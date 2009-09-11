@@ -150,16 +150,6 @@ namespace Tournaments.Standard
             bool byePaired = false;
             bool byesLocked = false;
 
-            var avail = from p in nodes
-                        where p.Locked == false
-                        select p;
-
-            var byes = from a in avail
-                       where a.ChildA != null
-                       where a.ChildB == null
-                       select a;
-
-
             foreach (var round in rounds)
             {
                 foreach (var pairing in round.Pairings)
@@ -180,8 +170,17 @@ namespace Tournaments.Standard
 
                         var team = pairing.TeamScores[0].Team;
 
-                        var matched = from a in byes
-                                      where a.ChildAMatches(team.TeamId)
+                        var byes = from n in nodes
+                                   where n.ChildA != null
+                                   where n.ChildB == null
+                                   select n;
+
+                        var avail = from b in byes
+                                    where b.Locked == false
+                                    select b;
+
+                        var matched = from a in avail
+                                      where a.ChildA.Team != null && a.ChildA.Team.Team.TeamId == team.TeamId
                                       select a;
 
                         if (matched.Count() == 1)
@@ -192,12 +191,12 @@ namespace Tournaments.Standard
                         else
                         {
                             // We did not find a matching bye, so we have to create one by swapping.
-                            if (byes.Count() == 0)
+                            if (avail.Count() == 0)
                             {
                                 throw new InvalidTournamentStateException("A bye was listed but no valid bye could be created.");
                             }
 
-                            var byeNode = byes.First();
+                            var byeNode = avail.First();
 
                             // Find our team in an unlocked node
                             var foundA = from n in nodes
@@ -247,9 +246,18 @@ namespace Tournaments.Standard
                             byesLocked = true;
                         }
 
+                        var pairs = from n in nodes
+                                    where n.ChildA != null
+                                    where n.ChildB != null
+                                    select n;
+
+                        var avail = from p in pairs
+                                    where p.Locked == false
+                                    select p;
+
                         var matched = from a in avail
-                                      where a.ChildAMatches(teamA.TeamId)
-                                      where a.ChildBMatches(teamB.TeamId)
+                                      where a.ChildA.Team != null && a.ChildA.Team.Team.TeamId == teamA.TeamId
+                                      where a.ChildB.Team != null && a.ChildB.Team.Team.TeamId == teamB.TeamId
                                       select a;
 
                         if (matched.Count() == 1)
@@ -303,7 +311,8 @@ namespace Tournaments.Standard
                                 }
 
                                 // find the first available node in this level.
-                                var available = from n in avail
+                                var available = from n in nodes
+                                                where n.Locked == false
                                                 where n.Level == teamANode.Level
                                                 where n.ChildA != null
                                                 where n.ChildB != null
