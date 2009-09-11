@@ -57,25 +57,6 @@ namespace Tournaments
         }
 
         /// <summary>
-        /// Initializes a new instance of the TournamentNameTable class, initialized with the supplied names.
-        /// </summary>
-        /// <param name="names">An enumerable mapping of team ids to team names.</param>
-        public TournamentNameTable(IEnumerable<KeyValuePair<long, string>> names)
-        {
-            this.names = new Dictionary<long, string>();
-
-            foreach (var pair in names)
-            {
-                if (this.names.ContainsKey(pair.Key))
-                {
-                    throw new InvalidOperationException("The key '" + pair.Key.ToString() + "' was already present in the collection.");
-                }
-
-                this.names.Add(pair.Key, pair.Value);
-            }
-        }
-
-        /// <summary>
         /// Retrieves a team name associated with the supplied team id.
         /// </summary>
         /// <param name="teamId">The id of the team for which to retrieve the name.</param>

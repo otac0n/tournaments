@@ -60,7 +60,7 @@ namespace Tournaments
         /// </summary>
         /// <param name="teamNames">The names of the teams, for use in drawing team names in the visualization.</param>
         /// <returns>An SVG document containing the rendered image.</returns>
-        XmlDocument Render(TournamentNameTable teamNames);
+        XmlReader Render(TournamentNameTable teamNames);
 
         /// <summary>
         /// Measures the tournament visualization.

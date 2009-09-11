@@ -531,7 +531,7 @@ namespace Tournaments.Standard
             return new Size(size.Width + 10, size.Height + 10);
         }
 
-        public XmlDocument Render(TournamentNameTable teamNames)
+        public XmlReader Render(TournamentNameTable teamNames)
         {
             XmlDocument doc = new XmlDocument();
             string xmlns = "http://www.w3.org/2000/svg";
@@ -555,7 +555,7 @@ namespace Tournaments.Standard
                 doc.DocumentElement.AppendChild(node);
             }
 
-            return doc;
+            return new XmlNodeReader(doc);
         }
 
         private XmlNode CreateScriptNode(XmlDocument doc, string xmlns)
