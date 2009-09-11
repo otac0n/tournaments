@@ -76,10 +76,10 @@ namespace Tournaments.Standard
                 if (obj == null)
                     return 1;
 
-                if (obj is RRWinRecord)
+                RRWinRecord record = obj as RRWinRecord;
+
+                if (record != null)
                 {
-                    RRWinRecord record = obj as RRWinRecord;
-                    
                     int comp = this.WinRecord.CompareTo(record.WinRecord);
                     if (comp != 0)
                     {
@@ -190,15 +190,15 @@ namespace Tournaments.Standard
             }
         }
 
-        List<TournamentTeam> teams = null;
-        List<RRPairing> pairings = null;
-        List<TournamentRound> rounds = null;
+        List<TournamentTeam> loadedTeams;
+        List<RRPairing> loadedPairings;
+        List<TournamentRound> loadedRounds;
 
         public void Reset()
         {
-            this.teams = null;
-            this.pairings = null;
-            this.rounds = null;
+            this.loadedTeams = null;
+            this.loadedPairings = null;
+            this.loadedRounds = null;
             this.state = PairingsGeneratorState.NotInitialized;
         }
 
@@ -264,20 +264,20 @@ namespace Tournaments.Standard
                 }
             }
 
-            this.teams = newTeams;
-            this.pairings = newPairings;
-            this.rounds = new List<TournamentRound>(rounds);
+            this.loadedTeams = newTeams;
+            this.loadedPairings = newPairings;
+            this.loadedRounds = new List<TournamentRound>(rounds);
             this.state = PairingsGeneratorState.Initialized;
         }
 
         public TournamentRound CreateNextRound(int? places)
         {
-            if (this.pairings.Count == 0)
+            if (this.loadedPairings.Count == 0)
             {
                 return null;
             }
 
-            IList<TournamentPairing> pairings = new List<TournamentPairing>(this.GetNextRoundPairings(this.pairings));
+            IList<TournamentPairing> pairings = new List<TournamentPairing>(this.GetNextRoundPairings(this.loadedPairings));
             return new TournamentRound(pairings);
         }
 
@@ -322,18 +322,18 @@ namespace Tournaments.Standard
 
         public IEnumerable<TournamentRanking> GenerateRankings()
         {
-            if (this.pairings.Count > 0)
+            if (this.loadedPairings.Count > 0)
             {
                 throw new InvalidTournamentStateException("The tournament is not in a state that allows ranking for the following reason: There is at least one pairing left to execute.");
             }
 
             Dictionary<TournamentTeam, RRWinRecord> records = new Dictionary<TournamentTeam, RRWinRecord>();
-            foreach (TournamentTeam team in this.teams)
+            foreach (TournamentTeam team in this.loadedTeams)
             {
                 records[team] = new RRWinRecord() { Wins = 0, Losses = 0, Draws = 0, OverallScore = null };
             }
 
-            foreach (TournamentRound round in rounds)
+            foreach (TournamentRound round in loadedRounds)
             {
                 foreach (TournamentPairing pairing in round.Pairings)
                 {

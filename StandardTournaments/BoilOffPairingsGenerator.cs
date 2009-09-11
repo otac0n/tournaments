@@ -67,17 +67,17 @@ namespace Tournaments.Standard
             }
         }
 
-        List<TournamentTeam> teams = null;
-        List<TournamentRound> rounds = null;
-        List<BORank> eliminated = null;
-        bool canContinue = false;
+        List<TournamentTeam> loadedTeams;
+        List<TournamentRound> loadedRounds;
+        List<BORank> loadedEliminated;
+        bool loadedCanContinue;
 
         public void Reset()
         {
-            this.teams = null;
-            this.rounds = null;
-            this.eliminated = null;
-            this.canContinue = false;
+            this.loadedTeams = null;
+            this.loadedRounds = null;
+            this.loadedEliminated = null;
+            this.loadedCanContinue = false;
             this.state = PairingsGeneratorState.NotInitialized;
         }
 
@@ -153,42 +153,37 @@ namespace Tournaments.Standard
             }
 
 
-            this.teams = newTeams;
-            this.rounds = newRounds;
-            this.eliminated = newEliminated;
-            this.canContinue = canContinue;
+            this.loadedTeams = newTeams;
+            this.loadedRounds = newRounds;
+            this.loadedEliminated = newEliminated;
+            this.loadedCanContinue = canContinue;
             this.state = PairingsGeneratorState.Initialized;
         }
 
         public TournamentRound CreateNextRound(int? places)
         {
-            if (this.teams == null)
+            if (this.loadedTeams == null)
             {
                 throw new InvalidTournamentStateException("This generator was never successfully initialized with a valid tournament state.");
             }
 
-            if (this.teams.Count == 0)
+            if (this.loadedTeams.Count == 0)
             {
                 return null;
             }
 
-            if (!this.canContinue)
+            if (!this.loadedCanContinue)
             {
                 throw new InvalidTournamentStateException("This generator is not in a state that would allow a new round to be generated.");
             }
 
-            IList<TournamentTeamScore> teamScores = GetNextRoundByTeams(this.teams);
+            IList<TournamentTeamScore> teamScores = GetNextRoundByTeams(this.loadedTeams);
 
             return new TournamentRound(new TournamentPairing[] { new TournamentPairing(teamScores) });
         }
 
-        private IList<TournamentTeamScore> GetNextRoundByTeams(IEnumerable<TournamentTeam> teams)
+        private static IList<TournamentTeamScore> GetNextRoundByTeams(IEnumerable<TournamentTeam> teams)
         {
-            //Contract.Requires(teams != null);
-            //Contract.Requires(Contract.ForAll<TournamentTeam>(teams, team => team != null));
-            //Contract.Ensures(Contract.Result<IList<TournamentTeamScore>>() != null);
-            //Contract.Ensures(Contract.ForAll<TournamentTeamScore>(Contract.Result<IList<TournamentTeamScore>>(), score => score != null));
-
             List<TournamentTeamScore> teamScores = new List<TournamentTeamScore>();
             foreach (var team in teams)
             {
@@ -204,13 +199,8 @@ namespace Tournaments.Standard
         /// <param name="teamCount">The count of teams left.</param>
         /// <param name="finalCount">The desired number of competitors in the final round.</param>
         /// <returns>The effective round number.  This may not represent the actual round number, because two or more teams may have tied for the last non-eliminated spot.</returns>
-        private int GetRoundNumber(int teamCount, int finalCount)
+        private static int GetRoundNumber(int teamCount, int finalCount)
         {
-            //Contract.Requires(teamCount >= 0);
-            //Contract.Requires(teamCount < 1073741824);
-            //Contract.Requires(finalCount >= 0);
-            //Contract.Ensures(Contract.Result<int>() >= 0);
-
             // If the number of teams is already smaller than or equal to the desired number of competitors, return zero, indicating no rounds left.
             if (teamCount <= finalCount)
             {
@@ -245,22 +235,13 @@ namespace Tournaments.Standard
             }
         }
 
-        private int TeamsInRound(int roundNumber, int finalCount)
+        private static int TeamsInRound(int roundNumber, int finalCount)
         {
-            //Contract.Requires(roundNumber >= 0);
-            //Contract.Requires(finalCount > 0);
-            //Contract.Ensures(Contract.Result<int>() > 0);
-
             return finalCount * (1 << roundNumber);
         }
 
         private IEnumerable<BORank> GetRoundRankings(TournamentRound round, int roundNumber)
         {
-            //Contract.Requires(round != null);
-            //Contract.Requires(roundNumber >= 0);
-            //Contract.Ensures(Contract.Result<IEnumerable<BORank>>() != null);
-            //Contract.Ensures(Contract.ForAll<BORank>(Contract.Result<IEnumerable<BORank>>(), rank => rank != null));
-            
             if (round.Pairings.Count != 1)
             {
                 throw new InvalidTournamentStateException("The rounds alread executed in this tournament make it invalid as a boil-off tournament for the following reason:  At least one round has more than one pairing set.");
@@ -299,17 +280,17 @@ namespace Tournaments.Standard
 
         public IEnumerable<TournamentRanking> GenerateRankings()
         {
-            if (this.teams.Count != 0)
+            if (this.loadedTeams.Count != 0)
             {
                 throw new InvalidTournamentStateException("The tournament is not in a state that allows ranking for the following reason: There is at least one pairing left to execute.");
             }
 
-            if (this.rounds.Count == 0)
+            if (this.loadedRounds.Count == 0)
             {
                 throw new InvalidTournamentStateException("The tournament is not in a state that allows ranking for the following reason: There have not been any rounds executed.");
             }
 
-            var r1 = from ranking in GetRoundRankings(this.rounds[this.rounds.Count - 1], 0)
+            var r1 = from ranking in GetRoundRankings(this.loadedRounds[this.loadedRounds.Count - 1], 0)
                      select ranking;
 
             foreach (var ranking in r1)
@@ -317,7 +298,7 @@ namespace Tournaments.Standard
                 yield return new TournamentRanking(ranking.Team, ranking.Rank, string.Format("Score: {0}", ranking.Score));
             }
 
-            var r2 = from ranking in this.eliminated
+            var r2 = from ranking in this.loadedEliminated
                      orderby ranking.Rank
                      select ranking;
 

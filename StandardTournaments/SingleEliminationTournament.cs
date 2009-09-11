@@ -38,8 +38,8 @@ namespace Tournaments.Standard
     /// </summary>
     public class SingleEliminationTournament : IPairingsGenerator, ITournamentVisualizer
     {
-        private List<SingleEliminationNode> nodes = null;
-        private List<TournamentTeam> teams = null;
+        private List<TournamentTeam> loadedTeams;
+        private List<SingleEliminationNode> loadedNodes;
         private PairingsGeneratorState state = PairingsGeneratorState.NotInitialized;
 
         public string Name
@@ -68,8 +68,8 @@ namespace Tournaments.Standard
 
         public void Reset()
         {
-            this.nodes = null;
-            this.teams = null;
+            this.loadedTeams = null;
+            this.loadedNodes = null;
             this.state = PairingsGeneratorState.NotInitialized;
         }
 
@@ -100,7 +100,6 @@ namespace Tournaments.Standard
 
                 Dictionary<int, TeamRanking[]> pairings = new Dictionary<int, TeamRanking[]>();
 
-                int count = teams.Count();
                 int i = 0;
                 int nextRound = 2;
                 int roundNumber = 0;
@@ -422,8 +421,8 @@ namespace Tournaments.Standard
                 }
             }
 
-            this.nodes = nodes;
-            this.teams = new List<TournamentTeam>(teams);
+            this.loadedNodes = nodes;
+            this.loadedTeams = new List<TournamentTeam>(teams);
             this.state = PairingsGeneratorState.Initialized;
         }
 
@@ -439,7 +438,7 @@ namespace Tournaments.Standard
                 throw new InvalidTournamentStateException("This generator was never successfully initialized with a valid tournament state.");
             }
 
-            var readyToPlay = from n in this.nodes
+            var readyToPlay = from n in this.loadedNodes
                               where n.Locked == false
                               where n.ChildA != null && n.ChildA.Team != null
                               where n.ChildB != null && n.ChildB.Team != null
@@ -453,7 +452,7 @@ namespace Tournaments.Standard
                 // if this is because the root is locked, return null
                 // otherwise, return an error because there is either a tie or an unfinished round.
 
-                var ties = from n in this.nodes
+                var ties = from n in this.loadedNodes
                            where n.Locked == true
                            where n.ChildA != null && n.ChildB != null
                            where n.ChildA.Score != null && n.ChildB.Score != null
@@ -465,7 +464,7 @@ namespace Tournaments.Standard
                     throw new InvalidTournamentStateException("The tournament cannot continue because there is at least one pairing still resulting in a tie.  Ties are not allowed in single elimintaion tournaments.");
                 }
 
-                var unfinished = from n in this.nodes
+                var unfinished = from n in this.loadedNodes
                                  where n.Locked == true
                                  where n.ChildA != null && n.ChildB != null
                                  where n.ChildA.Score == null || n.ChildB.Score == null
@@ -491,12 +490,12 @@ namespace Tournaments.Standard
 
         public IEnumerable<TournamentRanking> GenerateRankings()
         {
-            if (this.teams.Count >= 2)
+            if (this.loadedTeams.Count >= 2)
             {
-                var maxLevel = this.nodes.Max(n => n.Level);
+                var maxLevel = this.loadedNodes.Max(n => n.Level);
 
-                var ranks = from t in this.teams
-                            let node = (from n in this.nodes
+                var ranks = from t in this.loadedTeams
+                            let node = (from n in this.loadedNodes
                                         where (n.ChildA != null && n.ChildA.Team != null && n.ChildA.Team.Team.TeamId == t.TeamId) || (n.ChildB != null && n.ChildB.Team != null && n.ChildB.Team.Team.TeamId == t.TeamId)
                                         orderby n.Level
                                         select n).FirstOrDefault()
@@ -517,7 +516,7 @@ namespace Tournaments.Standard
 
         public Size Measure(TournamentNameTable teamNames)
         {
-            var rootNode = (from n in this.nodes
+            var rootNode = (from n in this.loadedNodes
                             where n.Parent == null
                             select n).SingleOrDefault();
 
@@ -537,7 +536,7 @@ namespace Tournaments.Standard
             string xmlns = "http://www.w3.org/2000/svg";
             doc.LoadXml(@"<svg xmlns=""http://www.w3.org/2000/svg"" width=""100%"" height=""100%"" onload=""Initialize(evt)""></svg>");
 
-            var rootNode = (from n in this.nodes
+            var rootNode = (from n in this.loadedNodes
                             where n.Parent == null
                             select n).SingleOrDefault();
 
@@ -801,12 +800,12 @@ namespace Tournaments.Standard
 
         private class SingleEliminationNode
         {
-            private SingleEliminationNode parent = null;
-            private SingleEliminationNode childA = null;
-            private SingleEliminationNode childB = null;
-            private TeamRanking team = null;
-            private bool locked = false;
-            private Score score = null;
+            private SingleEliminationNode parent;
+            private SingleEliminationNode childA;
+            private SingleEliminationNode childB;
+            private TeamRanking team;
+            private bool locked;
+            private Score score;
 
             public SingleEliminationNode(TeamRanking team)
             {
