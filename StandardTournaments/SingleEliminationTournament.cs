@@ -202,12 +202,12 @@ namespace Tournaments.Standard
                             // Find our team in an unlocked node
                             var foundA = from n in nodes
                                          where n.Locked == false
-                                         where n.ChildA.Team != null && n.ChildA.Team.Team.TeamId == team.TeamId
+                                         where n.ChildAMatches(team.TeamId)
                                          select n;
 
                             var foundB = from n in nodes
                                          where n.Locked == false
-                                         where n.ChildB.Team != null && n.ChildB.Team.Team.TeamId == team.TeamId
+                                         where n.ChildBMatches(team.TeamId)
                                          select n;
 
                             // swap out the found node for our bye node.
@@ -322,27 +322,15 @@ namespace Tournaments.Standard
 
                                 var destination = available.First();
 
-                                if (teamANode.ChildA != null && teamANode.ChildA.Team != null && teamANode.ChildA.Team.Team.TeamId == teamA.TeamId)
+                                if (teamANode.ChildAMatches(teamA.TeamId))
                                 {
                                     // swap destination A with teamANode A
-                                    var dA = destination.ChildA;
-                                    destination.ChildA = null;
-                                    var tA = teamANode.ChildA;
-                                    teamANode.ChildA = null;
-
-                                    destination.ChildA = tA;
-                                    teamANode.ChildA = dA;
+                                    SwapChildrenAA(destination, teamANode);
                                 }
-                                else if (teamANode.ChildB != null && teamANode.ChildB.Team != null && teamANode.ChildB.Team.Team.TeamId == teamA.TeamId)
+                                else if (teamANode.ChildBMatches(teamA.TeamId))
                                 {
                                     // swap destination A with teamANode B
-                                    var dA = destination.ChildA;
-                                    destination.ChildA = null;
-                                    var tB = teamANode.ChildB;
-                                    teamANode.ChildB = null;
-
-                                    destination.ChildA = tB;
-                                    teamANode.ChildB = dA;
+                                    SwapChildrenAB(destination, teamANode);
                                 }
                                 else
                                 {
@@ -352,27 +340,15 @@ namespace Tournaments.Standard
                                 // since destination could've matched teamBNode and we may have swapped it out, we need to refetch teamBNode
                                 teamBNode = teamBNodes.Single();
 
-                                if (teamBNode.ChildA != null && teamBNode.ChildA.Team != null && teamBNode.ChildA.Team.Team.TeamId == teamB.TeamId)
+                                if (teamBNode.ChildAMatches(teamB.TeamId))
                                 {
                                     // swap destination B with teamBNode A
-                                    var dB = destination.ChildB;
-                                    destination.ChildB = null;
-                                    var tA = teamBNode.ChildA;
-                                    teamBNode.ChildA = null;
-
-                                    destination.ChildB = tA;
-                                    teamBNode.ChildA = dB;
+                                    SwapChildrenBA(destination, teamBNode);
                                 }
-                                else if (teamBNode.ChildB != null && teamBNode.ChildB.Team != null && teamBNode.ChildB.Team.Team.TeamId == teamB.TeamId)
+                                else if (teamBNode.ChildBMatches(teamB.TeamId))
                                 {
                                     // swap destination B with teamBNode B
-                                    var dB = destination.ChildB;
-                                    destination.ChildB = null;
-                                    var tB = teamBNode.ChildB;
-                                    teamBNode.ChildB = null;
-
-                                    destination.ChildB = tB;
-                                    teamBNode.ChildB = dB;
+                                    SwapChildrenBB(destination, teamBNode);
                                 }
                                 else
                                 {
@@ -393,6 +369,50 @@ namespace Tournaments.Standard
             this.loadedNodes = nodes;
             this.loadedTeams = new List<TournamentTeam>(teams);
             this.state = PairingsGeneratorState.Initialized;
+        }
+
+        private static void SwapChildrenAA(SingleEliminationNode node1, SingleEliminationNode node2)
+        {
+            var temp1 = node1.ChildA;
+            node1.ChildA = null;
+            var temp2 = node2.ChildA;
+            node2.ChildA = null;
+
+            node1.ChildA = temp2;
+            node2.ChildA = temp1;
+        }
+
+        private static void SwapChildrenAB(SingleEliminationNode node1, SingleEliminationNode node2)
+        {
+            var temp1 = node1.ChildA;
+            node1.ChildA = null;
+            var temp2 = node2.ChildB;
+            node2.ChildB = null;
+
+            node1.ChildA = temp2;
+            node2.ChildB = temp1;
+        }
+
+        private static void SwapChildrenBA(SingleEliminationNode node1, SingleEliminationNode node2)
+        {
+            var temp1 = node1.ChildB;
+            node1.ChildB = null;
+            var temp2 = node2.ChildA;
+            node2.ChildA = null;
+
+            node1.ChildB = temp2;
+            node2.ChildA = temp1;
+        }
+
+        private static void SwapChildrenBB(SingleEliminationNode node1, SingleEliminationNode node2)
+        {
+            var temp1 = node1.ChildB;
+            node1.ChildB = null;
+            var temp2 = node2.ChildB;
+            node2.ChildB = null;
+
+            node1.ChildB = temp2;
+            node2.ChildB = temp1;
         }
 
         private static void LockByes(List<SingleEliminationNode> nodes)
