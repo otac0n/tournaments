@@ -4,6 +4,8 @@
     <Unrecognized/>
     <Recognized>
       <Word>Plugin</Word>
+      <Word>Plugins</Word>
+      <Word>Visualizer</Word>
     </Recognized>
     <Deprecated>
       <Term PreferredAlternate="EnterpriseServices">ComPlus</Term>

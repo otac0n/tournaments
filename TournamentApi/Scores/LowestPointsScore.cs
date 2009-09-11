@@ -28,6 +28,7 @@
 namespace Tournaments
 {
     using System;
+    using System.Globalization;
 
     /// <summary>
     /// Descibes a scoring scenarion where the lowest score in points should win.
@@ -58,7 +59,7 @@ namespace Tournaments
         /// <returns>The string representation of the value of this instance.</returns>
         public override string ToString()
         {
-            return this.Points.ToString();
+            return this.Points.ToString(CultureInfo.InvariantCulture);
         }
 
         /// <summary>
@@ -89,12 +90,14 @@ namespace Tournaments
                 return 1;
             }
 
-            if (!(other is LowestPointsScore))
+            var o = other as LowestPointsScore;
+
+            if (o == null)
             {
                 throw new InvalidOperationException();
             }
 
-            return -this.Points.CompareTo(((LowestPointsScore)other).Points);
+            return -this.Points.CompareTo(o.Points);
         }
 
         /// <summary>
@@ -102,19 +105,21 @@ namespace Tournaments
         /// </summary>
         /// <param name="addend">The other score to add to this instance.</param>
         /// <returns>A new instance of Score representing the sum of this instance and the addend.</returns>
-        protected override Score AddWith(Score addend)
+        public override Score Add(Score addend)
         {
             if (addend == null)
             {
                 return new LowestPointsScore(this.Points);
             }
 
-            if (!(addend is LowestPointsScore))
+            var a = addend as LowestPointsScore;
+
+            if (a == null)
             {
                 throw new InvalidOperationException();
             }
 
-            return new LowestPointsScore(this.Points + ((LowestPointsScore)addend).Points);
+            return new LowestPointsScore(this.Points + a.Points);
         }
     }
 }

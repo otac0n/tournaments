@@ -40,18 +40,18 @@ namespace Tournaments
         /// <summary>
         /// Adds one Score to another yielding their sum.
         /// </summary>
-        /// <param name="lhs">The first addend.</param>
-        /// <param name="rhs">The second addend.</param>
+        /// <param name="score1">The first addend.</param>
+        /// <param name="score2">The second addend.</param>
         /// <returns>A new Score representing the sum of the two addends.</returns>
-        public static Score operator +(Score lhs, Score rhs)
+        public static Score operator +(Score score1, Score score2)
         {
-            if (lhs != null)
+            if (score1 != null)
             {
-                return lhs.AddWith(rhs);
+                return score1.Add(score2);
             }
-            else if (rhs != null)
+            else if (score2 != null)
             {
-                return rhs.AddWith(lhs);
+                return score2.Add(score1);
             }
             else
             {
@@ -62,174 +62,176 @@ namespace Tournaments
         /// <summary>
         ///  Determines whether two specified instances of Score are equal.
         /// </summary>
-        /// <param name="lhs">The first score for which to check equality.</param>
-        /// <param name="rhs">The second score for which to check equality.</param>
-        /// <returns>true if rhs and lhs represent the same score; otherwise, false.</returns>
-        public static bool operator ==(Score lhs, Score rhs)
+        /// <param name="score1">The first score for which to check equality.</param>
+        /// <param name="score2">The second score for which to check equality.</param>
+        /// <returns>true if score2 and score1 represent the same score; otherwise, false.</returns>
+        public static bool operator ==(Score score1, Score score2)
         {
-            if (object.ReferenceEquals(lhs, rhs))
+            if (object.ReferenceEquals(score1, score2))
             {
                 return true;
             }
-            else if ((object)lhs == null || (object)rhs == null)
+            else if ((object)score1 == null || (object)score2 == null)
             {
                 return false;
             }
             else
             {
-                return lhs.CompareTo(rhs) == 0;
+                return score1.CompareTo(score2) == 0;
             }
         }
 
         /// <summary>
         ///  Determines whether two specified instances of Score are not equal.
         /// </summary>
-        /// <param name="lhs">The first score for which to check inequality.</param>
-        /// <param name="rhs">The second score for which to check inequality.</param>
-        /// <returns>true if rhs and lhs represent a different score; otherwise, false.</returns>
-        public static bool operator !=(Score lhs, Score rhs)
+        /// <param name="score1">The first score for which to check inequality.</param>
+        /// <param name="score2">The second score for which to check inequality.</param>
+        /// <returns>true if score2 and score1 represent a different score; otherwise, false.</returns>
+        public static bool operator !=(Score score1, Score score2)
         {
-            if (object.ReferenceEquals(lhs, rhs))
+            if (object.ReferenceEquals(score1, score2))
             {
                 return false;
             }
-            else if ((object)lhs == null || (object)rhs == null)
+            else if ((object)score1 == null || (object)score2 == null)
             {
                 return true;
             }
             else
             {
-                return lhs.CompareTo(rhs) != 0;
+                return score1.CompareTo(score2) != 0;
             }
         }
 
         /// <summary>
         /// Determines whether or not one specified Score is better than another specified Score.
         /// </summary>
-        /// <param name="lhs">The first score for which to check inequality.</param>
-        /// <param name="rhs">The second score for which to check inequality.</param>
-        /// <returns>true if lhs represent a better score than rhs; otherwise, false.</returns>
-        public static bool operator >(Score lhs, Score rhs)
+        /// <param name="score1">The first score for which to check inequality.</param>
+        /// <param name="score2">The second score for which to check inequality.</param>
+        /// <returns>true if score1 represent a better score than score2; otherwise, false.</returns>
+        public static bool operator >(Score score1, Score score2)
         {
-            if (object.ReferenceEquals(lhs, rhs))
+            if (object.ReferenceEquals(score1, score2))
             {
                 return false;
             }
-            else if ((object)lhs != null || (object)rhs == null)
+            else if ((object)score1 != null || (object)score2 == null)
             {
                 return true;
             }
-            else if ((object)lhs == null || (object)rhs != null)
+            else if ((object)score1 == null || (object)score2 != null)
             {
                 return false;
             }
             else
             {
-                return lhs.CompareTo(rhs) > 0;
+                return score1.CompareTo(score2) > 0;
             }
         }
 
         /// <summary>
         /// Determines whether or not one specified Score is worse than another specified Score.
         /// </summary>
-        /// <param name="lhs">The first score for which to check inequality.</param>
-        /// <param name="rhs">The second score for which to check inequality.</param>
-        /// <returns>true if lhs represent a worse score than rhs; otherwise, false.</returns>
-        public static bool operator <(Score lhs, Score rhs)
+        /// <param name="score1">The first score for which to check inequality.</param>
+        /// <param name="score2">The second score for which to check inequality.</param>
+        /// <returns>true if score1 represent a worse score than score2; otherwise, false.</returns>
+        public static bool operator <(Score score1, Score score2)
         {
-            if (object.ReferenceEquals(lhs, rhs))
+            if (object.ReferenceEquals(score1, score2))
             {
                 return false;
             }
-            else if ((object)lhs != null || (object)rhs == null)
+            else if ((object)score1 != null || (object)score2 == null)
             {
                 return false;
             }
-            else if ((object)lhs == null || (object)rhs != null)
+            else if ((object)score1 == null || (object)score2 != null)
             {
                 return true;
             }
             else
             {
-                return lhs.CompareTo(rhs) < 0;
+                return score1.CompareTo(score2) < 0;
             }
         }
 
         /// <summary>
         /// Determines whether or not one specified Score is better than or equal to another specified Score.
         /// </summary>
-        /// <param name="lhs">The first score for which to check inequality.</param>
-        /// <param name="rhs">The second score for which to check inequality.</param>
-        /// <returns>true if lhs represent a score that is better than or equal to rhs; otherwise, false.</returns>
-        public static bool operator >=(Score lhs, Score rhs)
+        /// <param name="score1">The first score for which to check inequality.</param>
+        /// <param name="score2">The second score for which to check inequality.</param>
+        /// <returns>true if score1 represent a score that is better than or equal to score2; otherwise, false.</returns>
+        public static bool operator >=(Score score1, Score score2)
         {
-            if (object.ReferenceEquals(lhs, rhs))
+            if (object.ReferenceEquals(score1, score2))
             {
                 return true;
             }
-            else if ((object)lhs != null || (object)rhs == null)
+            else if ((object)score1 != null || (object)score2 == null)
             {
                 return true;
             }
-            else if ((object)lhs == null || (object)rhs != null)
+            else if ((object)score1 == null || (object)score2 != null)
             {
                 return false;
             }
             else
             {
-                return lhs.CompareTo(rhs) >= 0;
+                return score1.CompareTo(score2) >= 0;
             }
         }
 
         /// <summary>
         /// Determines whether or not one specified Score is worse than or equal to another specified Score.
         /// </summary>
-        /// <param name="lhs">The first score for which to check inequality.</param>
-        /// <param name="rhs">The second score for which to check inequality.</param>
-        /// <returns>true if lhs represent a score that is worse than or equal to rhs; otherwise, false.</returns>
-        public static bool operator <=(Score lhs, Score rhs)
+        /// <param name="score1">The first score for which to check inequality.</param>
+        /// <param name="score2">The second score for which to check inequality.</param>
+        /// <returns>true if score1 represent a score that is worse than or equal to score2; otherwise, false.</returns>
+        public static bool operator <=(Score score1, Score score2)
         {
-            if (object.ReferenceEquals(lhs, rhs))
+            if (object.ReferenceEquals(score1, score2))
             {
                 return true;
             }
-            else if ((object)lhs != null || (object)rhs == null)
+            else if ((object)score1 != null || (object)score2 == null)
             {
                 return false;
             }
-            else if ((object)lhs == null || (object)rhs != null)
+            else if ((object)score1 == null || (object)score2 != null)
             {
                 return true;
             }
             else
             {
-                return lhs.CompareTo(rhs) <= 0;
+                return score1.CompareTo(score2) <= 0;
             }
         }
 
         /// <summary>
         /// Returns a value indicating whether this instance is equal to the specified Score instance.
         /// </summary>
-        /// <param name="value">A Score instance to compare to this instance.</param>
+        /// <param name="other">A Score instance to compare to this instance.</param>
         /// <returns>true if the value parameter equals the value of this instance; otherwise, false.</returns>
-        public bool Equals(Score value)
+        public bool Equals(Score other)
         {
-            return this == value;
+            return this == other;
         }
 
         /// <summary>
         /// Returns a value indicating whether this instance is equal to the specified object.
         /// </summary>
-        /// <param name="value">An object to compare to this instance.</param>
+        /// <param name="obj">An object to compare to this instance.</param>
         /// <returns>true if the value parameter is a Score instance and equals the value of this instance; otherwise, false.</returns>
-        public override bool Equals(object value)
+        public override bool Equals(object obj)
         {
-            if (!(value is Score))
+            var o = obj as Score;
+
+            if (o == null)
             {
                 return false;
             }
 
-            return this.Equals((Score)value);
+            return this.Equals(o);
         }
 
         /// <summary>
@@ -257,6 +259,6 @@ namespace Tournaments
         /// </summary>
         /// <param name="addend">The other score to add to this instance.</param>
         /// <returns>A new instance of Score representing the sum of this instance and the addend.</returns>
-        protected abstract Score AddWith(Score addend);
+        public abstract Score Add(Score addend);
     }
 }

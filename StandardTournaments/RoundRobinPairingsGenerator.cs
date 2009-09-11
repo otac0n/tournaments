@@ -112,48 +112,48 @@ namespace Tournaments.Standard
                 }
             }
 
-            public static bool operator ==(RRWinRecord lhs, RRWinRecord rhs)
+            public static bool operator ==(RRWinRecord score1, RRWinRecord score2)
             {
-                if (object.ReferenceEquals(lhs, rhs))
+                if (object.ReferenceEquals(score1, score2))
                 {
                     return true;
                 }
-                else if ((object)lhs == null || (object)rhs == null)
+                else if ((object)score1 == null || (object)score2 == null)
                 {
                     return false;
                 }
                 else
                 {
-                    return lhs.Wins == rhs.Wins &&
-                        lhs.Losses == rhs.Losses &&
-                        lhs.Draws == rhs.Draws &&
-                        lhs.OverallScore == rhs.OverallScore;
+                    return score1.Wins == score2.Wins &&
+                        score1.Losses == score2.Losses &&
+                        score1.Draws == score2.Draws &&
+                        score1.OverallScore == score2.OverallScore;
                 }
             }
 
-            public static bool operator !=(RRWinRecord lhs, RRWinRecord rhs)
+            public static bool operator !=(RRWinRecord score1, RRWinRecord score2)
             {
-                return !(lhs == rhs);
+                return !(score1 == score2);
             }
 
-            public static bool operator >(RRWinRecord lhs, RRWinRecord rhs)
+            public static bool operator >(RRWinRecord score1, RRWinRecord score2)
             {
-                return lhs.CompareTo(rhs) > 0;
+                return score1.CompareTo(score2) > 0;
             }
 
-            public static bool operator <(RRWinRecord lhs, RRWinRecord rhs)
+            public static bool operator <(RRWinRecord score1, RRWinRecord score2)
             {
-                return lhs.CompareTo(rhs) < 0;
+                return score1.CompareTo(score2) < 0;
             }
 
-            public static bool operator >=(RRWinRecord lhs, RRWinRecord rhs)
+            public static bool operator >=(RRWinRecord score1, RRWinRecord score2)
             {
-                return lhs.CompareTo(rhs) >= 0;
+                return score1.CompareTo(score2) >= 0;
             }
 
-            public static bool operator <=(RRWinRecord lhs, RRWinRecord rhs)
+            public static bool operator <=(RRWinRecord score1, RRWinRecord score2)
             {
-                return lhs.CompareTo(rhs) <= 0;
+                return score1.CompareTo(score2) <= 0;
             }
         }
 

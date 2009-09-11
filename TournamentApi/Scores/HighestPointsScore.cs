@@ -28,6 +28,7 @@
 namespace Tournaments
 {
     using System;
+    using System.Globalization;
 
     /// <summary>
     /// Descibes a scoring scenarion where the highest score in points should win.
@@ -58,7 +59,7 @@ namespace Tournaments
         /// <returns>The string representation of the value of this instance.</returns>
         public override string ToString()
         {
-            return this.Points.ToString();
+            return this.Points.ToString(CultureInfo.InvariantCulture);
         }
 
         /// <summary>
@@ -104,7 +105,7 @@ namespace Tournaments
         /// </summary>
         /// <param name="addend">The other score to add to this instance.</param>
         /// <returns>A new instance of Score representing the sum of this instance and the addend.</returns>
-        protected override Score AddWith(Score addend)
+        public override Score Add(Score addend)
         {
             if (addend == null)
             {

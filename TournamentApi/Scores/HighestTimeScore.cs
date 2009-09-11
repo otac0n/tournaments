@@ -28,6 +28,7 @@
 namespace Tournaments
 {
     using System;
+    using System.Globalization;
 
     /// <summary>
     /// Descibes a scoring scenarion where the highest score in amount-of-time should win.
@@ -58,12 +59,12 @@ namespace Tournaments
         /// <returns>The string representation of the value of this instance.</returns>
         public override string ToString()
         {
-            var ms = (this.Milliseconds % 1000).ToString().PadLeft(3, '0');
+            var ms = (this.Milliseconds % 1000).ToString(CultureInfo.InvariantCulture).PadLeft(3, '0');
             var seconds = this.Milliseconds / 1000;
-            var s = (seconds % 60).ToString().PadLeft(2, '0');
+            var s = (seconds % 60).ToString(CultureInfo.InvariantCulture).PadLeft(2, '0');
             var minutes = seconds / 60;
-            var m = (minutes % 60).ToString().PadLeft(2, '0');
-            var h = (minutes / 60).ToString().PadLeft(2, '0');
+            var m = (minutes % 60).ToString(CultureInfo.InvariantCulture).PadLeft(2, '0');
+            var h = (minutes / 60).ToString(CultureInfo.InvariantCulture).PadLeft(2, '0');
 
             return h + ":" + m + ":" + s + "." + ms;
         }
@@ -96,12 +97,14 @@ namespace Tournaments
                 return 1;
             }
 
-            if (!(other is HighestTimeScore))
+            var o = other as HighestTimeScore;
+
+            if (o == null)
             {
                 throw new InvalidOperationException();
             }
 
-            return this.Milliseconds.CompareTo(((HighestTimeScore)other).Milliseconds);
+            return this.Milliseconds.CompareTo(o.Milliseconds);
         }
 
         /// <summary>
@@ -109,19 +112,21 @@ namespace Tournaments
         /// </summary>
         /// <param name="addend">The other score to add to this instance.</param>
         /// <returns>A new instance of Score representing the sum of this instance and the addend.</returns>
-        protected override Score AddWith(Score addend)
+        public override Score Add(Score addend)
         {
             if (addend == null)
             {
                 return new HighestTimeScore(this.Milliseconds);
             }
 
-            if (!(addend is HighestTimeScore))
+            var a = addend as HighestTimeScore;
+
+            if (a == null)
             {
                 throw new InvalidOperationException();
             }
 
-            return new HighestTimeScore(this.Milliseconds + ((HighestTimeScore)addend).Milliseconds);
+            return new HighestTimeScore(this.Milliseconds + a.Milliseconds);
         }    
     }
 }
