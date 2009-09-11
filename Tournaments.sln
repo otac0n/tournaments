@@ -7,6 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StandardTournaments", "Stan
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{743A4C55-B7E7-4A0A-BCB6-220D0F0AAC76}"
 	ProjectSection(SolutionItems) = preProject
+		CustomDictionary.xml = CustomDictionary.xml
 		Tournaments.snk = Tournaments.snk
 	EndProjectSection
 EndProject
