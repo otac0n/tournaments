@@ -5,6 +5,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TournamentApi", "Tournament
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StandardTournaments", "StandardTournaments\StandardTournaments.csproj", "{3EAA8071-F4A9-4DAA-A964-52DB7FA0C553}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{743A4C55-B7E7-4A0A-BCB6-220D0F0AAC76}"
+	ProjectSection(SolutionItems) = preProject
+		Tournaments.snk = Tournaments.snk
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SubversionScc) = preSolution
 		Svn-Managed = True
