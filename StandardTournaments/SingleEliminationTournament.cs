@@ -180,7 +180,7 @@ namespace Tournaments.Standard
                                     select b;
 
                         var matched = from a in avail
-                                      where a.ChildAMatches(team.TeamId)
+                                      where a.ChildA.Team != null && a.ChildA.Team.Team.TeamId == team.TeamId
                                       select a;
 
                         if (matched.Count() == 1)
@@ -201,12 +201,12 @@ namespace Tournaments.Standard
                             // Find our team in an unlocked node
                             var foundA = from n in nodes
                                          where n.Locked == false
-                                         where n.ChildAMatches(team.TeamId)
+                                         where n.ChildA.Team != null && n.ChildA.Team.Team.TeamId == team.TeamId
                                          select n;
 
                             var foundB = from n in nodes
                                          where n.Locked == false
-                                         where n.ChildBMatches(team.TeamId)
+                                         where n.ChildB.Team != null && n.ChildB.Team.Team.TeamId == team.TeamId
                                          select n;
 
                             // swap out the found node for our bye node.
@@ -256,8 +256,8 @@ namespace Tournaments.Standard
                                     select p;
 
                         var matched = from a in avail
-                                      where a.ChildAMatches(teamA.TeamId)
-                                      where a.ChildBMatches(teamB.TeamId)
+                                      where a.ChildA.Team != null && a.ChildA.Team.Team.TeamId == teamA.TeamId
+                                      where a.ChildB.Team != null && a.ChildB.Team.Team.TeamId == teamB.TeamId
                                       select a;
 
                         if (matched.Count() == 1)
@@ -273,12 +273,12 @@ namespace Tournaments.Standard
 
                             var teamANodes = from n in nodes
                                              where n.Locked == false
-                                             where n.ChildAMatches(teamA.TeamId) || n.ChildBMatches(teamA.TeamId)
+                                             where (n.ChildA != null && n.ChildA.Team != null && n.ChildA.Team.Team.TeamId == teamA.TeamId) || (n.ChildB != null && n.ChildB.Team != null && n.ChildB.Team.Team.TeamId == teamA.TeamId)
                                              select n;
 
                             var teamBNodes = from n in nodes
                                              where n.Locked == false
-                                             where n.ChildAMatches(teamB.TeamId) || n.ChildBMatches(teamB.TeamId)
+                                             where (n.ChildA != null && n.ChildA.Team != null && n.ChildA.Team.Team.TeamId == teamB.TeamId) || (n.ChildB != null && n.ChildB.Team != null && n.ChildB.Team.Team.TeamId == teamB.TeamId)
                                              select n;
 
                             if (teamANodes.Count() != 1 || teamBNodes.Count() != 1)
@@ -331,15 +331,27 @@ namespace Tournaments.Standard
 
                                 var destination = available.First();
 
-                                if (teamANode.ChildAMatches(teamA.TeamId))
+                                if (teamANode.ChildA != null && teamANode.ChildA.Team != null && teamANode.ChildA.Team.Team.TeamId == teamA.TeamId)
                                 {
                                     // swap destination A with teamANode A
-                                    SwapChildrenAA(destination, teamANode);
+                                    var dA = destination.ChildA;
+                                    destination.ChildA = null;
+                                    var tA = teamANode.ChildA;
+                                    teamANode.ChildA = null;
+
+                                    destination.ChildA = tA;
+                                    teamANode.ChildA = dA;
                                 }
-                                else if (teamANode.ChildBMatches(teamA.TeamId))
+                                else if (teamANode.ChildB != null && teamANode.ChildB.Team != null && teamANode.ChildB.Team.Team.TeamId == teamA.TeamId)
                                 {
                                     // swap destination A with teamANode B
-                                    SwapChildrenAB(destination, teamANode);
+                                    var dA = destination.ChildA;
+                                    destination.ChildA = null;
+                                    var tB = teamANode.ChildB;
+                                    teamANode.ChildB = null;
+
+                                    destination.ChildA = tB;
+                                    teamANode.ChildB = dA;
                                 }
                                 else
                                 {
@@ -349,15 +361,27 @@ namespace Tournaments.Standard
                                 // since destination could've matched teamBNode and we may have swapped it out, we need to refetch teamBNode
                                 teamBNode = teamBNodes.Single();
 
-                                if (teamBNode.ChildAMatches(teamB.TeamId))
+                                if (teamBNode.ChildA != null && teamBNode.ChildA.Team != null && teamBNode.ChildA.Team.Team.TeamId == teamB.TeamId)
                                 {
                                     // swap destination B with teamBNode A
-                                    SwapChildrenBA(destination, teamBNode);
+                                    var dB = destination.ChildB;
+                                    destination.ChildB = null;
+                                    var tA = teamBNode.ChildA;
+                                    teamBNode.ChildA = null;
+
+                                    destination.ChildB = tA;
+                                    teamBNode.ChildA = dB;
                                 }
-                                else if (teamBNode.ChildBMatches(teamB.TeamId))
+                                else if (teamBNode.ChildB != null && teamBNode.ChildB.Team != null && teamBNode.ChildB.Team.Team.TeamId == teamB.TeamId)
                                 {
                                     // swap destination B with teamBNode B
-                                    SwapChildrenBB(destination, teamBNode);
+                                    var dB = destination.ChildB;
+                                    destination.ChildB = null;
+                                    var tB = teamBNode.ChildB;
+                                    teamBNode.ChildB = null;
+
+                                    destination.ChildB = tB;
+                                    teamBNode.ChildB = dB;
                                 }
                                 else
                                 {
