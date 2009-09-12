@@ -115,11 +115,11 @@ namespace Tournaments
             {
                 return false;
             }
-            else if ((object)score1 != null || (object)score2 == null)
+            else if ((object)score1 != null && (object)score2 == null)
             {
                 return true;
             }
-            else if ((object)score1 == null || (object)score2 != null)
+            else if ((object)score1 == null && (object)score2 != null)
             {
                 return false;
             }
@@ -141,11 +141,11 @@ namespace Tournaments
             {
                 return false;
             }
-            else if ((object)score1 != null || (object)score2 == null)
+            else if ((object)score1 != null && (object)score2 == null)
             {
                 return false;
             }
-            else if ((object)score1 == null || (object)score2 != null)
+            else if ((object)score1 == null && (object)score2 != null)
             {
                 return true;
             }
@@ -167,11 +167,11 @@ namespace Tournaments
             {
                 return true;
             }
-            else if ((object)score1 != null || (object)score2 == null)
+            else if ((object)score1 != null && (object)score2 == null)
             {
                 return true;
             }
-            else if ((object)score1 == null || (object)score2 != null)
+            else if ((object)score1 == null && (object)score2 != null)
             {
                 return false;
             }
@@ -193,11 +193,11 @@ namespace Tournaments
             {
                 return true;
             }
-            else if ((object)score1 != null || (object)score2 == null)
+            else if ((object)score1 != null && (object)score2 == null)
             {
                 return false;
             }
-            else if ((object)score1 == null || (object)score2 != null)
+            else if ((object)score1 == null && (object)score2 != null)
             {
                 return true;
             }
