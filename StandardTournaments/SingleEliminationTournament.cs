@@ -156,7 +156,7 @@ namespace Tournaments.Standard
                 {
                     if (pairing.TeamScores.Count > 2)
                     {
-                        throw new InvalidTournamentStateException("At least on pairing had more than two teams competing.  This is invalid in a single elimination tournament.");
+                        throw new InvalidTournamentStateException("At least one pairing had more than two teams competing.  This is invalid in a single elimination tournament.");
                     }
 
                     if (pairing.TeamScores.Count == 0)
