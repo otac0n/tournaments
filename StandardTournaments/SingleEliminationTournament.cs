@@ -32,15 +32,14 @@ namespace Tournaments.Standard
     using System.Drawing;
     using System.Linq;
     using System.Xml;
-    using System.Globalization;
 
     /// <summary>
     /// Implements a Singe Elmination Tournament
     /// </summary>
     public class SingleEliminationTournament : IPairingsGenerator, ITournamentVisualizer
     {
-        private List<TournamentTeam> loadedTeams;
-        private List<SingleEliminationNode> loadedNodes;
+        private List<SingleEliminationNode> nodes = null;
+        private List<TournamentTeam> teams = null;
         private PairingsGeneratorState state = PairingsGeneratorState.NotInitialized;
 
         public string Name
@@ -69,8 +68,8 @@ namespace Tournaments.Standard
 
         public void Reset()
         {
-            this.loadedTeams = null;
-            this.loadedNodes = null;
+            this.nodes = null;
+            this.teams = null;
             this.state = PairingsGeneratorState.NotInitialized;
         }
 
@@ -99,6 +98,9 @@ namespace Tournaments.Standard
                                      Ranking = ranking++,
                                  };
 
+                Dictionary<int, TeamRanking[]> pairings = new Dictionary<int, TeamRanking[]>();
+
+                int count = teams.Count();
                 int i = 0;
                 int nextRound = 2;
                 int roundNumber = 0;
@@ -156,7 +158,7 @@ namespace Tournaments.Standard
                 {
                     if (pairing.TeamScores.Count > 2)
                     {
-                        throw new InvalidTournamentStateException("At least on pairing had more than two teams competing.  This is invalid in a single elimination tournament.");
+                        throw new InvalidTournamentStateException("At least one pairing had more than two teams competing.  This is invalid in a single elimination tournament.");
                     }
 
                     if (pairing.TeamScores.Count == 0)
@@ -201,12 +203,12 @@ namespace Tournaments.Standard
                             // Find our team in an unlocked node
                             var foundA = from n in nodes
                                          where n.Locked == false
-                                         where n.ChildAMatches(team.TeamId)
+                                         where n.ChildA.Team != null && n.ChildA.Team.Team.TeamId == team.TeamId
                                          select n;
 
                             var foundB = from n in nodes
                                          where n.Locked == false
-                                         where n.ChildBMatches(team.TeamId)
+                                         where n.ChildB.Team != null && n.ChildB.Team.Team.TeamId == team.TeamId
                                          select n;
 
                             // swap out the found node for our bye node.
@@ -242,7 +244,17 @@ namespace Tournaments.Standard
                     tryagainwithbyespaired:
                         if (byePaired && !byesLocked)
                         {
-                            LockByes(nodes);
+                            var unlockedByes = from n in nodes
+                                               where n.Locked == false
+                                               where n.ChildA != null
+                                               where n.ChildB == null
+                                               select n;
+
+                            foreach (var u in unlockedByes)
+                            {
+                                u.Locked = true;
+                            }
+
                             byesLocked = true;
                         }
 
@@ -273,17 +285,17 @@ namespace Tournaments.Standard
 
                             var teamANodes = from n in nodes
                                              where n.Locked == false
-                                             where n.ChildAMatches(teamA.TeamId)
+                                             where (n.ChildA != null && n.ChildA.Team != null && n.ChildA.Team.Team.TeamId == teamA.TeamId) || (n.ChildB != null && n.ChildB.Team != null && n.ChildB.Team.Team.TeamId == teamA.TeamId)
                                              select n;
 
                             var teamBNodes = from n in nodes
                                              where n.Locked == false
-                                             where n.ChildBMatches(teamB.TeamId)
+                                             where (n.ChildA != null && n.ChildA.Team != null && n.ChildA.Team.Team.TeamId == teamB.TeamId) || (n.ChildB != null && n.ChildB.Team != null && n.ChildB.Team.Team.TeamId == teamB.TeamId)
                                              select n;
 
                             if (teamANodes.Count() != 1 || teamBNodes.Count() != 1)
                             {
-                                throw new InvalidTournamentStateException("At least on pairing involved a team that was not eligible to play.");
+                                throw new InvalidTournamentStateException("At least one pairing involved a team that was not eligible to play.");
                             }
 
                             var teamANode = teamANodes.Single();
@@ -292,7 +304,7 @@ namespace Tournaments.Standard
                             if (teamANode == teamBNode)
                             {
                                 // If the order was merely swapped, swap it back.
-                                teamANode.SwapChildren();
+                                teamANode.SwapChildred();
                                 teamANode.ChildA.Score = scoreA;
                                 teamANode.ChildB.Score = scoreB;
                                 teamANode.Locked = true;
@@ -331,15 +343,27 @@ namespace Tournaments.Standard
 
                                 var destination = available.First();
 
-                                if (teamANode.ChildAMatches(teamA.TeamId))
+                                if (teamANode.ChildA != null && teamANode.ChildA.Team != null && teamANode.ChildA.Team.Team.TeamId == teamA.TeamId)
                                 {
                                     // swap destination A with teamANode A
-                                    SwapChildrenAA(destination, teamANode);
+                                    var dA = destination.ChildA;
+                                    destination.ChildA = null;
+                                    var tA = teamANode.ChildA;
+                                    teamANode.ChildA = null;
+
+                                    destination.ChildA = tA;
+                                    teamANode.ChildA = dA;
                                 }
-                                else if (teamANode.ChildBMatches(teamA.TeamId))
+                                else if (teamANode.ChildB != null && teamANode.ChildB.Team != null && teamANode.ChildB.Team.Team.TeamId == teamA.TeamId)
                                 {
                                     // swap destination A with teamANode B
-                                    SwapChildrenAB(destination, teamANode);
+                                    var dA = destination.ChildA;
+                                    destination.ChildA = null;
+                                    var tB = teamANode.ChildB;
+                                    teamANode.ChildB = null;
+
+                                    destination.ChildA = tB;
+                                    teamANode.ChildB = dA;
                                 }
                                 else
                                 {
@@ -349,15 +373,27 @@ namespace Tournaments.Standard
                                 // since destination could've matched teamBNode and we may have swapped it out, we need to refetch teamBNode
                                 teamBNode = teamBNodes.Single();
 
-                                if (teamBNode.ChildAMatches(teamB.TeamId))
+                                if (teamBNode.ChildA != null && teamBNode.ChildA.Team != null && teamBNode.ChildA.Team.Team.TeamId == teamB.TeamId)
                                 {
                                     // swap destination B with teamBNode A
-                                    SwapChildrenBA(destination, teamBNode);
+                                    var dB = destination.ChildB;
+                                    destination.ChildB = null;
+                                    var tA = teamBNode.ChildA;
+                                    teamBNode.ChildA = null;
+
+                                    destination.ChildB = tA;
+                                    teamBNode.ChildA = dB;
                                 }
-                                else if (teamBNode.ChildBMatches(teamB.TeamId))
+                                else if (teamBNode.ChildB != null && teamBNode.ChildB.Team != null && teamBNode.ChildB.Team.Team.TeamId == teamB.TeamId)
                                 {
                                     // swap destination B with teamBNode B
-                                    SwapChildrenBB(destination, teamBNode);
+                                    var dB = destination.ChildB;
+                                    destination.ChildB = null;
+                                    var tB = teamBNode.ChildB;
+                                    teamBNode.ChildB = null;
+
+                                    destination.ChildB = tB;
+                                    teamBNode.ChildB = dB;
                                 }
                                 else
                                 {
@@ -373,69 +409,22 @@ namespace Tournaments.Standard
                 }
             }
 
-            LockByes(nodes);
-
-            this.loadedNodes = nodes;
-            this.loadedTeams = new List<TournamentTeam>(teams);
-            this.state = PairingsGeneratorState.Initialized;
-        }
-
-        private static void SwapChildrenAA(SingleEliminationNode node1, SingleEliminationNode node2)
-        {
-            var temp1 = node1.ChildA;
-            node1.ChildA = null;
-            var temp2 = node2.ChildA;
-            node2.ChildA = null;
-
-            node1.ChildA = temp2;
-            node2.ChildA = temp1;
-        }
-
-        private static void SwapChildrenAB(SingleEliminationNode node1, SingleEliminationNode node2)
-        {
-            var temp1 = node1.ChildA;
-            node1.ChildA = null;
-            var temp2 = node2.ChildB;
-            node2.ChildB = null;
-
-            node1.ChildA = temp2;
-            node2.ChildB = temp1;
-        }
-
-        private static void SwapChildrenBA(SingleEliminationNode node1, SingleEliminationNode node2)
-        {
-            var temp1 = node1.ChildB;
-            node1.ChildB = null;
-            var temp2 = node2.ChildA;
-            node2.ChildA = null;
-
-            node1.ChildB = temp2;
-            node2.ChildA = temp1;
-        }
-
-        private static void SwapChildrenBB(SingleEliminationNode node1, SingleEliminationNode node2)
-        {
-            var temp1 = node1.ChildB;
-            node1.ChildB = null;
-            var temp2 = node2.ChildB;
-            node2.ChildB = null;
-
-            node1.ChildB = temp2;
-            node2.ChildB = temp1;
-        }
-
-        private static void LockByes(List<SingleEliminationNode> nodes)
-        {
-            var unlockedByes = from n in nodes
-                               where n.Locked == false
-                               where n.ChildA != null
-                               where n.ChildB == null
-                               select n;
-
-            foreach (var u in unlockedByes)
             {
-                u.Locked = true;
+                var unlockedByes = from n in nodes
+                                   where n.Locked == false
+                                   where n.ChildA != null
+                                   where n.ChildB == null
+                                   select n;
+
+                foreach (var u in unlockedByes)
+                {
+                    u.Locked = true;
+                }
             }
+
+            this.nodes = nodes;
+            this.teams = new List<TournamentTeam>(teams);
+            this.state = PairingsGeneratorState.Initialized;
         }
 
         public TournamentRound CreateNextRound(int? places)
@@ -450,7 +439,7 @@ namespace Tournaments.Standard
                 throw new InvalidTournamentStateException("This generator was never successfully initialized with a valid tournament state.");
             }
 
-            var readyToPlay = from n in this.loadedNodes
+            var readyToPlay = from n in this.nodes
                               where n.Locked == false
                               where n.ChildA != null && n.ChildA.Team != null
                               where n.ChildB != null && n.ChildB.Team != null
@@ -464,7 +453,7 @@ namespace Tournaments.Standard
                 // if this is because the root is locked, return null
                 // otherwise, return an error because there is either a tie or an unfinished round.
 
-                var ties = from n in this.loadedNodes
+                var ties = from n in this.nodes
                            where n.Locked == true
                            where n.ChildA != null && n.ChildB != null
                            where n.ChildA.Score != null && n.ChildB.Score != null
@@ -476,7 +465,7 @@ namespace Tournaments.Standard
                     throw new InvalidTournamentStateException("The tournament cannot continue because there is at least one pairing still resulting in a tie.  Ties are not allowed in single elimintaion tournaments.");
                 }
 
-                var unfinished = from n in this.loadedNodes
+                var unfinished = from n in this.nodes
                                  where n.Locked == true
                                  where n.ChildA != null && n.ChildB != null
                                  where n.ChildA.Score == null || n.ChildB.Score == null
@@ -502,12 +491,12 @@ namespace Tournaments.Standard
 
         public IEnumerable<TournamentRanking> GenerateRankings()
         {
-            if (this.loadedTeams.Count >= 2)
+            if (this.teams.Count >= 2)
             {
-                var maxLevel = this.loadedNodes.Max(n => n.Level);
+                var maxLevel = this.nodes.Max(n => n.Level);
 
-                var ranks = from t in this.loadedTeams
-                            let node = (from n in this.loadedNodes
+                var ranks = from t in this.teams
+                            let node = (from n in this.nodes
                                         where (n.ChildA != null && n.ChildA.Team != null && n.ChildA.Team.Team.TeamId == t.TeamId) || (n.ChildB != null && n.ChildB.Team != null && n.ChildB.Team.Team.TeamId == t.TeamId)
                                         orderby n.Level
                                         select n).FirstOrDefault()
@@ -528,7 +517,7 @@ namespace Tournaments.Standard
 
         public Size Measure(TournamentNameTable teamNames)
         {
-            var rootNode = (from n in this.loadedNodes
+            var rootNode = (from n in this.nodes
                             where n.Parent == null
                             select n).SingleOrDefault();
 
@@ -548,7 +537,7 @@ namespace Tournaments.Standard
             string xmlns = "http://www.w3.org/2000/svg";
             doc.LoadXml(@"<svg xmlns=""http://www.w3.org/2000/svg"" width=""100%"" height=""100%"" onload=""Initialize(evt)""></svg>");
 
-            var rootNode = (from n in this.loadedNodes
+            var rootNode = (from n in this.nodes
                             where n.Parent == null
                             select n).SingleOrDefault();
 
@@ -557,7 +546,7 @@ namespace Tournaments.Standard
                 return null;
             }
 
-            doc.DocumentElement.AppendChild(CreateScriptNode(doc, xmlns));
+            doc.DocumentElement.AppendChild(this.CreateScriptNode(doc, xmlns));
 
             IEnumerable<XmlNode> renderedNodes = this.RenderNode(rootNode, 5, 5, teamNames, doc, xmlns);
 
@@ -569,7 +558,7 @@ namespace Tournaments.Standard
             return new XmlNodeReader(doc);
         }
 
-        private static XmlNode CreateScriptNode(XmlDocument doc, string xmlns)
+        private XmlNode CreateScriptNode(XmlDocument doc, string xmlns)
         {
             XmlElement script = doc.CreateElement("script", xmlns);
             XmlAttribute script_type = doc.CreateAttribute("type");
@@ -642,10 +631,10 @@ namespace Tournaments.Standard
                 preline.Attributes.Append(preline_y2);
                 preline.Attributes.Append(preline_style);
 
-                preline_x1.Value = (x + (m.Width - BracketWidth)).ToString(CultureInfo.InvariantCulture);
-                preline_y1.Value = (y + m.CenterLine).ToString(CultureInfo.InvariantCulture);
-                preline_x2.Value = (x + (m.Width - BracketWidth - BracketPreIndent)).ToString(CultureInfo.InvariantCulture);
-                preline_y2.Value = (y + m.CenterLine).ToString(CultureInfo.InvariantCulture);
+                preline_x1.Value = (x + (m.Width - BracketWidth)).ToString();
+                preline_y1.Value = (y + m.CenterLine).ToString();
+                preline_x2.Value = (x + (m.Width - BracketWidth - BracketPreIndent)).ToString();
+                preline_y2.Value = (y + m.CenterLine).ToString();
                 preline_style.Value = BracketStyle;
 
                 var renderedA = this.RenderNode(rootNode.ChildA, x, y, teamNames, doc, xmlns);
@@ -689,22 +678,22 @@ namespace Tournaments.Standard
                 postlineB.Attributes.Append(postlineB_y2);
                 postlineB.Attributes.Append(postlineB_style);
 
-                vline_x1.Value = (x + (m.Width - BracketWidth - BracketPreIndent)).ToString(CultureInfo.InvariantCulture);
-                vline_y1.Value = (y + childASize.CenterLine).ToString(CultureInfo.InvariantCulture);
-                vline_x2.Value = (x + (m.Width - BracketWidth - BracketPreIndent)).ToString(CultureInfo.InvariantCulture);
-                vline_y2.Value = (y + childASize.Height + BracketVSpacing + childBSize.CenterLine).ToString(CultureInfo.InvariantCulture);
+                vline_x1.Value = (x + (m.Width - BracketWidth - BracketPreIndent)).ToString();
+                vline_y1.Value = (y + childASize.CenterLine).ToString();
+                vline_x2.Value = (x + (m.Width - BracketWidth - BracketPreIndent)).ToString();
+                vline_y2.Value = (y + childASize.Height + BracketVSpacing + childBSize.CenterLine).ToString();
                 vline_style.Value = BracketStyle;
 
-                postlineA_x1.Value = (x + (m.Width - BracketWidth - BracketPreIndent - BracketPostIndent)).ToString(CultureInfo.InvariantCulture);
-                postlineA_y1.Value = (y + childASize.CenterLine).ToString(CultureInfo.InvariantCulture);
-                postlineA_x2.Value = (x + (m.Width - BracketWidth - BracketPreIndent)).ToString(CultureInfo.InvariantCulture);
-                postlineA_y2.Value = (y + childASize.CenterLine).ToString(CultureInfo.InvariantCulture);
+                postlineA_x1.Value = (x + (m.Width - BracketWidth - BracketPreIndent - BracketPostIndent)).ToString();
+                postlineA_y1.Value = (y + childASize.CenterLine).ToString();
+                postlineA_x2.Value = (x + (m.Width - BracketWidth - BracketPreIndent)).ToString();
+                postlineA_y2.Value = (y + childASize.CenterLine).ToString();
                 postlineA_style.Value = BracketStyle;
 
-                postlineB_x1.Value = (x + (m.Width - BracketWidth - BracketPreIndent - BracketPostIndent)).ToString(CultureInfo.InvariantCulture);
-                postlineB_y1.Value = (y + childASize.Height + BracketVSpacing + childBSize.CenterLine).ToString(CultureInfo.InvariantCulture);
-                postlineB_x2.Value = (x + (m.Width - BracketWidth - BracketPreIndent)).ToString(CultureInfo.InvariantCulture);
-                postlineB_y2.Value = (y + childASize.Height + BracketVSpacing + childBSize.CenterLine).ToString(CultureInfo.InvariantCulture);
+                postlineB_x1.Value = (x + (m.Width - BracketWidth - BracketPreIndent - BracketPostIndent)).ToString();
+                postlineB_y1.Value = (y + childASize.Height + BracketVSpacing + childBSize.CenterLine).ToString();
+                postlineB_x2.Value = (x + (m.Width - BracketWidth - BracketPreIndent)).ToString();
+                postlineB_y2.Value = (y + childASize.Height + BracketVSpacing + childBSize.CenterLine).ToString();
                 postlineB_style.Value = BracketStyle;
 
                 allNodes.Add(preline);
@@ -727,10 +716,10 @@ namespace Tournaments.Standard
             userbox.Attributes.Append(userbox_h);
             userbox.Attributes.Append(userbox_style);
 
-            userbox_x.Value = (x + (m.Width - BracketWidth)).ToString(CultureInfo.InvariantCulture);
-            userbox_y.Value = (y + m.CenterLine - (TextHeight / 2)).ToString(CultureInfo.InvariantCulture);
-            userbox_w.Value = BracketWidth.ToString(CultureInfo.InvariantCulture);
-            userbox_h.Value = TextHeight.ToString(CultureInfo.InvariantCulture);
+            userbox_x.Value = (x + (m.Width - BracketWidth)).ToString();
+            userbox_y.Value = (y + m.CenterLine - (TextHeight / 2)).ToString();
+            userbox_w.Value = BracketWidth.ToString();
+            userbox_h.Value = TextHeight.ToString();
             userbox_style.Value = UserboxStyle;
             
             allNodes.Add(userbox);
@@ -743,8 +732,8 @@ namespace Tournaments.Standard
                 username.Attributes.Append(username_x);
                 username.Attributes.Append(username_y);
 
-                username_x.Value = (x + (m.Width - BracketWidth) + TextXOffset).ToString(CultureInfo.InvariantCulture);
-                username_y.Value = (y + m.CenterLine + TextYOffset).ToString(CultureInfo.InvariantCulture);
+                username_x.Value = (x + (m.Width - BracketWidth) + TextXOffset).ToString();
+                username_y.Value = (y + m.CenterLine + TextYOffset).ToString();
 
                 username.InnerText = teamNames[rootNode.Team.Team.TeamId];
 
@@ -761,8 +750,8 @@ namespace Tournaments.Standard
                 score.Attributes.Append(score_y);
                 score.Attributes.Append(score_textanchor);
 
-                score_x.Value = (x + m.Width - TextXOffset).ToString(CultureInfo.InvariantCulture);
-                score_y.Value = (y + m.CenterLine + TextYOffset).ToString(CultureInfo.InvariantCulture);
+                score_x.Value = (x + m.Width - TextXOffset).ToString();
+                score_y.Value = (y + m.CenterLine + TextYOffset).ToString();
                 score_textanchor.Value = "end";
 
                 score.InnerText = rootNode.Score.ToString();
@@ -808,6 +797,291 @@ namespace Tournaments.Standard
                 Width = width,
                 CenterLine = center
             };
+        }
+
+        private class SingleEliminationNode
+        {
+            private SingleEliminationNode parent = null;
+            private SingleEliminationNode childA = null;
+            private SingleEliminationNode childB = null;
+            private TeamRanking team = null;
+            private bool locked = false;
+            private Score score = null;
+
+            public SingleEliminationNode(TeamRanking team)
+            {
+                this.team = team;
+            }
+
+            public SingleEliminationNode()
+            {
+                this.team = null;
+            }
+
+            public bool Locked
+            {
+                get
+                {
+                    return this.locked;
+                }
+
+                set
+                {
+                    this.locked = value;
+                }
+            }
+
+            public Score Score
+            {
+                get
+                {
+                    return this.score;
+                }
+
+                set
+                {
+                    this.score = value;
+                }
+            }
+
+            public SingleEliminationNode Parent
+            {
+                get
+                {
+                    return this.parent;
+                }
+
+                private set
+                {
+                    if (this.parent != null)
+                    {
+                        if (this.parent.childA == this)
+                        {
+                            this.parent.childA = null;
+                        }
+                        else if (this.parent.childB == this)
+                        {
+                            this.parent.childB = null;
+                        }
+                    }
+
+                    this.parent = value;
+                }
+            }
+
+            public TeamRanking Team
+            {
+                get
+                {
+                    if (this.team != null)
+                    {
+                        return this.team;
+                    }
+                    else if (this.locked)
+                    {
+                        if (this.childA == null && this.childB == null)
+                        {
+                            return null;
+                        }
+                        else if (this.childA != null && this.childB == null)
+                        {
+                            return this.childA.Team;
+                        }
+                        else if (this.childA == null && this.childB != null)
+                        {
+                            return this.childB.Team;
+                        }
+                        else
+                        {
+                            if (this.childA.Score != null && this.childB.Score != null)
+                            {
+                                if (this.childA.Score > this.childB.Score)
+                                {
+                                    return this.childA.Team;
+                                }
+                                else if (this.childA.Score < this.childB.Score)
+                                {
+                                    return this.childB.Team;
+                                }
+                                else
+                                {
+                                    return null;
+                                }
+                            }
+                            else
+                            {
+                                return null;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                }
+            }
+
+            public int Level
+            {
+                get
+                {
+                    if (this.parent != null)
+                    {
+                        return this.parent.Level + 1;
+                    }
+                    else
+                    {
+                        return 0;
+                    }
+                }
+            }
+
+            public SingleEliminationNode ChildA
+            {
+                get
+                {
+                    return this.childA;
+                }
+
+                set
+                {
+                    if (this.team != null)
+                    {
+                        throw new InvalidOperationException("You cannot assign children to a node with a team");
+                    }
+
+                    if (this.childA != value)
+                    {
+                        if (this.childA != null)
+                        {
+                            this.childA.parent = null;
+                        }
+
+                        if (value != null)
+                        {
+                            if (value.parent != null)
+                            {
+                                if (value.parent.childA == value)
+                                {
+                                    value.parent.childA = null;
+                                }
+                                else if (value.parent.childB == value)
+                                {
+                                    value.parent.childB = null;
+                                }
+                            }
+                            value.parent = this;
+                        }
+
+                        this.childA = value;
+                    }
+                }
+            }
+
+            public SingleEliminationNode ChildB
+            {
+                get
+                {
+                    return this.childB;
+                }
+
+                set
+                {
+                    if (this.team != null)
+                    {
+                        throw new InvalidOperationException("You cannot assign children to a node with a team");
+                    }
+
+                    if (this.childB != value)
+                    {
+                        if (this.childB != null)
+                        {
+                            this.childB.Parent = null;
+                        }
+
+                        if (value != null)
+                        {
+                            if (value.parent != null)
+                            {
+                                if (value.parent.childA == value)
+                                {
+                                    value.parent.childA = null;
+                                }
+                                else if (value.parent.childB == value)
+                                {
+                                    value.parent.childB = null;
+                                }
+                            }
+
+                            value.parent = this;
+                        }
+
+                        this.childB = value;
+                    }
+                }
+            }
+
+            public void MakeSiblingA(SingleEliminationNode siblingA)
+            {
+                SingleEliminationNode newParent = new SingleEliminationNode();
+                newParent.ChildA = siblingA;
+
+                if (this.parent != null)
+                {
+                    if (this.parent.childA == this)
+                    {
+                        this.parent.ChildA = newParent;
+                    }
+                    else if (this.parent.childB == this)
+                    {
+                        this.parent.ChildB = newParent;
+                    }
+                }
+
+                newParent.ChildB = this;
+            }
+
+            public void MakeSiblingB(SingleEliminationNode siblingB)
+            {
+                SingleEliminationNode newParent = new SingleEliminationNode();
+                newParent.ChildB = siblingB;
+
+                if (this.parent != null)
+                {
+                    if (this.parent.childA == this)
+                    {
+                        this.parent.ChildA = newParent;
+                    }
+                    else if (this.parent.childB == this)
+                    {
+                        this.parent.ChildB = newParent;
+                    }
+                }
+
+                newParent.ChildA = this;
+            }
+
+            public void SwapChildred()
+            {
+                SingleEliminationNode temp = this.childA;
+                this.childA = this.childB;
+                this.childB = temp;
+            }
+        }
+
+        private class TeamRanking
+        {
+            public TournamentTeam Team
+            {
+                get;
+                set;
+            }
+
+            public int Ranking
+            {
+                get;
+                set;
+            }
         }
 
         private class NodeMeasurement
