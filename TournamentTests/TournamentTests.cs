@@ -27,6 +27,34 @@ namespace TournamentTests
         }
 
         [TestMethod]
+        public void TounamentTeamScoreRejectsNullParameters()
+        {
+            try
+            {
+                TournamentTeamScore ts = new TournamentTeamScore(null, null);
+                Assert.Fail();
+            }
+            catch (ArgumentNullException)
+            {
+                return;
+            }
+        }
+
+        [TestMethod]
+        public void TounamentRoundRejectsNullParameters()
+        {
+            try
+            {
+                TournamentRound ts = new TournamentRound(null);
+                Assert.Fail();
+            }
+            catch (ArgumentNullException)
+            {
+                return;
+            }
+        }
+
+        [TestMethod]
         public void BoilOffThrowsExceptionOnNullParameters()
         {
             IPairingsGenerator bopg = new BoilOffPairingsGenerator();
@@ -116,7 +144,7 @@ namespace TournamentTests
 
             try
             {
-                RunTournament(pg, teams, rounds, true);
+                RunTournament(pg, teams, rounds, true, null);
 
                 DisplayTournamentRounds(rounds);
                 DisplayTournamentRankings(pg.GenerateRankings());
@@ -165,8 +193,9 @@ namespace TournamentTests
 
             try
             {
-                RunTournament(pg, teams, rounds, true);
+                RunTournament(pg, teams, rounds, true, null);
 
+                DisplayTournamentRounds(rounds);
                 DisplayTournamentRankings(pg.GenerateRankings());
             }
             catch (InvalidTournamentStateException)
@@ -278,7 +307,7 @@ namespace TournamentTests
 
             try
             {
-                RunTournament(pg, teams, rounds, false);
+                RunTournament(pg, teams, rounds, false, null);
                 Assert.Fail();
             }
             catch (InvalidTournamentStateException)
@@ -297,9 +326,17 @@ namespace TournamentTests
                 List<TournamentTeam> teams = new List<TournamentTeam>(CreateTeams(i));
                 List<TournamentRound> rounds = new List<TournamentRound>();
 
+                Dictionary<long, string> teamNames = new Dictionary<long, string>();
+                foreach (var team in teams)
+                {
+                    teamNames.Add(team.TeamId, "Team#" + team.TeamId);
+                }
+
+                TournamentNameTable nameTable = new TournamentNameTable(teamNames);
+
                 try
                 {
-                    RunTournament(pg, teams, rounds, false);
+                    RunTournament(pg, teams, rounds, false, nameTable);
 
                     DisplayTournamentRounds(rounds);
                     DisplayTournamentRankings(pg.GenerateRankings());
@@ -311,12 +348,25 @@ namespace TournamentTests
             }
         }
 
-        public void RunTournament(IPairingsGenerator pg, List<TournamentTeam> teams, List<TournamentRound> rounds, bool allowTies)
+        public void RunTournament(IPairingsGenerator pg, List<TournamentTeam> teams, List<TournamentRound> rounds, bool allowTies, TournamentNameTable nameTable)
         {
+            ITournamentVisualizer viz = null;
+            if (nameTable != null)
+            {
+                viz = pg as ITournamentVisualizer;
+            }
+
             while (true)
             {
                 pg.LoadState(teams, rounds);
                 TournamentRound newRound = pg.CreateNextRound(null);
+
+                if (viz != null)
+                {
+                    var q2 = viz.Measure(nameTable);
+                    var q1 = viz.Render(nameTable);
+                }
+
                 if (newRound == null)
                 {
                     pg.LoadState(teams, rounds);

@@ -100,7 +100,7 @@ namespace Tournaments.Standard
                                  };
 
                 int i = 0;
-                int nextRound = 2;
+                int nextRoundAt = 2;
                 int roundNumber = 0;
                 int mask = (1 << roundNumber) - 1;
                 foreach (var team in teamsOrder)
@@ -126,9 +126,9 @@ namespace Tournaments.Standard
 
                     i++;
 
-                    if (i == nextRound)
+                    if (i == nextRoundAt)
                     {
-                        nextRound *= 2;
+                        nextRoundAt *= 2;
                         roundNumber += 1;
                         mask = (1 << roundNumber) - 1;
                     }
@@ -180,7 +180,7 @@ namespace Tournaments.Standard
                                     select b;
 
                         var matched = from a in avail
-                                      where a.ChildA.Team != null && a.ChildA.Team.Team.TeamId == team.TeamId
+                                      where a.ChildAMatches(team.TeamId)
                                       select a;
 
                         if (matched.Count() == 1)
@@ -201,12 +201,12 @@ namespace Tournaments.Standard
                             // Find our team in an unlocked node
                             var foundA = from n in nodes
                                          where n.Locked == false
-                                         where n.ChildA.Team != null && n.ChildA.Team.Team.TeamId == team.TeamId
+                                         where n.ChildAMatches(team.TeamId)
                                          select n;
 
                             var foundB = from n in nodes
                                          where n.Locked == false
-                                         where n.ChildB.Team != null && n.ChildB.Team.Team.TeamId == team.TeamId
+                                         where n.ChildBMatches(team.TeamId)
                                          select n;
 
                             // swap out the found node for our bye node.
@@ -256,8 +256,8 @@ namespace Tournaments.Standard
                                     select p;
 
                         var matched = from a in avail
-                                      where a.ChildA.Team != null && a.ChildA.Team.Team.TeamId == teamA.TeamId
-                                      where a.ChildB.Team != null && a.ChildB.Team.Team.TeamId == teamB.TeamId
+                                      where a.ChildAMatches(teamA.TeamId)
+                                      where a.ChildBMatches(teamB.TeamId)
                                       select a;
 
                         if (matched.Count() == 1)
@@ -273,12 +273,12 @@ namespace Tournaments.Standard
 
                             var teamANodes = from n in nodes
                                              where n.Locked == false
-                                             where (n.ChildA != null && n.ChildA.Team != null && n.ChildA.Team.Team.TeamId == teamA.TeamId) || (n.ChildB != null && n.ChildB.Team != null && n.ChildB.Team.Team.TeamId == teamA.TeamId)
+                                             where n.ChildAMatches(teamA.TeamId) || n.ChildBMatches(teamA.TeamId)
                                              select n;
 
                             var teamBNodes = from n in nodes
                                              where n.Locked == false
-                                             where (n.ChildA != null && n.ChildA.Team != null && n.ChildA.Team.Team.TeamId == teamB.TeamId) || (n.ChildB != null && n.ChildB.Team != null && n.ChildB.Team.Team.TeamId == teamB.TeamId)
+                                             where n.ChildAMatches(teamB.TeamId) || n.ChildBMatches(teamB.TeamId)
                                              select n;
 
                             if (teamANodes.Count() != 1 || teamBNodes.Count() != 1)
@@ -334,24 +334,13 @@ namespace Tournaments.Standard
                                 if (teamANode.ChildA != null && teamANode.ChildA.Team != null && teamANode.ChildA.Team.Team.TeamId == teamA.TeamId)
                                 {
                                     // swap destination A with teamANode A
-                                    var dA = destination.ChildA;
-                                    destination.ChildA = null;
-                                    var tA = teamANode.ChildA;
-                                    teamANode.ChildA = null;
+                                    SwapChildrenAA(destination, teamANode);
 
-                                    destination.ChildA = tA;
-                                    teamANode.ChildA = dA;
                                 }
                                 else if (teamANode.ChildB != null && teamANode.ChildB.Team != null && teamANode.ChildB.Team.Team.TeamId == teamA.TeamId)
                                 {
                                     // swap destination A with teamANode B
-                                    var dA = destination.ChildA;
-                                    destination.ChildA = null;
-                                    var tB = teamANode.ChildB;
-                                    teamANode.ChildB = null;
-
-                                    destination.ChildA = tB;
-                                    teamANode.ChildB = dA;
+                                    SwapChildrenAB(destination, teamANode);
                                 }
                                 else
                                 {
@@ -364,24 +353,12 @@ namespace Tournaments.Standard
                                 if (teamBNode.ChildA != null && teamBNode.ChildA.Team != null && teamBNode.ChildA.Team.Team.TeamId == teamB.TeamId)
                                 {
                                     // swap destination B with teamBNode A
-                                    var dB = destination.ChildB;
-                                    destination.ChildB = null;
-                                    var tA = teamBNode.ChildA;
-                                    teamBNode.ChildA = null;
-
-                                    destination.ChildB = tA;
-                                    teamBNode.ChildA = dB;
+                                    SwapChildrenBA(destination, teamBNode);
                                 }
                                 else if (teamBNode.ChildB != null && teamBNode.ChildB.Team != null && teamBNode.ChildB.Team.Team.TeamId == teamB.TeamId)
                                 {
                                     // swap destination B with teamBNode B
-                                    var dB = destination.ChildB;
-                                    destination.ChildB = null;
-                                    var tB = teamBNode.ChildB;
-                                    teamBNode.ChildB = null;
-
-                                    destination.ChildB = tB;
-                                    teamBNode.ChildB = dB;
+                                    SwapChildrenBB(destination, teamBNode);
                                 }
                                 else
                                 {
@@ -531,11 +508,8 @@ namespace Tournaments.Standard
                 var maxLevel = this.loadedNodes.Max(n => n.Level);
 
                 var ranks = from t in this.loadedTeams
-                            let node = (from n in this.loadedNodes
-                                        where (n.ChildA != null && n.ChildA.Team != null && n.ChildA.Team.Team.TeamId == t.TeamId) || (n.ChildB != null && n.ChildB.Team != null && n.ChildB.Team.Team.TeamId == t.TeamId)
-                                        orderby n.Level
-                                        select n).FirstOrDefault()
-                            let finished = node.Locked && (node.ChildA != null && node.ChildA.Score != null) && (node.ChildB != null && node.ChildB.Score != null) && !(node.ChildA != null && node.ChildB != null && node.ChildA.Score != null && node.ChildB.Score != null && node.ChildA.Score == node.ChildB.Score)
+                            let node = FindTeamsHighestNode(t.TeamId)
+                            let finished = node.Locked && node.HasWinner
                             let winner = node.Team != null && node.Team.Team.TeamId == t.TeamId
                             let round = maxLevel - node.Level
                             let rank = node.Level + (winner ? 1 : 2)
@@ -548,6 +522,14 @@ namespace Tournaments.Standard
             {
                 throw new InvalidTournamentStateException("The tournament is not in a state that allows ranking.");
             }
+        }
+
+        private SingleEliminationNode FindTeamsHighestNode(long teamId)
+        {
+            return (from n in this.loadedNodes
+                    where n.ChildAMatches(teamId) || n.ChildBMatches(teamId)
+                    orderby n.Level
+                    select n).FirstOrDefault();
         }
 
         public Size Measure(TournamentNameTable teamNames)

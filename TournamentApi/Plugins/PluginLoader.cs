@@ -69,13 +69,30 @@ namespace Tournaments.Plugins
         /// <returns>The plugin factories contained in the assembly, if the load was successful; null, otherwise.</returns>
         public static IEnumerable<IPluginFactory> LoadPlugins(byte[] rawAssembly)
         {
-            List<IPluginFactory> factories = new List<IPluginFactory>();
-
             try
             {
                 // TODO: Check if assembly is signed.
                 Assembly assembly = Assembly.Load(rawAssembly);
 
+                return LoadPlugins(assembly);
+            }
+            catch (BadImageFormatException)
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Loads the plugins from a specified assembly.
+        /// </summary>
+        /// <param name="rawAssembly">The assembly from which to load.</param>
+        /// <returns>The plugin factories contained in the assembly, if the load was successful; null, otherwise.</returns>
+        public static IEnumerable<IPluginFactory> LoadPlugins(Assembly assembly)
+        {
+            List<IPluginFactory> factories = new List<IPluginFactory>();
+
+            try
+            {
                 foreach (Type type in assembly.GetTypes())
                 {
                     IPluginEnumerator instance = null;
@@ -90,10 +107,6 @@ namespace Tournaments.Plugins
                         factories.AddRange(instance.EnumerateFactories());
                     }
                 }
-            }
-            catch (BadImageFormatException)
-            {
-                return null;
             }
             catch (SecurityException)
             {

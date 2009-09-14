@@ -228,12 +228,12 @@ namespace Tournaments.Standard
 
         public bool ChildAMatches(long teamId)
         {
-            return this.childA != null && this.childA.team != null && this.childA.team.Team.TeamId == teamId;
+            return this.childA != null && this.childA.Team != null && this.childA.Team.Team.TeamId == teamId;
         }
 
         public bool ChildBMatches(long teamId)
         {
-            return this.childB != null && this.childB.team != null && this.childB.team.Team.TeamId == teamId;
+            return this.childB != null && this.childB.Team != null && this.childB.Team.Team.TeamId == teamId;
         }
 
         public bool ChildAHasScore

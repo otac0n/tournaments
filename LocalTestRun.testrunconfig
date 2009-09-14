@@ -1,5 +1,12 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <TestRunConfiguration name="Local Test Run" id="12809901-663b-42b3-af57-315645033793" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2006">
   <Description>This is a default test run configuration for a local test run.</Description>
+  <CodeCoverage enabled="true" keyFile="Tournaments.snk">
+    <Regular>
+      <CodeCoverageItem binaryFile="TournamentApi\bin\Debug\TournamentApi.dll" pdbFile="TournamentApi\bin\Debug\TournamentApi.pdb" instrumentInPlace="true" />
+      <CodeCoverageItem binaryFile="StandardTournaments\bin\Debug\StandardTournaments.dll" pdbFile="StandardTournaments\bin\Debug\StandardTournaments.pdb" instrumentInPlace="true" />
+    </Regular>
+  </CodeCoverage>
+  <Timeouts runTimeout="1800000" testTimeout="300000" />
   <TestTypeSpecific />
 </TestRunConfiguration>

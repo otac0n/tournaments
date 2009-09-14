@@ -52,7 +52,7 @@ namespace Tournaments.Plugins
         /// <summary>
         /// Gets the name of this pairings generator factory.
         /// </summary>
-        string IPluginFactory.Name
+        public string Name
         {
             get
             {

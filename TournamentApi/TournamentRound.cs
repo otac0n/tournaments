@@ -27,6 +27,7 @@
 
 namespace Tournaments
 {
+    using System;
     using System.Collections.Generic;
 
     /// <summary>
@@ -45,6 +46,11 @@ namespace Tournaments
         /// <param name="pairings">The list of pairings in the round.</param>
         public TournamentRound(IList<TournamentPairing> pairings)
         {
+            if (pairings == null)
+            {
+                throw new ArgumentNullException("pairings");
+            }
+
             this.pairings = new List<TournamentPairing>(pairings);
         }
 
