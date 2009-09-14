@@ -85,6 +85,16 @@ namespace Tournaments.Standard
 
         public void LoadState(IEnumerable<TournamentTeam> teams, IList<TournamentRound> rounds)
         {
+            if (teams == null)
+            {
+                throw new ArgumentNullException("teams");
+            }
+
+            if (rounds == null)
+            {
+                throw new ArgumentNullException("rounds");
+            }
+
             if (!(teams.Count() < 1073741824))
             {
                 throw new InvalidTournamentStateException("A boil off competition can not handle more than 1073741823 competitors.");

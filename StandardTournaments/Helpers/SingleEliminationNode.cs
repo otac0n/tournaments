@@ -236,6 +236,30 @@ namespace Tournaments.Standard
             return this.childB != null && this.childB.team != null && this.childB.team.Team.TeamId == teamId;
         }
 
+        public bool ChildAHasScore
+        {
+            get
+            {
+                return this.childA != null && this.childA.score != null;
+            }
+        }
+
+        public bool ChildBHasScore
+        {
+            get
+            {
+                return this.childB != null && this.childB.score != null;
+            }
+        }
+
+        public bool HasWinner
+        {
+            get
+            {
+                return this.ChildAHasScore && this.ChildBHasScore && this.childA.Score != this.childB.Score;
+            }
+        }
+
         public void MakeSiblingA(SingleEliminationNode siblingA)
         {
             SingleEliminationNode newParent = new SingleEliminationNode();

@@ -204,6 +204,16 @@ namespace Tournaments.Standard
 
         public void LoadState(IEnumerable<TournamentTeam> teams, IList<TournamentRound> rounds)
         {
+            if (teams == null)
+            {
+                throw new ArgumentNullException("teams");
+            }
+
+            if (rounds == null)
+            {
+                throw new ArgumentNullException("rounds");
+            }
+
             // Load our list of teams.
             List<TournamentTeam> newTeams = new List<TournamentTeam>();
             newTeams.AddRange(teams);

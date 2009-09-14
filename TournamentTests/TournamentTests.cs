@@ -292,7 +292,7 @@ namespace TournamentTests
         {
             IPairingsGenerator pg = new SingleEliminationTournament();
 
-            for (int i = 2; i <= 33; i++)
+            for (int i = 30; i <= 40; i++)
             {
                 List<TournamentTeam> teams = new List<TournamentTeam>(CreateTeams(i));
                 List<TournamentRound> rounds = new List<TournamentRound>();
