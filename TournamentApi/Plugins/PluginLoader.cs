@@ -76,9 +76,9 @@ namespace Tournaments.Plugins
 
                 return LoadPlugins(assembly);
             }
-            catch (BadImageFormatException)
+            catch (BadImageFormatException ex)
             {
-                return null;
+                throw new LoadPluginsFailureException("Loading of plugins failed.  Check the inner exception for more details.", ex);
             }
         }
 
@@ -108,13 +108,13 @@ namespace Tournaments.Plugins
                     }
                 }
             }
-            catch (SecurityException)
+            catch (SecurityException ex)
             {
-                return null;
+                throw new LoadPluginsFailureException("Loading of plugins failed.  Check the inner exception for more details.", ex);
             }
-            catch (ReflectionTypeLoadException)
+            catch (ReflectionTypeLoadException ex)
             {
-                return null;
+                throw new LoadPluginsFailureException("Loading of plugins failed.  Check the inner exception for more details.", ex);
             }
 
             return factories.AsReadOnly();

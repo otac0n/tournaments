@@ -79,17 +79,31 @@ namespace TournamentTests
     public class PluginApiTests
     {
         [TestMethod]
-        public void BadImageReturnsNull()
+        public void BadImageThrowsException()
         {
-            var plugins = PluginLoader.LoadPlugins(@"c:\WINDOWS\System32\user32.dll");
-            Assert.AreEqual(null, plugins);
+            try
+            {
+                var plugins = PluginLoader.LoadPlugins(@"c:\WINDOWS\System32\user32.dll");
+                Assert.Fail();
+            }
+            catch (LoadPluginsFailureException)
+            {
+                return;
+            }
         }
 
         [TestMethod]
-        public void FileNotFoundReturnsNull()
+        public void FileNotFoundThrowsException()
         {
-            var plugins = PluginLoader.LoadPlugins(@"C:\filenotfound.dll");
-            Assert.AreEqual(null, plugins);
+            try
+            {
+                var plugins = PluginLoader.LoadPlugins(@"C:\filenotfound.dll");
+                Assert.Fail();
+            }
+            catch (LoadPluginsFailureException)
+            {
+                return;
+            }
         }
 
         [TestMethod]

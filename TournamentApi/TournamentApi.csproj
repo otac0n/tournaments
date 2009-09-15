@@ -39,6 +39,7 @@
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -48,6 +49,7 @@
   <ItemGroup>
     <Compile Include="InvalidTournamentStateException.cs" />
     <Compile Include="IPairingsGenerator.cs" />
+    <Compile Include="Plugins\LoadPluginsFailureException.cs" />
     <Compile Include="Plugins\IPairingsGeneratorFactory.cs" />
     <Compile Include="Plugins\IPluginEnumerator.cs" />
     <Compile Include="Plugins\IPluginFactory.cs" />
