@@ -85,7 +85,7 @@ namespace Tournaments.Plugins
         /// <summary>
         /// Loads the plugins from a specified assembly.
         /// </summary>
-        /// <param name="rawAssembly">The assembly from which to load.</param>
+        /// <param name="assembly">The assembly from which to load.</param>
         /// <returns>The plugin factories contained in the assembly, if the load was successful; null, otherwise.</returns>
         public static IEnumerable<IPluginFactory> LoadPlugins(Assembly assembly)
         {
