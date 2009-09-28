@@ -67,6 +67,20 @@ namespace Tournaments.Sample
             {
                 try
                 {
+                    this.StandingsList.Items.Clear();
+                    var standings = this.generator.GenerateRankings();
+                    foreach (var standing in standings)
+                    {
+                        var item = new ListViewItem(new string[] { standing.Rank.ToString(), this.teamNames[standing.Team.TeamId], standing.ScoreDescription });
+                        this.StandingsList.Items.Add(item);
+                    }
+                }
+                catch (InvalidTournamentStateException)
+                {
+                }
+
+                try
+                {
                     if (this.visualizer != null)
                     {
                         var names = new TournamentNameTable(this.teamNames);
@@ -103,6 +117,21 @@ namespace Tournaments.Sample
             this.AddTeam.Enabled = !roundsPlayed;
             this.RollBack.Enabled = roundsPlayed;
             this.StartNext.Enabled = nextRoundAvailable;
+
+            foreach(ColumnHeader col in this.TeamsList.Columns)
+            {
+                col.AutoResize(ColumnHeaderAutoResizeStyle.HeaderSize);
+            }
+
+            foreach (ColumnHeader col in this.StandingsList.Columns)
+            {
+                col.AutoResize(ColumnHeaderAutoResizeStyle.HeaderSize);
+            }
+
+            foreach (ColumnHeader col in this.RoundsList.Columns)
+            {
+                col.AutoResize(ColumnHeaderAutoResizeStyle.HeaderSize);
+            }
         }
 
         public void Run()
@@ -133,7 +162,7 @@ namespace Tournaments.Sample
 
         private void TeamsList_DoubleClick(object sender, EventArgs e)
         {
-            if (this.TeamsList.SelectedIndices.Count != 0)
+            if (this.rounds.Count == 0 && this.TeamsList.SelectedIndices.Count != 0)
             {
                 var item = this.TeamsList.SelectedItems[0];
                 var team = (TournamentTeam)item.Tag;
