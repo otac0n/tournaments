@@ -21,6 +21,10 @@ namespace Tournaments.Sample
         private Dictionary<long, string> teamNames = new Dictionary<long, string>();
         int teamIdentity = 0;
 
+        private Dictionary<TournamentRound, List<ListViewGroup>> roundGroupsHelper = new Dictionary<TournamentRound, List<ListViewGroup>>();
+        private Dictionary<TournamentRound, List<ListViewItem>> roundItemsHelper = new Dictionary<TournamentRound, List<ListViewItem>>();
+        private Dictionary<long, List<ListViewItem>> teamItemsHelper = new Dictionary<long, List<ListViewItem>>();
+
         public TournamentView(IPairingsGenerator generator)
         {
             if (generator == null)
@@ -138,6 +142,15 @@ namespace Tournaments.Sample
             var team = (TournamentTeam)item.Tag;
             teamNames[team.TeamId] = e.Label;
 
+            if(this.teamItemsHelper.ContainsKey(team.TeamId))
+            {
+                var staleItems = this.teamItemsHelper[team.TeamId];
+                foreach (var stale in staleItems)
+                {
+                    stale.SubItems[1].Text = teamNames[team.TeamId];
+                }
+            }
+
             this.UpdateState();
         }
 
@@ -184,18 +197,23 @@ namespace Tournaments.Sample
                 this.rounds.Add(round);
                 var roundNumber = this.rounds.Count;
 
+                this.roundGroupsHelper.Add(round, new List<ListViewGroup>());
+                this.roundItemsHelper.Add(round, new List<ListViewItem>());
+
                 var i = 1;
                 foreach (var pairing in round.Pairings)
                 {
                     var group = new ListViewGroup("Round " + roundNumber + ", Pairing " + i);
                     this.RoundsList.Groups.Add(group);
-                    
+                    this.roundGroupsHelper[round].Add(group);
+
                     foreach(var teamScore in pairing.TeamScores)
                     {
                         var item = new ListViewItem(new string[] { teamScore.Score == null ? "" : teamScore.Score.ToString(), this.teamNames[teamScore.Team.TeamId] });
                         item.Tag = teamScore;
                         item.Group = group;
                         this.RoundsList.Items.Add(item);
+                        this.roundItemsHelper[round].Add(item);
                     }
 
                     i++;
@@ -207,7 +225,54 @@ namespace Tournaments.Sample
 
         private void RollBack_Click(object sender, EventArgs e)
         {
-            //
+            var round = this.rounds.Last();
+
+            this.rounds.Remove(round);
+
+            foreach (var roundItem in this.roundItemsHelper[round])
+            {
+                this.RoundsList.Items.Remove(roundItem);
+            }
+
+            foreach (var roundGroup in this.roundGroupsHelper[round])
+            {
+                this.RoundsList.Groups.Remove(roundGroup);
+            }
+
+            this.UpdateState();
+        }
+
+        private void RoundsList_AfterLabelEdit(object sender, LabelEditEventArgs e)
+        {
+            double score = 0.0;
+            if (!string.IsNullOrEmpty(e.Label) && !double.TryParse(e.Label, out score))
+            {
+                e.CancelEdit = true;
+            }
+
+            var teamScore = (TournamentTeamScore)RoundsList.Items[e.Item].Tag;
+            teamScore.Score = string.IsNullOrEmpty(e.Label) ? null : new HighestPointsScore(score);
+
+            this.UpdateState();
+        }
+
+        private void RoundsList_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
+        {
+            if (e.IsSelected)
+            {
+                e.Item.BeginEdit();
+            }
+        }
+
+        private void RoundsList_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                if (this.RoundsList.SelectedItems.Count > 0)
+                {
+                    this.RoundsList.SelectedItems[0].BeginEdit();
+                }
+            }
         }
     }
 }
