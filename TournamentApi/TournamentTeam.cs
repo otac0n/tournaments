@@ -65,13 +65,18 @@ namespace Tournaments
         }
 
         /// <summary>
-        /// Gets the team's current rating pertaining to a specific tournament.
+        /// Gets or sets the team's current rating or seed pertaining to a specific tournament or league.
         /// </summary>
         public int? Rating
         {
             get
             {
                 return this.rating;
+            }
+
+            set
+            {
+                this.rating = value;
             }
         }
     }

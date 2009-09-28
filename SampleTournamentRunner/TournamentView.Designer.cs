@@ -37,8 +37,8 @@
             this.RoundTeamColumn = new System.Windows.Forms.ColumnHeader();
             this.RoundScoreColumn = new System.Windows.Forms.ColumnHeader();
             this.label2 = new System.Windows.Forms.Label();
-            this.button2 = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
+            this.StartNext = new System.Windows.Forms.Button();
+            this.RollBack = new System.Windows.Forms.Button();
             this.VisualizerScrollPanel = new System.Windows.Forms.Panel();
             this.Visualization = new System.Windows.Forms.PictureBox();
             this.VisualizerScrollPanel.SuspendLayout();
@@ -59,7 +59,9 @@
             this.TeamsList.TabIndex = 1;
             this.TeamsList.UseCompatibleStateImageBehavior = false;
             this.TeamsList.View = System.Windows.Forms.View.Details;
+            this.TeamsList.AfterLabelEdit += new System.Windows.Forms.LabelEditEventHandler(this.TeamsList_AfterLabelEdit);
             this.TeamsList.DoubleClick += new System.EventHandler(this.TeamsList_DoubleClick);
+            this.TeamsList.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TeamsList_KeyDown);
             // 
             // TeamColumn
             // 
@@ -122,25 +124,25 @@
             this.label2.TabIndex = 3;
             this.label2.Text = "&Rounds:";
             // 
-            // button2
+            // StartNext
             // 
-            this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.button2.Location = new System.Drawing.Point(196, 280);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 23);
-            this.button2.TabIndex = 5;
-            this.button2.Text = "Start &Next";
-            this.button2.UseVisualStyleBackColor = true;
+            this.StartNext.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.StartNext.Location = new System.Drawing.Point(196, 280);
+            this.StartNext.Name = "StartNext";
+            this.StartNext.Size = new System.Drawing.Size(75, 23);
+            this.StartNext.TabIndex = 5;
+            this.StartNext.Text = "Start &Next";
+            this.StartNext.UseVisualStyleBackColor = true;
             // 
-            // button3
+            // RollBack
             // 
-            this.button3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.button3.Location = new System.Drawing.Point(277, 280);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(75, 23);
-            this.button3.TabIndex = 6;
-            this.button3.Text = "Roll &Back";
-            this.button3.UseVisualStyleBackColor = true;
+            this.RollBack.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.RollBack.Location = new System.Drawing.Point(277, 280);
+            this.RollBack.Name = "RollBack";
+            this.RollBack.Size = new System.Drawing.Size(75, 23);
+            this.RollBack.TabIndex = 6;
+            this.RollBack.Text = "Roll &Back";
+            this.RollBack.UseVisualStyleBackColor = true;
             // 
             // VisualizerScrollPanel
             // 
@@ -169,8 +171,8 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(714, 315);
             this.Controls.Add(this.VisualizerScrollPanel);
-            this.Controls.Add(this.button3);
-            this.Controls.Add(this.button2);
+            this.Controls.Add(this.RollBack);
+            this.Controls.Add(this.StartNext);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.RoundsList);
             this.Controls.Add(this.AddTeam);
@@ -193,8 +195,8 @@
         private System.Windows.Forms.Button AddTeam;
         private System.Windows.Forms.ListView RoundsList;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.Button StartNext;
+        private System.Windows.Forms.Button RollBack;
         private System.Windows.Forms.Panel VisualizerScrollPanel;
         private System.Windows.Forms.PictureBox Visualization;
         private System.Windows.Forms.ColumnHeader TeamColumn;
