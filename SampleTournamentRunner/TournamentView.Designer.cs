@@ -43,6 +43,10 @@
             this.Visualization = new System.Windows.Forms.PictureBox();
             this.StatusBar = new System.Windows.Forms.StatusStrip();
             this.TournamentStatus = new System.Windows.Forms.ToolStripStatusLabel();
+            this.StandingsList = new System.Windows.Forms.ListView();
+            this.StandingRankHeader = new System.Windows.Forms.ColumnHeader();
+            this.StandingTeamHeader = new System.Windows.Forms.ColumnHeader();
+            this.StandingReasonHeader = new System.Windows.Forms.ColumnHeader();
             this.VisualizerScrollPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Visualization)).BeginInit();
             this.StatusBar.SuspendLayout();
@@ -123,7 +127,7 @@
             // RoundTeamColumn
             // 
             this.RoundTeamColumn.Text = "Team";
-            this.RoundTeamColumn.Width = 149;
+            this.RoundTeamColumn.Width = 130;
             // 
             // label2
             // 
@@ -167,7 +171,7 @@
             this.VisualizerScrollPanel.Controls.Add(this.Visualization);
             this.VisualizerScrollPanel.Location = new System.Drawing.Point(421, 25);
             this.VisualizerScrollPanel.Name = "VisualizerScrollPanel";
-            this.VisualizerScrollPanel.Size = new System.Drawing.Size(277, 232);
+            this.VisualizerScrollPanel.Size = new System.Drawing.Size(194, 232);
             this.VisualizerScrollPanel.TabIndex = 7;
             // 
             // Visualization
@@ -185,7 +189,7 @@
             this.TournamentStatus});
             this.StatusBar.Location = new System.Drawing.Point(0, 289);
             this.StatusBar.Name = "StatusBar";
-            this.StatusBar.Size = new System.Drawing.Size(710, 22);
+            this.StatusBar.Size = new System.Drawing.Size(845, 22);
             this.StatusBar.TabIndex = 8;
             // 
             // TournamentStatus
@@ -194,11 +198,39 @@
             this.TournamentStatus.Size = new System.Drawing.Size(42, 17);
             this.TournamentStatus.Text = "Ready.";
             // 
+            // StandingsList
+            // 
+            this.StandingsList.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.StandingsList.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.StandingRankHeader,
+            this.StandingTeamHeader,
+            this.StandingReasonHeader});
+            this.StandingsList.Location = new System.Drawing.Point(621, 25);
+            this.StandingsList.Name = "StandingsList";
+            this.StandingsList.Size = new System.Drawing.Size(212, 231);
+            this.StandingsList.TabIndex = 9;
+            this.StandingsList.UseCompatibleStateImageBehavior = false;
+            this.StandingsList.View = System.Windows.Forms.View.Details;
+            // 
+            // StandingRankHeader
+            // 
+            this.StandingRankHeader.Text = "Rank";
+            // 
+            // StandingTeamHeader
+            // 
+            this.StandingTeamHeader.Text = "Team";
+            // 
+            // StandingReasonHeader
+            // 
+            this.StandingReasonHeader.Text = "Reason";
+            // 
             // TournamentView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(710, 311);
+            this.ClientSize = new System.Drawing.Size(845, 311);
+            this.Controls.Add(this.StandingsList);
             this.Controls.Add(this.StatusBar);
             this.Controls.Add(this.VisualizerScrollPanel);
             this.Controls.Add(this.RollBack);
@@ -237,6 +269,10 @@
         private System.Windows.Forms.ColumnHeader RoundScoreColumn;
         private System.Windows.Forms.StatusStrip StatusBar;
         private System.Windows.Forms.ToolStripStatusLabel TournamentStatus;
+        private System.Windows.Forms.ListView StandingsList;
+        private System.Windows.Forms.ColumnHeader StandingRankHeader;
+        private System.Windows.Forms.ColumnHeader StandingTeamHeader;
+        private System.Windows.Forms.ColumnHeader StandingReasonHeader;
     }
 }
 
