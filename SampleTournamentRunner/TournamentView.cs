@@ -45,36 +45,59 @@ namespace Tournaments.Sample
         {
             bool roundsPlayed = this.rounds.Count > 0;
             bool nextRoundAvailable = false;
+            bool validState = false;
 
             try
             {
                 this.generator.Reset();
                 this.generator.LoadState(this.teams, this.rounds);
+                validState = true;
 
-                var round = this.generator.CreateNextRound(null);
-                if (round != null)
-                {
-                    nextRoundAvailable = true;
-                }
-
-                if (this.visualizer != null)
-                {
-                    var names = new TournamentNameTable(this.teamNames);
-                    var size = this.visualizer.Measure(this.measureGraphics, names);
-                    if (size.Height > 0 && size.Width > 0)
-                    {
-                        var rendered = new Bitmap((int)Math.Ceiling(size.Width), (int)Math.Ceiling(size.Height));
-                        this.visualizer.Render(new SystemGraphics(System.Drawing.Graphics.FromImage(rendered)), names);
-                        this.Visualization.Image = rendered;
-                    }
-                    else
-                    {
-                        this.Visualization.Image = null;
-                    }
-                }
+                this.TournamentStatus.Text = "Ready.";
+                this.TournamentStatus.BackColor = Color.Transparent;
             }
-            catch (InvalidTournamentStateException)
+            catch (InvalidTournamentStateException ex)
             {
+                this.Visualization.Image = null;
+                this.TournamentStatus.Text = "Error: " + ex.Message;
+                this.TournamentStatus.BackColor = Color.Red;
+            }
+
+            if (validState)
+            {
+                try
+                {
+                    if (this.visualizer != null)
+                    {
+                        var names = new TournamentNameTable(this.teamNames);
+                        var size = this.visualizer.Measure(this.measureGraphics, names);
+                        if (size.Height > 0 && size.Width > 0)
+                        {
+                            var rendered = new Bitmap((int)Math.Ceiling(size.Width), (int)Math.Ceiling(size.Height));
+                            this.visualizer.Render(new SystemGraphics(System.Drawing.Graphics.FromImage(rendered)), names);
+                            this.Visualization.Image = rendered;
+                        }
+                        else
+                        {
+                            this.Visualization.Image = null;
+                        }
+                    }
+                }
+                catch (InvalidTournamentStateException)
+                {
+                }
+
+                try
+                {
+                    var round = this.generator.CreateNextRound(null);
+                    if (round != null)
+                    {
+                        nextRoundAvailable = true;
+                    }
+                }
+                catch (InvalidTournamentStateException)
+                {
+                }
             }
 
             this.AddTeam.Enabled = !roundsPlayed;
@@ -254,14 +277,6 @@ namespace Tournaments.Sample
             teamScore.Score = string.IsNullOrEmpty(e.Label) ? null : new HighestPointsScore(score);
 
             this.UpdateState();
-        }
-
-        private void RoundsList_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
-        {
-            if (e.IsSelected)
-            {
-                e.Item.BeginEdit();
-            }
         }
 
         private void RoundsList_MouseUp(object sender, MouseEventArgs e)

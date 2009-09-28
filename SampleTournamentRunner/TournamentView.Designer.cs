@@ -41,8 +41,11 @@
             this.RollBack = new System.Windows.Forms.Button();
             this.VisualizerScrollPanel = new System.Windows.Forms.Panel();
             this.Visualization = new System.Windows.Forms.PictureBox();
+            this.StatusBar = new System.Windows.Forms.StatusStrip();
+            this.TournamentStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.VisualizerScrollPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Visualization)).BeginInit();
+            this.StatusBar.SuspendLayout();
             this.SuspendLayout();
             // 
             // TeamsList
@@ -56,7 +59,7 @@
             this.TeamsList.LabelEdit = true;
             this.TeamsList.Location = new System.Drawing.Point(12, 25);
             this.TeamsList.Name = "TeamsList";
-            this.TeamsList.Size = new System.Drawing.Size(178, 249);
+            this.TeamsList.Size = new System.Drawing.Size(178, 232);
             this.TeamsList.TabIndex = 1;
             this.TeamsList.UseCompatibleStateImageBehavior = false;
             this.TeamsList.View = System.Windows.Forms.View.Details;
@@ -86,7 +89,7 @@
             // AddTeam
             // 
             this.AddTeam.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.AddTeam.Location = new System.Drawing.Point(12, 280);
+            this.AddTeam.Location = new System.Drawing.Point(12, 263);
             this.AddTeam.Name = "AddTeam";
             this.AddTeam.Size = new System.Drawing.Size(75, 23);
             this.AddTeam.TabIndex = 2;
@@ -105,14 +108,12 @@
             this.RoundsList.LabelEdit = true;
             this.RoundsList.Location = new System.Drawing.Point(196, 25);
             this.RoundsList.Name = "RoundsList";
-            this.RoundsList.Size = new System.Drawing.Size(219, 249);
+            this.RoundsList.Size = new System.Drawing.Size(219, 232);
             this.RoundsList.TabIndex = 4;
             this.RoundsList.UseCompatibleStateImageBehavior = false;
             this.RoundsList.View = System.Windows.Forms.View.Details;
             this.RoundsList.AfterLabelEdit += new System.Windows.Forms.LabelEditEventHandler(this.RoundsList_AfterLabelEdit);
-            this.RoundsList.DoubleClick += new System.EventHandler(this.RoundsList_DoubleClick);
             this.RoundsList.MouseUp += new System.Windows.Forms.MouseEventHandler(this.RoundsList_MouseUp);
-            this.RoundsList.ItemSelectionChanged += new System.Windows.Forms.ListViewItemSelectionChangedEventHandler(this.RoundsList_ItemSelectionChanged);
             // 
             // RoundScoreColumn
             // 
@@ -136,7 +137,7 @@
             // StartNext
             // 
             this.StartNext.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.StartNext.Location = new System.Drawing.Point(196, 280);
+            this.StartNext.Location = new System.Drawing.Point(196, 263);
             this.StartNext.Name = "StartNext";
             this.StartNext.Size = new System.Drawing.Size(75, 23);
             this.StartNext.TabIndex = 5;
@@ -147,7 +148,7 @@
             // RollBack
             // 
             this.RollBack.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.RollBack.Location = new System.Drawing.Point(277, 280);
+            this.RollBack.Location = new System.Drawing.Point(277, 263);
             this.RollBack.Name = "RollBack";
             this.RollBack.Size = new System.Drawing.Size(75, 23);
             this.RollBack.TabIndex = 6;
@@ -166,7 +167,7 @@
             this.VisualizerScrollPanel.Controls.Add(this.Visualization);
             this.VisualizerScrollPanel.Location = new System.Drawing.Point(421, 25);
             this.VisualizerScrollPanel.Name = "VisualizerScrollPanel";
-            this.VisualizerScrollPanel.Size = new System.Drawing.Size(281, 249);
+            this.VisualizerScrollPanel.Size = new System.Drawing.Size(277, 232);
             this.VisualizerScrollPanel.TabIndex = 7;
             // 
             // Visualization
@@ -178,11 +179,27 @@
             this.Visualization.TabIndex = 0;
             this.Visualization.TabStop = false;
             // 
+            // StatusBar
+            // 
+            this.StatusBar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.TournamentStatus});
+            this.StatusBar.Location = new System.Drawing.Point(0, 289);
+            this.StatusBar.Name = "StatusBar";
+            this.StatusBar.Size = new System.Drawing.Size(710, 22);
+            this.StatusBar.TabIndex = 8;
+            // 
+            // TournamentStatus
+            // 
+            this.TournamentStatus.Name = "TournamentStatus";
+            this.TournamentStatus.Size = new System.Drawing.Size(42, 17);
+            this.TournamentStatus.Text = "Ready.";
+            // 
             // TournamentView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(714, 315);
+            this.ClientSize = new System.Drawing.Size(710, 311);
+            this.Controls.Add(this.StatusBar);
             this.Controls.Add(this.VisualizerScrollPanel);
             this.Controls.Add(this.RollBack);
             this.Controls.Add(this.StartNext);
@@ -196,6 +213,8 @@
             this.VisualizerScrollPanel.ResumeLayout(false);
             this.VisualizerScrollPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Visualization)).EndInit();
+            this.StatusBar.ResumeLayout(false);
+            this.StatusBar.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -216,6 +235,8 @@
         private System.Windows.Forms.ColumnHeader RatingColumn;
         private System.Windows.Forms.ColumnHeader RoundTeamColumn;
         private System.Windows.Forms.ColumnHeader RoundScoreColumn;
+        private System.Windows.Forms.StatusStrip StatusBar;
+        private System.Windows.Forms.ToolStripStatusLabel TournamentStatus;
     }
 }
 
