@@ -47,6 +47,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Graphics\IGraphics.cs" />
     <Compile Include="InvalidTournamentStateException.cs" />
     <Compile Include="IPairingsGenerator.cs" />
     <Compile Include="Plugins\LoadPluginsFailureException.cs" />

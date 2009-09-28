@@ -33,6 +33,7 @@ namespace Tournaments.Standard
     using System.Linq;
     using System.Xml;
     using System.Globalization;
+    using Tournaments.Graphics;
 
     /// <summary>
     /// Implements a Singe Elmination Tournament
@@ -335,7 +336,6 @@ namespace Tournaments.Standard
                                 {
                                     // swap destination A with teamANode A
                                     SwapChildrenAA(destination, teamANode);
-
                                 }
                                 else if (teamANode.ChildB != null && teamANode.ChildB.Team != null && teamANode.ChildB.Team.Team.TeamId == teamA.TeamId)
                                 {
@@ -532,7 +532,7 @@ namespace Tournaments.Standard
                     select n).FirstOrDefault();
         }
 
-        public Size Measure(TournamentNameTable teamNames)
+        public SizeF Measure(IGraphics graphics, TournamentNameTable teamNames)
         {
             var rootNode = (from n in this.loadedNodes
                             where n.Parent == null
@@ -543,266 +543,161 @@ namespace Tournaments.Standard
                 return new Size(0, 0);
             }
 
-            var size = this.MeasureNode(rootNode);
+            var textHeight = GetTextHeight(graphics);
 
-            return new Size(size.Width + 10, size.Height + 10);
+            var size = this.MeasureNode(rootNode, textHeight);
+
+            return new SizeF(size.Width + 10, size.Height + 10);
         }
 
-        public XmlReader Render(TournamentNameTable teamNames)
+        public void Render(IGraphics graphics, TournamentNameTable teamNames)
         {
-            XmlDocument doc = new XmlDocument();
-            string xmlns = "http://www.w3.org/2000/svg";
-            doc.LoadXml(@"<svg xmlns=""http://www.w3.org/2000/svg"" width=""100%"" height=""100%"" onload=""Initialize(evt)""></svg>");
-
             var rootNode = (from n in this.loadedNodes
                             where n.Parent == null
                             select n).SingleOrDefault();
 
             if (rootNode == null)
             {
-                return null;
+                return;
             }
 
-            doc.DocumentElement.AppendChild(CreateScriptNode(doc, xmlns));
+            var textHeight = GetTextHeight(graphics);
 
-            IEnumerable<XmlNode> renderedNodes = this.RenderNode(rootNode, 5, 5, teamNames, doc, xmlns);
-
-            foreach (XmlNode node in renderedNodes)
-            {
-                doc.DocumentElement.AppendChild(node);
-            }
-
-            return new XmlNodeReader(doc);
+            this.RenderNode(graphics, textHeight, rootNode, 5, 5, teamNames);
         }
 
-        private static XmlNode CreateScriptNode(XmlDocument doc, string xmlns)
+        private const float MinBracketWidth = 120;
+        private const float BracketPreIndent = 10;
+        private const float BracketPostIndent = 10;
+        private const float BracketVSpacing = 25;
+        private Pen BracketPen = new Pen(Color.Black, 1.0f);
+        private const float MinTextHeight = 20;
+        private const float TextYOffset = 3;
+        private const float TextXOffset = 3;
+        private Brush UserboxBrush = new SolidBrush(Color.FromArgb(220, 220, 220));
+        private Font UserboxFont = new Font(FontFamily.GenericSansSerif, 10.0f);
+        private Brush UserboxFontBrush = new SolidBrush(Color.Black);
+
+        private float GetTextHeight(IGraphics g)
         {
-            XmlElement script = doc.CreateElement("script", xmlns);
-            XmlAttribute script_type = doc.CreateAttribute("type");
-            script.Attributes.Append(script_type);
-
-            script_type.Value = "text/ecmascript";
-
-            XmlCDataSection script_data = doc.CreateCDataSection(@"
-            SVGDocument = null;
-            top.SetTournamentTextStyle = SetTournamentTextStyle;
-            top.SetTournamentTextContrastStyle = SetTournamentTextContrastStyle;
-            top.SetTournamentAccentStyle = SetTournamentAccentStyle;
-
-            function Initialize(LoadEvent) {
-              SVGDocument = LoadEvent.target.ownerDocument
-            }
-
-            function SetTournamentTextStyle(style) {
-              setElementsAttribute('text', 'style', style);
-            }
-
-            function SetTournamentTextContrastStyle(style) {
-              setElementsAttribute('rect', 'style', style);
-            }
-
-            function SetTournamentAccentStyle(style) {
-              setElementsAttribute('line', 'style', style);
-            }
-
-            function setElementsAttribute(tag, attribute, value) {
-              var elements = SVGDocument.getElementsByTagName(tag);
-              for (var i = 0; i < elements.length; i++) {
-                elements.item(i).setAttribute(attribute, value);
-              }
-            }
-            ");
-
-            script.AppendChild(script_data);
-
-            return script;
+            return Math.Max(g.MeasureString("abfgijlpqyAIJQ170,`'\"", UserboxFont).Height + TextYOffset * 2, MinTextHeight);
         }
 
-        private const int BracketWidth = 120;
-        private const int BracketPreIndent = 10;
-        private const int BracketPostIndent = 10;
-        private const int BracketVSpacing = 25;
-        private const string BracketStyle = "stroke:black;stroke-width:1px;";
-        private const int TextHeight = 20;
-        private const int TextYOffset = (TextHeight / 2) - 5;
-        private const int TextXOffset = 5;
-        private const string UserboxStyle = "fill:rgb(220,220,220);";
-
-        private IEnumerable<XmlNode> RenderNode(SingleEliminationNode rootNode, int x, int y, TournamentNameTable teamNames, XmlDocument doc, string xmlns)
+        private void RenderNode(IGraphics g, float textHeight, SingleEliminationNode rootNode, float x, float y, TournamentNameTable teamNames)
         {
-            List<XmlNode> allNodes = new List<XmlNode>();
-
-            var m = this.MeasureNode(rootNode);
+            var m = this.MeasureNode(rootNode, textHeight);
 
             if (rootNode.ChildA != null && rootNode.ChildB != null)
             {
-                XmlElement preline = doc.CreateElement("line", xmlns);
-                XmlAttribute preline_x1 = doc.CreateAttribute("x1");
-                XmlAttribute preline_y1 = doc.CreateAttribute("y1");
-                XmlAttribute preline_x2 = doc.CreateAttribute("x2");
-                XmlAttribute preline_y2 = doc.CreateAttribute("y2");
-                XmlAttribute preline_style = doc.CreateAttribute("style");
-                preline.Attributes.Append(preline_x1);
-                preline.Attributes.Append(preline_y1);
-                preline.Attributes.Append(preline_x2);
-                preline.Attributes.Append(preline_y2);
-                preline.Attributes.Append(preline_style);
+                // Preline
+                g.DrawLine(
+                    BracketPen,
+                    new PointF(
+                        x + (m.Width - MinBracketWidth),
+                        y + m.CenterLine),
+                    new PointF(
+                        x + (m.Width - MinBracketWidth - BracketPreIndent),
+                        y + m.CenterLine));
 
-                preline_x1.Value = (x + (m.Width - BracketWidth)).ToString(CultureInfo.InvariantCulture);
-                preline_y1.Value = (y + m.CenterLine).ToString(CultureInfo.InvariantCulture);
-                preline_x2.Value = (x + (m.Width - BracketWidth - BracketPreIndent)).ToString(CultureInfo.InvariantCulture);
-                preline_y2.Value = (y + m.CenterLine).ToString(CultureInfo.InvariantCulture);
-                preline_style.Value = BracketStyle;
+                var childASize = this.MeasureNode(rootNode.ChildA, textHeight);
+                var childBSize = this.MeasureNode(rootNode.ChildB, textHeight);
 
-                var renderedA = this.RenderNode(rootNode.ChildA, x, y, teamNames, doc, xmlns);
-                var childASize = this.MeasureNode(rootNode.ChildA);
-                var renderedB = this.RenderNode(rootNode.ChildB, x, y + childASize.Height + BracketVSpacing, teamNames, doc, xmlns);
-                var childBSize = this.MeasureNode(rootNode.ChildB);
+                // V-Line
+                g.DrawLine(
+                    BracketPen, 
+                    new PointF(
+                        x + (m.Width - MinBracketWidth - BracketPreIndent),
+                        y + childASize.CenterLine),
+                    new PointF(
+                        x + (m.Width - MinBracketWidth - BracketPreIndent),
+                        y + childASize.Height + BracketVSpacing + childBSize.CenterLine));
 
-                XmlElement vline = doc.CreateElement("line", xmlns);
-                XmlAttribute vline_x1 = doc.CreateAttribute("x1");
-                XmlAttribute vline_y1 = doc.CreateAttribute("y1");
-                XmlAttribute vline_x2 = doc.CreateAttribute("x2");
-                XmlAttribute vline_y2 = doc.CreateAttribute("y2");
-                XmlAttribute vline_style = doc.CreateAttribute("style");
-                vline.Attributes.Append(vline_x1);
-                vline.Attributes.Append(vline_y1);
-                vline.Attributes.Append(vline_x2);
-                vline.Attributes.Append(vline_y2);
-                vline.Attributes.Append(vline_style);
+                // Post-Line-A
+                g.DrawLine(
+                    BracketPen,
+                    new PointF(
+                        x + (m.Width - MinBracketWidth - BracketPreIndent - BracketPostIndent),
+                        y + childASize.CenterLine),
+                    new PointF(
+                        x + (m.Width - MinBracketWidth - BracketPreIndent),
+                        y + childASize.CenterLine));
 
-                XmlElement postlineA = doc.CreateElement("line", xmlns);
-                XmlAttribute postlineA_x1 = doc.CreateAttribute("x1");
-                XmlAttribute postlineA_y1 = doc.CreateAttribute("y1");
-                XmlAttribute postlineA_x2 = doc.CreateAttribute("x2");
-                XmlAttribute postlineA_y2 = doc.CreateAttribute("y2");
-                XmlAttribute postlineA_style = doc.CreateAttribute("style");
-                postlineA.Attributes.Append(postlineA_x1);
-                postlineA.Attributes.Append(postlineA_y1);
-                postlineA.Attributes.Append(postlineA_x2);
-                postlineA.Attributes.Append(postlineA_y2);
-                postlineA.Attributes.Append(postlineA_style);
+                // Post-Line-B
+                g.DrawLine(
+                    BracketPen,
+                    new PointF(
+                        x + (m.Width - MinBracketWidth - BracketPreIndent - BracketPostIndent),
+                        y + childASize.Height + BracketVSpacing + childBSize.CenterLine),
+                    new PointF(
+                        x + (m.Width - MinBracketWidth - BracketPreIndent),
+                        y + childASize.Height + BracketVSpacing + childBSize.CenterLine));
 
-                XmlElement postlineB = doc.CreateElement("line", xmlns);
-                XmlAttribute postlineB_x1 = doc.CreateAttribute("x1");
-                XmlAttribute postlineB_y1 = doc.CreateAttribute("y1");
-                XmlAttribute postlineB_x2 = doc.CreateAttribute("x2");
-                XmlAttribute postlineB_y2 = doc.CreateAttribute("y2");
-                XmlAttribute postlineB_style = doc.CreateAttribute("style");
-                postlineB.Attributes.Append(postlineB_x1);
-                postlineB.Attributes.Append(postlineB_y1);
-                postlineB.Attributes.Append(postlineB_x2);
-                postlineB.Attributes.Append(postlineB_y2);
-                postlineB.Attributes.Append(postlineB_style);
-
-                vline_x1.Value = (x + (m.Width - BracketWidth - BracketPreIndent)).ToString(CultureInfo.InvariantCulture);
-                vline_y1.Value = (y + childASize.CenterLine).ToString(CultureInfo.InvariantCulture);
-                vline_x2.Value = (x + (m.Width - BracketWidth - BracketPreIndent)).ToString(CultureInfo.InvariantCulture);
-                vline_y2.Value = (y + childASize.Height + BracketVSpacing + childBSize.CenterLine).ToString(CultureInfo.InvariantCulture);
-                vline_style.Value = BracketStyle;
-
-                postlineA_x1.Value = (x + (m.Width - BracketWidth - BracketPreIndent - BracketPostIndent)).ToString(CultureInfo.InvariantCulture);
-                postlineA_y1.Value = (y + childASize.CenterLine).ToString(CultureInfo.InvariantCulture);
-                postlineA_x2.Value = (x + (m.Width - BracketWidth - BracketPreIndent)).ToString(CultureInfo.InvariantCulture);
-                postlineA_y2.Value = (y + childASize.CenterLine).ToString(CultureInfo.InvariantCulture);
-                postlineA_style.Value = BracketStyle;
-
-                postlineB_x1.Value = (x + (m.Width - BracketWidth - BracketPreIndent - BracketPostIndent)).ToString(CultureInfo.InvariantCulture);
-                postlineB_y1.Value = (y + childASize.Height + BracketVSpacing + childBSize.CenterLine).ToString(CultureInfo.InvariantCulture);
-                postlineB_x2.Value = (x + (m.Width - BracketWidth - BracketPreIndent)).ToString(CultureInfo.InvariantCulture);
-                postlineB_y2.Value = (y + childASize.Height + BracketVSpacing + childBSize.CenterLine).ToString(CultureInfo.InvariantCulture);
-                postlineB_style.Value = BracketStyle;
-
-                allNodes.Add(preline);
-                allNodes.Add(vline);
-                allNodes.Add(postlineA);
-                allNodes.Add(postlineB);
-                allNodes.AddRange(renderedA);
-                allNodes.AddRange(renderedB);
+                this.RenderNode(g, textHeight, rootNode.ChildA, x, y, teamNames);
+                this.RenderNode(g, textHeight, rootNode.ChildB, x, y + childASize.Height + BracketVSpacing, teamNames);
             }
 
-            XmlElement userbox = doc.CreateElement("rect", xmlns);
-            XmlAttribute userbox_x = doc.CreateAttribute("x");
-            XmlAttribute userbox_y = doc.CreateAttribute("y");
-            XmlAttribute userbox_w = doc.CreateAttribute("width");
-            XmlAttribute userbox_h = doc.CreateAttribute("height");
-            XmlAttribute userbox_style = doc.CreateAttribute("style");
-            userbox.Attributes.Append(userbox_x);
-            userbox.Attributes.Append(userbox_y);
-            userbox.Attributes.Append(userbox_w);
-            userbox.Attributes.Append(userbox_h);
-            userbox.Attributes.Append(userbox_style);
+            g.FillRectangle(
+                UserboxBrush,
+                new RectangleF(
+                    new PointF(
+                        x + (m.Width - MinBracketWidth),
+                        y + m.CenterLine - (textHeight / 2)),
+                    new SizeF(
+                        MinBracketWidth,
+                        textHeight)));
 
-            userbox_x.Value = (x + (m.Width - BracketWidth)).ToString(CultureInfo.InvariantCulture);
-            userbox_y.Value = (y + m.CenterLine - (TextHeight / 2)).ToString(CultureInfo.InvariantCulture);
-            userbox_w.Value = BracketWidth.ToString(CultureInfo.InvariantCulture);
-            userbox_h.Value = TextHeight.ToString(CultureInfo.InvariantCulture);
-            userbox_style.Value = UserboxStyle;
             
-            allNodes.Add(userbox);
-
             if (rootNode.Team != null)
             {
-                XmlElement username = doc.CreateElement("text", xmlns);
-                XmlAttribute username_x = doc.CreateAttribute("x");
-                XmlAttribute username_y = doc.CreateAttribute("y");
-                username.Attributes.Append(username_x);
-                username.Attributes.Append(username_y);
-
-                username_x.Value = (x + (m.Width - BracketWidth) + TextXOffset).ToString(CultureInfo.InvariantCulture);
-                username_y.Value = (y + m.CenterLine + TextYOffset).ToString(CultureInfo.InvariantCulture);
-
-                username.InnerText = teamNames[rootNode.Team.Team.TeamId];
-
-                allNodes.Add(username);
+                g.DrawString(
+                    teamNames[rootNode.Team.Team.TeamId],
+                    UserboxFont,
+                    UserboxFontBrush,
+                    new PointF(
+                        x + (m.Width - MinBracketWidth) + TextXOffset,
+                        y + m.CenterLine - (textHeight / 2) + TextYOffset));
             }
 
             if (rootNode.Score != null)
             {
-                XmlElement score = doc.CreateElement("text", xmlns);
-                XmlAttribute score_x = doc.CreateAttribute("x");
-                XmlAttribute score_y = doc.CreateAttribute("y");
-                XmlAttribute score_textanchor = doc.CreateAttribute("text-anchor");
-                score.Attributes.Append(score_x);
-                score.Attributes.Append(score_y);
-                score.Attributes.Append(score_textanchor);
+                var score = rootNode.Score.ToString();
 
-                score_x.Value = (x + m.Width - TextXOffset).ToString(CultureInfo.InvariantCulture);
-                score_y.Value = (y + m.CenterLine + TextYOffset).ToString(CultureInfo.InvariantCulture);
-                score_textanchor.Value = "end";
+                var scoreWidth = g.MeasureString(score, UserboxFont).Width;
 
-                score.InnerText = rootNode.Score.ToString();
-
-                allNodes.Add(score);
+                g.DrawString(
+                    score,
+                    UserboxFont,
+                    UserboxFontBrush,
+                    new PointF(
+                        x + m.Width - scoreWidth - TextXOffset,
+                        y + m.CenterLine - (textHeight / 2) + TextYOffset));
             }
-
-            return allNodes.AsReadOnly();
         }
 
-        private NodeMeasurement MeasureNode(SingleEliminationNode rootNode)
+        private NodeMeasurement MeasureNode(SingleEliminationNode rootNode, float textHeight)
         {
-            int width = BracketWidth;
-            int height = TextHeight;
-            int center = TextHeight / 2;
+            float width = MinBracketWidth;
+            float height = textHeight;
+            float center = textHeight / 2;
 
             if (rootNode.ChildA != null && rootNode.ChildB != null)
             {
-                var a = this.MeasureNode(rootNode.ChildA);
-                var b = this.MeasureNode(rootNode.ChildB);
+                var a = this.MeasureNode(rootNode.ChildA, textHeight);
+                var b = this.MeasureNode(rootNode.ChildB, textHeight);
                 height = Math.Max(a.Height + BracketVSpacing + b.Height, height);
                 width = width + Math.Max(a.Width, b.Width) + BracketPreIndent + BracketPostIndent;
                 center = (a.CenterLine + BracketVSpacing + b.CenterLine + a.Height) / 2;
             }
             else if (rootNode.ChildA != null)
             {
-                var a = this.MeasureNode(rootNode.ChildA);
+                var a = this.MeasureNode(rootNode.ChildA, textHeight);
                 width = width + a.Width + BracketPreIndent + BracketPostIndent;
                 height = Math.Max(a.Height, height);
                 center = a.CenterLine;
             }
             else if (rootNode.ChildB != null)
             {
-                var b = this.MeasureNode(rootNode.ChildB);
+                var b = this.MeasureNode(rootNode.ChildB, textHeight);
                 width = width + b.Width + BracketPreIndent + BracketPostIndent;
                 height = Math.Max(b.Height, height);
                 center = b.CenterLine;
@@ -818,19 +713,19 @@ namespace Tournaments.Standard
 
         private class NodeMeasurement
         {
-            public int Width
+            public float Width
             {
                 get;
                 set;
             }
 
-            public int Height
+            public float Height
             {
                 get;
                 set;
             }
 
-            public int CenterLine
+            public float CenterLine
             {
                 get;
                 set;

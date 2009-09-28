@@ -15,13 +15,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TournamentTests", "TournamentTests\TournamentTests.csproj", "{3F1871D3-AD43-4A40-A101-1E2F9019B17A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleTournamentRunner", "SampleTournamentRunner\SampleTournamentRunner.csproj", "{447591BE-511C-490D-8E3D-403B0820A699}"
+EndProject
 Global
 	GlobalSection(SubversionScc) = preSolution
 		Svn-Managed = True
 		Manager = AnkhSVN - Subversion Support for Visual Studio
-	EndGlobalSection
-	GlobalSection(TestCaseManagementSettings) = postSolution
-		CategoryFile = Tournaments.vsmdi
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -40,8 +39,15 @@ Global
 		{3F1871D3-AD43-4A40-A101-1E2F9019B17A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3F1871D3-AD43-4A40-A101-1E2F9019B17A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3F1871D3-AD43-4A40-A101-1E2F9019B17A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{447591BE-511C-490D-8E3D-403B0820A699}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{447591BE-511C-490D-8E3D-403B0820A699}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{447591BE-511C-490D-8E3D-403B0820A699}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{447591BE-511C-490D-8E3D-403B0820A699}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(TestCaseManagementSettings) = postSolution
+		CategoryFile = Tournaments.vsmdi
 	EndGlobalSection
 EndGlobal

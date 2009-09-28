@@ -52,6 +52,7 @@
     <Compile Include="RoundRobinPairingsGenerator.cs" />
     <Compile Include="SingleEliminationTournament.cs" />
     <Compile Include="Plugins\StandardTournamentsPluginEnumerator.cs" />
+    <Compile Include="SystemGraphics.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TournamentApi\TournamentApi.csproj">

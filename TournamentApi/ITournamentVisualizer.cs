@@ -30,7 +30,7 @@ namespace Tournaments
     using System;
     using System.Collections.Generic;
     using System.Drawing;
-    using System.Xml;
+    using Tournaments.Graphics;
 
     /// <summary>
     /// Specifies the interface required for a tournament visualizer.
@@ -56,17 +56,18 @@ namespace Tournaments
         void LoadState(IEnumerable<TournamentTeam> teams, IList<TournamentRound> rounds);
 
         /// <summary>
-        /// Renders the tournament to an SVG image.
+        /// Renders the tournament to an IGraphics object.
         /// </summary>
+        /// <param name="graphics">The IGraphics to which to render.</param>
         /// <param name="teamNames">The names of the teams, for use in drawing team names in the visualization.</param>
-        /// <returns>An SVG document containing the rendered image.</returns>
-        XmlReader Render(TournamentNameTable teamNames);
+        void Render(IGraphics graphics, TournamentNameTable teamNames);
 
         /// <summary>
         /// Measures the tournament visualization.
         /// </summary>
+        /// <param name="graphics">The IGraphics to which to render.</param>
         /// <param name="teamNames">The names of the teams, for use in drawing team names in the visualization.</param>
-        /// <returns>The size, in pixels, of the resulting SVG document prefered bounds.</returns>
-        Size Measure(TournamentNameTable teamNames);
+        /// <returns>The size of the resulting rendering bounds.</returns>
+        SizeF Measure(IGraphics graphics, TournamentNameTable teamNames);
     }
 }
