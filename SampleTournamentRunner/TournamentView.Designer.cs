@@ -34,8 +34,8 @@
             this.label1 = new System.Windows.Forms.Label();
             this.AddTeam = new System.Windows.Forms.Button();
             this.RoundsList = new System.Windows.Forms.ListView();
-            this.RoundTeamColumn = new System.Windows.Forms.ColumnHeader();
             this.RoundScoreColumn = new System.Windows.Forms.ColumnHeader();
+            this.RoundTeamColumn = new System.Windows.Forms.ColumnHeader();
             this.label2 = new System.Windows.Forms.Label();
             this.StartNext = new System.Windows.Forms.Button();
             this.RollBack = new System.Windows.Forms.Button();
@@ -52,6 +52,7 @@
             this.TeamsList.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.TeamColumn,
             this.RatingColumn});
+            this.TeamsList.FullRowSelect = true;
             this.TeamsList.LabelEdit = true;
             this.TeamsList.Location = new System.Drawing.Point(12, 25);
             this.TeamsList.Name = "TeamsList";
@@ -98,8 +99,10 @@
             this.RoundsList.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)));
             this.RoundsList.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.RoundTeamColumn,
-            this.RoundScoreColumn});
+            this.RoundScoreColumn,
+            this.RoundTeamColumn});
+            this.RoundsList.FullRowSelect = true;
+            this.RoundsList.LabelEdit = true;
             this.RoundsList.Location = new System.Drawing.Point(196, 25);
             this.RoundsList.Name = "RoundsList";
             this.RoundsList.Size = new System.Drawing.Size(219, 249);
@@ -107,13 +110,15 @@
             this.RoundsList.UseCompatibleStateImageBehavior = false;
             this.RoundsList.View = System.Windows.Forms.View.Details;
             // 
-            // RoundTeamColumn
-            // 
-            this.RoundTeamColumn.Text = "Team";
-            // 
             // RoundScoreColumn
             // 
             this.RoundScoreColumn.Text = "Score";
+            this.RoundScoreColumn.Width = 66;
+            // 
+            // RoundTeamColumn
+            // 
+            this.RoundTeamColumn.Text = "Team";
+            this.RoundTeamColumn.Width = 149;
             // 
             // label2
             // 
@@ -133,6 +138,7 @@
             this.StartNext.TabIndex = 5;
             this.StartNext.Text = "Start &Next";
             this.StartNext.UseVisualStyleBackColor = true;
+            this.StartNext.Click += new System.EventHandler(this.StartNext_Click);
             // 
             // RollBack
             // 
@@ -143,6 +149,7 @@
             this.RollBack.TabIndex = 6;
             this.RollBack.Text = "Roll &Back";
             this.RollBack.UseVisualStyleBackColor = true;
+            this.RollBack.Click += new System.EventHandler(this.RollBack_Click);
             // 
             // VisualizerScrollPanel
             // 
@@ -150,6 +157,8 @@
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.VisualizerScrollPanel.AutoScroll = true;
+            this.VisualizerScrollPanel.BackColor = System.Drawing.SystemColors.Window;
+            this.VisualizerScrollPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.VisualizerScrollPanel.Controls.Add(this.Visualization);
             this.VisualizerScrollPanel.Location = new System.Drawing.Point(421, 25);
             this.VisualizerScrollPanel.Name = "VisualizerScrollPanel";

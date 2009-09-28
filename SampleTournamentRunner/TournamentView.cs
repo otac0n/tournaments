@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using Tournaments.Standard;
+using System.Diagnostics;
 
 namespace Tournaments.Sample
 {
@@ -157,6 +158,56 @@ namespace Tournaments.Sample
 
                 this.UpdateState();
             }
+        }
+
+        private void StartNext_Click(object sender, EventArgs e)
+        {
+            TournamentRound round = null;
+            try
+            {
+                this.generator.Reset();
+                this.generator.LoadState(this.teams, this.rounds);
+                round = this.generator.CreateNextRound(null);
+            }
+            catch (InvalidTournamentStateException ex)
+            {
+                MessageBox.Show(ex.Message, "Error Creating Next Round.");
+                if (Debugger.IsAttached)
+                {
+                    Debugger.Break();
+                }
+                return;
+            }
+
+            if (round != null)
+            {
+                this.rounds.Add(round);
+                var roundNumber = this.rounds.Count;
+
+                var i = 1;
+                foreach (var pairing in round.Pairings)
+                {
+                    var group = new ListViewGroup("Round " + roundNumber + ", Pairing " + i);
+                    this.RoundsList.Groups.Add(group);
+                    
+                    foreach(var teamScore in pairing.TeamScores)
+                    {
+                        var item = new ListViewItem(new string[] { teamScore.Score == null ? "" : teamScore.Score.ToString(), this.teamNames[teamScore.Team.TeamId] });
+                        item.Tag = teamScore;
+                        item.Group = group;
+                        this.RoundsList.Items.Add(item);
+                    }
+
+                    i++;
+                }
+
+                this.UpdateState();
+            }
+        }
+
+        private void RollBack_Click(object sender, EventArgs e)
+        {
+            //
         }
     }
 }
