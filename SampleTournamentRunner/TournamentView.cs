@@ -35,11 +35,27 @@ namespace Tournaments.Sample
             Application.Run(this);
         }
 
-        private void pictureBox1_Paint(object sender, PaintEventArgs e)
+        private void AddTeam_Click(object sender, EventArgs e)
         {
-            if (this.rendered != null)
+            var item = new ListViewItem(new string[] { "New Team", 100.ToString() });
+            this.TeamsList.Items.Add(item);
+            item.BeginEdit();
+        }
+
+        private void TeamsList_DoubleClick(object sender, EventArgs e)
+        {
+            if (this.TeamsList.SelectedIndices.Count != 0)
             {
-                e.Graphics.DrawImage(this.rendered, new Point(0, 0));
+                var item = this.TeamsList.SelectedItems[0];
+                string name = item.SubItems[0].Text;
+                int rating = int.Parse(item.SubItems[1].Text);
+
+                using (EditTeamView dlg = new EditTeamView(name, rating))
+                {
+                    dlg.ShowDialog();
+                    item.SubItems[0].Text = dlg.TeamName;
+                    item.SubItems[1].Text = dlg.Rating.ToString();
+                }
             }
         }
     }

@@ -35,7 +35,7 @@ namespace Tournaments.Sample
 
     public partial class PairingsChooserView : Form
     {
-        private bool OkPressed = false;
+        private bool okPressed = false;
 
         private IPairingsGeneratorFactory[] factories;
 
@@ -76,13 +76,13 @@ namespace Tournaments.Sample
 
         private void Ok_Click(object sender, EventArgs e)
         {
-            this.OkPressed = true;
+            this.okPressed = true;
             this.Close();
         }
 
         private void PairingsChooserView_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (!OkPressed)
+            if (!okPressed)
             {
                 this.ChosenGenerator = null;
             }

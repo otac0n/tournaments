@@ -28,10 +28,14 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.listView1 = new System.Windows.Forms.ListView();
+            this.TeamsList = new System.Windows.Forms.ListView();
+            this.TeamColumn = new System.Windows.Forms.ColumnHeader();
+            this.RatingColumn = new System.Windows.Forms.ColumnHeader();
             this.label1 = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
-            this.listView2 = new System.Windows.Forms.ListView();
+            this.AddTeam = new System.Windows.Forms.Button();
+            this.RoundsList = new System.Windows.Forms.ListView();
+            this.RoundTeamColumn = new System.Windows.Forms.ColumnHeader();
+            this.RoundScoreColumn = new System.Windows.Forms.ColumnHeader();
             this.label2 = new System.Windows.Forms.Label();
             this.button2 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
@@ -41,15 +45,31 @@
             ((System.ComponentModel.ISupportInitialize)(this.Visualization)).BeginInit();
             this.SuspendLayout();
             // 
-            // listView1
+            // TeamsList
             // 
-            this.listView1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            this.TeamsList.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)));
-            this.listView1.Location = new System.Drawing.Point(12, 25);
-            this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(178, 249);
-            this.listView1.TabIndex = 1;
-            this.listView1.UseCompatibleStateImageBehavior = false;
+            this.TeamsList.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.TeamColumn,
+            this.RatingColumn});
+            this.TeamsList.LabelEdit = true;
+            this.TeamsList.Location = new System.Drawing.Point(12, 25);
+            this.TeamsList.Name = "TeamsList";
+            this.TeamsList.Size = new System.Drawing.Size(178, 249);
+            this.TeamsList.TabIndex = 1;
+            this.TeamsList.UseCompatibleStateImageBehavior = false;
+            this.TeamsList.View = System.Windows.Forms.View.Details;
+            this.TeamsList.DoubleClick += new System.EventHandler(this.TeamsList_DoubleClick);
+            // 
+            // TeamColumn
+            // 
+            this.TeamColumn.Text = "Team";
+            this.TeamColumn.Width = 98;
+            // 
+            // RatingColumn
+            // 
+            this.RatingColumn.Text = "Rating/Seed";
+            this.RatingColumn.Width = 76;
             // 
             // label1
             // 
@@ -60,25 +80,38 @@
             this.label1.TabIndex = 0;
             this.label1.Text = "&Teams:";
             // 
-            // button1
+            // AddTeam
             // 
-            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.button1.Location = new System.Drawing.Point(12, 280);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 2;
-            this.button1.Text = "&Add";
-            this.button1.UseVisualStyleBackColor = true;
+            this.AddTeam.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.AddTeam.Location = new System.Drawing.Point(12, 280);
+            this.AddTeam.Name = "AddTeam";
+            this.AddTeam.Size = new System.Drawing.Size(75, 23);
+            this.AddTeam.TabIndex = 2;
+            this.AddTeam.Text = "&Add";
+            this.AddTeam.UseVisualStyleBackColor = true;
+            this.AddTeam.Click += new System.EventHandler(this.AddTeam_Click);
             // 
-            // listView2
+            // RoundsList
             // 
-            this.listView2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            this.RoundsList.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)));
-            this.listView2.Location = new System.Drawing.Point(196, 25);
-            this.listView2.Name = "listView2";
-            this.listView2.Size = new System.Drawing.Size(219, 249);
-            this.listView2.TabIndex = 4;
-            this.listView2.UseCompatibleStateImageBehavior = false;
+            this.RoundsList.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.RoundTeamColumn,
+            this.RoundScoreColumn});
+            this.RoundsList.Location = new System.Drawing.Point(196, 25);
+            this.RoundsList.Name = "RoundsList";
+            this.RoundsList.Size = new System.Drawing.Size(219, 249);
+            this.RoundsList.TabIndex = 4;
+            this.RoundsList.UseCompatibleStateImageBehavior = false;
+            this.RoundsList.View = System.Windows.Forms.View.Details;
+            // 
+            // RoundTeamColumn
+            // 
+            this.RoundTeamColumn.Text = "Team";
+            // 
+            // RoundScoreColumn
+            // 
+            this.RoundScoreColumn.Text = "Score";
             // 
             // label2
             // 
@@ -139,10 +172,10 @@
             this.Controls.Add(this.button3);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.label2);
-            this.Controls.Add(this.listView2);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.RoundsList);
+            this.Controls.Add(this.AddTeam);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.listView1);
+            this.Controls.Add(this.TeamsList);
             this.Name = "TournamentView";
             this.Text = "Run Tournament";
             this.VisualizerScrollPanel.ResumeLayout(false);
@@ -155,15 +188,19 @@
 
         #endregion
 
-        private System.Windows.Forms.ListView listView1;
+        private System.Windows.Forms.ListView TeamsList;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.ListView listView2;
+        private System.Windows.Forms.Button AddTeam;
+        private System.Windows.Forms.ListView RoundsList;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.Panel VisualizerScrollPanel;
         private System.Windows.Forms.PictureBox Visualization;
+        private System.Windows.Forms.ColumnHeader TeamColumn;
+        private System.Windows.Forms.ColumnHeader RatingColumn;
+        private System.Windows.Forms.ColumnHeader RoundTeamColumn;
+        private System.Windows.Forms.ColumnHeader RoundScoreColumn;
     }
 }
 
