@@ -6,6 +6,8 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Tournaments.Plugins;
 using Tournaments;
 using System.Reflection;
+using Tournaments.Graphics;
+using System.Drawing;
 
 namespace TournamentTests
 {
@@ -62,12 +64,12 @@ namespace TournamentTests
             throw new NotImplementedException();
         }
 
-        public System.Xml.XmlReader Render(TournamentNameTable teamNames)
+        public void Render(IGraphics graphics, TournamentNameTable teamNames)
         {
             throw new NotImplementedException();
         }
 
-        public System.Drawing.Size Measure(TournamentNameTable teamNames)
+        public SizeF Measure(IGraphics graphics, TournamentNameTable teamNames)
         {
             throw new NotImplementedException();
         }

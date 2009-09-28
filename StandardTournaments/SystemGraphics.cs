@@ -18,10 +18,26 @@ namespace Tournaments.Standard
         {
             if (baseGraphics == null)
             {
-                throw new InvalidOperationException();
+                throw new ArgumentNullException("baseGraphics");
             }
 
             this.baseGraphics = baseGraphics;
+        }
+
+        public SystemGraphics(System.Drawing.Image targetImage)
+        {
+            if (targetImage == null)
+            {
+                throw new InvalidOperationException("targetImage");
+            }
+
+            this.baseGraphics = System.Drawing.Graphics.FromImage(targetImage);
+        }
+
+        public SystemGraphics()
+        {
+            this.baseGraphics = System.Drawing.Graphics.FromImage(
+                new Bitmap(1, 1));
         }
 
         public Region Clip { get { return baseGraphics.Clip; } set { baseGraphics.Clip = value; } }

@@ -363,8 +363,9 @@ namespace TournamentTests
 
                 if (viz != null)
                 {
-                    var q2 = viz.Measure(nameTable);
-                    var q1 = viz.Render(nameTable);
+                    var gfx = new SystemGraphics();
+                    var q2 = viz.Measure(gfx, nameTable);
+                    viz.Render(gfx, nameTable);
                 }
 
                 if (newRound == null)
