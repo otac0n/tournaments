@@ -162,7 +162,7 @@ namespace Tournaments.Sample
 
         private void TeamsList_DoubleClick(object sender, EventArgs e)
         {
-            if (this.rounds.Count == 0 && this.TeamsList.SelectedIndices.Count != 0)
+            if (this.TeamsList.SelectedIndices.Count != 0)
             {
                 var item = this.TeamsList.SelectedItems[0];
                 var team = (TournamentTeam)item.Tag;
@@ -184,6 +184,10 @@ namespace Tournaments.Sample
 
         private void TeamsList_AfterLabelEdit(object sender, LabelEditEventArgs e)
         {
+            if(object.ReferenceEquals(e.Label, null))
+            {
+                return;
+            }
             if (string.IsNullOrEmpty(e.Label))
             {
                 e.CancelEdit = true;
@@ -266,6 +270,13 @@ namespace Tournaments.Sample
                         item.Group = group;
                         this.RoundsList.Items.Add(item);
                         this.roundItemsHelper[round].Add(item);
+
+                        if (!this.teamItemsHelper.ContainsKey(teamScore.Team.TeamId))
+                        {
+                            this.teamItemsHelper.Add(teamScore.Team.TeamId, new List<ListViewItem>());
+                        }
+
+                        this.teamItemsHelper[teamScore.Team.TeamId].Add(item);
                     }
 
                     i++;
@@ -284,31 +295,51 @@ namespace Tournaments.Sample
             foreach (var roundItem in this.roundItemsHelper[round])
             {
                 this.RoundsList.Items.Remove(roundItem);
+                var teamItems = from th in this.teamItemsHelper.Keys
+                                where this.teamItemsHelper[th].Contains(roundItem)
+                                select this.teamItemsHelper[th];
+                foreach (var item in teamItems)
+                {
+                    item.Remove(roundItem);
+                }
             }
 
             foreach (var roundGroup in this.roundGroupsHelper[round])
             {
                 this.RoundsList.Groups.Remove(roundGroup);
             }
-
             this.UpdateState();
         }
 
         private void RoundsList_AfterLabelEdit(object sender, LabelEditEventArgs e)
         {
-            double score = 0.0;
-            if (!string.IsNullOrEmpty(e.Label) && !double.TryParse(e.Label, out score))
-            {
-                e.CancelEdit = true;
-            }
+            var item = RoundsList.Items[e.Item];
+            var teamScore = (TournamentTeamScore)item.Tag;
 
-            var teamScore = (TournamentTeamScore)RoundsList.Items[e.Item].Tag;
-            teamScore.Score = string.IsNullOrEmpty(e.Label) ? null : new HighestPointsScore(score);
+            if (object.ReferenceEquals(e.Label, null))
+            {
+                return;
+            }
+            if (string.IsNullOrEmpty(e.Label))
+            {
+                teamScore.Score = null;
+            }
+            else
+            {
+                double score = 0.0;
+                if (!double.TryParse(e.Label, out score))
+                {
+                    e.CancelEdit = true;
+                    return;
+                }
+
+                teamScore.Score = new HighestPointsScore(score);
+            }
 
             this.UpdateState();
         }
 
-        private void RoundsList_MouseUp(object sender, MouseEventArgs e)
+        private void RoundsList_MouseClick(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
             {

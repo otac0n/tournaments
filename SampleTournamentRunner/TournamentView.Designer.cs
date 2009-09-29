@@ -114,8 +114,8 @@
             this.RoundsList.TabIndex = 4;
             this.RoundsList.UseCompatibleStateImageBehavior = false;
             this.RoundsList.View = System.Windows.Forms.View.Details;
+            this.RoundsList.MouseClick += new System.Windows.Forms.MouseEventHandler(this.RoundsList_MouseClick);
             this.RoundsList.AfterLabelEdit += new System.Windows.Forms.LabelEditEventHandler(this.RoundsList_AfterLabelEdit);
-            this.RoundsList.MouseUp += new System.Windows.Forms.MouseEventHandler(this.RoundsList_MouseUp);
             // 
             // RoundScoreColumn
             // 
