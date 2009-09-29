@@ -110,7 +110,7 @@
             this.RoundsList.LabelEdit = true;
             this.RoundsList.Location = new System.Drawing.Point(12, 242);
             this.RoundsList.Name = "RoundsList";
-            this.RoundsList.Size = new System.Drawing.Size(205, 124);
+            this.RoundsList.Size = new System.Drawing.Size(205, 251);
             this.RoundsList.TabIndex = 4;
             this.RoundsList.UseCompatibleStateImageBehavior = false;
             this.RoundsList.View = System.Windows.Forms.View.Details;
@@ -167,7 +167,7 @@
             this.VisualizerScrollPanel.Controls.Add(this.Visualization);
             this.VisualizerScrollPanel.Location = new System.Drawing.Point(223, 214);
             this.VisualizerScrollPanel.Name = "VisualizerScrollPanel";
-            this.VisualizerScrollPanel.Size = new System.Drawing.Size(298, 152);
+            this.VisualizerScrollPanel.Size = new System.Drawing.Size(488, 279);
             this.VisualizerScrollPanel.TabIndex = 9;
             // 
             // Visualization
@@ -183,9 +183,9 @@
             // 
             this.StatusBar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.TournamentStatus});
-            this.StatusBar.Location = new System.Drawing.Point(0, 369);
+            this.StatusBar.Location = new System.Drawing.Point(0, 496);
             this.StatusBar.Name = "StatusBar";
-            this.StatusBar.Size = new System.Drawing.Size(533, 22);
+            this.StatusBar.Size = new System.Drawing.Size(723, 22);
             this.StatusBar.TabIndex = 10;
             // 
             // TournamentStatus
@@ -206,7 +206,7 @@
             this.StandingsList.GridLines = true;
             this.StandingsList.Location = new System.Drawing.Point(223, 37);
             this.StandingsList.Name = "StandingsList";
-            this.StandingsList.Size = new System.Drawing.Size(297, 171);
+            this.StandingsList.Size = new System.Drawing.Size(487, 171);
             this.StandingsList.TabIndex = 8;
             this.StandingsList.UseCompatibleStateImageBehavior = false;
             this.StandingsList.View = System.Windows.Forms.View.Details;
@@ -236,7 +236,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(533, 391);
+            this.ClientSize = new System.Drawing.Size(723, 518);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.StandingsList);
             this.Controls.Add(this.StatusBar);

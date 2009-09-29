@@ -121,8 +121,8 @@ namespace Tournaments.Standard
                     continue;
                 }
 
-                List<TournamentTeam> rankingTeams = new List<TournamentTeam>(from ranking in rankings
-                                                                             select ranking.Team);
+                var rankingTeams = (from ranking in rankings
+                                    select ranking.Team).ToList();
 
                 var ineligible = from rt in rankingTeams
                                  where !newTeams.Contains(rt)
@@ -130,16 +130,21 @@ namespace Tournaments.Standard
 
                 if (ineligible.Any())
                 {
-                    throw new InvalidTournamentStateException("The rounds alread executed in this tournament make it invalid as a boil-off tournament for the following reason:  There is at least one competitor who should not have competed in a round.");
+                    throw new InvalidTournamentStateException("The rounds alread executed in this tournament make it invalid as a boil-off tournament for the following reason:  There is at least one competitor who should not have competed in a round who did.");
                 }
 
-                // TODO: If not in the first round, allow additional eliminations. (Given that all players in a tie must be eliminated/kept together.)
-                var required = from nt in newTeams
-                               where !rankingTeams.Contains(nt)
-                               select nt;
+                var required = (from nt in newTeams
+                                where !rankingTeams.Contains(nt)
+                                select nt).ToList();
 
                 if (required.Any())
                 {
+                    // If not in the first round, allow additional eliminations. (Given that all players in a tie must be eliminated/kept together.)
+                    if (ordinalRoundNumber > 1)
+                    {
+                        //
+                    }
+
                     throw new InvalidTournamentStateException("The rounds alread executed in this tournament make it invalid as a boil-off tournament for the following reason:  There is at least one competitor who should have competed in a round who did not.");
                 }
 
@@ -243,7 +248,7 @@ namespace Tournaments.Standard
         {
             if (round.Pairings.Count != 1)
             {
-                throw new InvalidTournamentStateException("The rounds alread executed in this tournament make it invalid as a boil-off tournament for the following reason:  At least one round has more than one pairing set.");
+                throw new InvalidTournamentStateException("At least one round has more than one pairing set.");
             }
 
             TournamentPairing pairing = round.Pairings[0];
@@ -279,22 +284,34 @@ namespace Tournaments.Standard
 
         public IEnumerable<TournamentRanking> GenerateRankings()
         {
-            if (this.loadedTeams.Count != 0)
-            {
-                throw new InvalidTournamentStateException("The tournament is not in a state that allows ranking for the following reason: There is at least one pairing left to execute.");
-            }
-
             if (this.loadedRounds.Count == 0)
             {
-                throw new InvalidTournamentStateException("The tournament is not in a state that allows ranking for the following reason: There have not been any rounds executed.");
+                throw new InvalidTournamentStateException("There have not been any rounds executed.");
             }
 
-            var r1 = from ranking in GetRoundRankings(this.loadedRounds[this.loadedRounds.Count - 1], 0)
-                     select ranking;
+            var lastRoundRankings = (from ranking in GetRoundRankings(this.loadedRounds[this.loadedRounds.Count - 1], 0)
+                                     select ranking).ToList();
 
-            foreach (var ranking in r1)
+            if (this.loadedTeams.Count != 0)
             {
-                yield return new TournamentRanking(ranking.Team, ranking.Rank, string.Format("Score: {0}", ranking.Score));
+                var continuing = from t in this.loadedTeams
+                                 let ranking = lastRoundRankings.Where(r => r.Team == t).SingleOrDefault()
+                                 orderby ranking == null ? null : ranking.Score descending
+                                 select t;
+
+                int i = 1;
+                foreach (var team in continuing)
+                {
+                    yield return new TournamentRanking(team, i, "Continuing");
+                    i++;
+                }
+            }
+            else
+            {
+                foreach (var ranking in lastRoundRankings)
+                {
+                    yield return new TournamentRanking(ranking.Team, ranking.Rank, string.Format("Score: {0}", ranking.Score));
+                }
             }
 
             var r2 = from ranking in this.loadedEliminated

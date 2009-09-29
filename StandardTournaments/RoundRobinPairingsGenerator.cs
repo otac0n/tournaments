@@ -218,18 +218,12 @@ namespace Tournaments.Standard
             List<TournamentTeam> newTeams = new List<TournamentTeam>();
             newTeams.AddRange(teams);
 
-            //Contract.Assert(newTeams.Count >= 0);
-
             // Build our total list of pairings.
             List<RRPairing>  newPairings = new List<RRPairing>();
             for (int i = 0; i < newTeams.Count; i++)
             {
-                //Contract.Assume(i >= 0);
-
                 for (int j = i + 1; j < newTeams.Count; j++)
                 {
-                    //Contract.Assume(j > i);
-
                     newPairings.Add(new RRPairing() { A = newTeams[i], B = newTeams[j] });
                 }
             }
