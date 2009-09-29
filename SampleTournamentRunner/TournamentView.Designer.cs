@@ -60,9 +60,9 @@
             this.RatingColumn});
             this.TeamsList.FullRowSelect = true;
             this.TeamsList.LabelEdit = true;
-            this.TeamsList.Location = new System.Drawing.Point(12, 25);
+            this.TeamsList.Location = new System.Drawing.Point(12, 37);
             this.TeamsList.Name = "TeamsList";
-            this.TeamsList.Size = new System.Drawing.Size(192, 168);
+            this.TeamsList.Size = new System.Drawing.Size(205, 171);
             this.TeamsList.TabIndex = 1;
             this.TeamsList.UseCompatibleStateImageBehavior = false;
             this.TeamsList.View = System.Windows.Forms.View.Details;
@@ -83,7 +83,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 9);
+            this.label1.Location = new System.Drawing.Point(9, 21);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(42, 13);
             this.label1.TabIndex = 0;
@@ -91,9 +91,9 @@
             // 
             // AddTeam
             // 
-            this.AddTeam.Location = new System.Drawing.Point(12, 199);
+            this.AddTeam.Location = new System.Drawing.Point(142, 9);
             this.AddTeam.Name = "AddTeam";
-            this.AddTeam.Size = new System.Drawing.Size(75, 23);
+            this.AddTeam.Size = new System.Drawing.Size(75, 22);
             this.AddTeam.TabIndex = 2;
             this.AddTeam.Text = "&Add";
             this.AddTeam.UseVisualStyleBackColor = true;
@@ -108,9 +108,9 @@
             this.RoundTeamColumn});
             this.RoundsList.FullRowSelect = true;
             this.RoundsList.LabelEdit = true;
-            this.RoundsList.Location = new System.Drawing.Point(210, 25);
+            this.RoundsList.Location = new System.Drawing.Point(12, 242);
             this.RoundsList.Name = "RoundsList";
-            this.RoundsList.Size = new System.Drawing.Size(219, 312);
+            this.RoundsList.Size = new System.Drawing.Size(205, 124);
             this.RoundsList.TabIndex = 4;
             this.RoundsList.UseCompatibleStateImageBehavior = false;
             this.RoundsList.View = System.Windows.Forms.View.Details;
@@ -130,7 +130,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(210, 9);
+            this.label2.Location = new System.Drawing.Point(8, 226);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(47, 13);
             this.label2.TabIndex = 3;
@@ -138,10 +138,9 @@
             // 
             // StartNext
             // 
-            this.StartNext.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.StartNext.Location = new System.Drawing.Point(210, 343);
+            this.StartNext.Location = new System.Drawing.Point(61, 214);
             this.StartNext.Name = "StartNext";
-            this.StartNext.Size = new System.Drawing.Size(75, 23);
+            this.StartNext.Size = new System.Drawing.Size(75, 22);
             this.StartNext.TabIndex = 5;
             this.StartNext.Text = "Start &Next";
             this.StartNext.UseVisualStyleBackColor = true;
@@ -149,10 +148,9 @@
             // 
             // RollBack
             // 
-            this.RollBack.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.RollBack.Location = new System.Drawing.Point(291, 343);
+            this.RollBack.Location = new System.Drawing.Point(142, 214);
             this.RollBack.Name = "RollBack";
-            this.RollBack.Size = new System.Drawing.Size(75, 23);
+            this.RollBack.Size = new System.Drawing.Size(75, 22);
             this.RollBack.TabIndex = 6;
             this.RollBack.Text = "Roll &Back";
             this.RollBack.UseVisualStyleBackColor = true;
@@ -167,9 +165,9 @@
             this.VisualizerScrollPanel.BackColor = System.Drawing.SystemColors.Window;
             this.VisualizerScrollPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.VisualizerScrollPanel.Controls.Add(this.Visualization);
-            this.VisualizerScrollPanel.Location = new System.Drawing.Point(435, 25);
+            this.VisualizerScrollPanel.Location = new System.Drawing.Point(223, 214);
             this.VisualizerScrollPanel.Name = "VisualizerScrollPanel";
-            this.VisualizerScrollPanel.Size = new System.Drawing.Size(250, 341);
+            this.VisualizerScrollPanel.Size = new System.Drawing.Size(298, 152);
             this.VisualizerScrollPanel.TabIndex = 9;
             // 
             // Visualization
@@ -187,7 +185,7 @@
             this.TournamentStatus});
             this.StatusBar.Location = new System.Drawing.Point(0, 369);
             this.StatusBar.Name = "StatusBar";
-            this.StatusBar.Size = new System.Drawing.Size(697, 22);
+            this.StatusBar.Size = new System.Drawing.Size(533, 22);
             this.StatusBar.TabIndex = 10;
             // 
             // TournamentStatus
@@ -198,17 +196,17 @@
             // 
             // StandingsList
             // 
-            this.StandingsList.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)));
+            this.StandingsList.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.StandingsList.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.StandingRankHeader,
             this.StandingTeamHeader,
             this.StandingReasonHeader});
             this.StandingsList.FullRowSelect = true;
             this.StandingsList.GridLines = true;
-            this.StandingsList.Location = new System.Drawing.Point(12, 241);
+            this.StandingsList.Location = new System.Drawing.Point(223, 37);
             this.StandingsList.Name = "StandingsList";
-            this.StandingsList.Size = new System.Drawing.Size(192, 125);
+            this.StandingsList.Size = new System.Drawing.Size(297, 171);
             this.StandingsList.TabIndex = 8;
             this.StandingsList.UseCompatibleStateImageBehavior = false;
             this.StandingsList.View = System.Windows.Forms.View.Details;
@@ -228,7 +226,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(12, 225);
+            this.label3.Location = new System.Drawing.Point(220, 21);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(57, 13);
             this.label3.TabIndex = 7;
@@ -238,7 +236,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(697, 391);
+            this.ClientSize = new System.Drawing.Size(533, 391);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.StandingsList);
             this.Controls.Add(this.StatusBar);
