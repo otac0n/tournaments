@@ -110,7 +110,7 @@ namespace Tournaments.Standard
             {
                 if (!canContinue)
                 {
-                    throw new InvalidTournamentStateException("The rounds alread executed in this tournament make it invalid as a boil-off tournament for the following reason:  At least one round was not completed before another was started.");
+                    throw new InvalidTournamentStateException("At least one round was not completed before another was started.");
                 }
 
                 List<BORank> rankings = new List<BORank>(GetRoundRankings(round, ordinalRoundNumber));
@@ -142,10 +142,10 @@ namespace Tournaments.Standard
                     // If not in the first round, allow additional eliminations. (Given that all players in a tie must be eliminated/kept together.)
                     if (ordinalRoundNumber > 1)
                     {
-                        //
+                        // TODO: Allow additional eliminations, given that all players in a tie must be kept together.
                     }
 
-                    throw new InvalidTournamentStateException("The rounds alread executed in this tournament make it invalid as a boil-off tournament for the following reason:  There is at least one competitor who should have competed in a round who did not.");
+                    throw new InvalidTournamentStateException("There is at least one competitor who should have competed in a round who did not.");
                 }
 
                 int roundNumber = GetRoundNumber(newTeams.Count, BoilOffPairingsGenerator.lastRound);
