@@ -179,41 +179,41 @@ namespace Tournaments.Graphics
 
         /// <summary>Draws an arc representing a portion of an ellipse specified by a System.Drawing.Rectangle structure.</summary>
         /// <param name="pen">System.Drawing.Pen that determines the color, width, and style of the arc.</param>
-        /// <param name="rect">System.Drawing.RectangleF structure that defines the boundaries of the ellipse.</param>
+        /// <param name="rectangle">System.Drawing.RectangleF structure that defines the boundaries of the ellipse.</param>
         /// <param name="startAngle">Angle in degrees measured clockwise from the x-axis to the starting point of the arc.</param>
         /// <param name="sweepAngle">Angle in degrees measured clockwise from the startAngle parameter to ending point of the arc.</param>
         /// <exception cref="System.ArgumentNullException">pen is null.</exception>
-        void DrawArc(Pen pen, Rectangle rect, float startAngle, float sweepAngle);
+        void DrawArc(Pen pen, Rectangle rectangle, float startAngle, float sweepAngle);
 
         /// <summary>Draws an arc representing a portion of an ellipse specified by a System.Drawing.RectangleF structure.</summary>
         /// <param name="pen">System.Drawing.Pen that determines the color, width, and style of the arc.</param>
-        /// <param name="rect">System.Drawing.RectangleF structure that defines the boundaries of the ellipse.</param>
+        /// <param name="rectangle">System.Drawing.RectangleF structure that defines the boundaries of the ellipse.</param>
         /// <param name="startAngle">Angle in degrees measured clockwise from the x-axis to the starting point of the arc.</param>
         /// <param name="sweepAngle">Angle in degrees measured clockwise from the startAngle parameter to ending point of the arc.</param>
         /// <exception cref="System.ArgumentNullException">pen is null</exception>
-        void DrawArc(Pen pen, RectangleF rect, float startAngle, float sweepAngle);
+        void DrawArc(Pen pen, RectangleF rectangle, float startAngle, float sweepAngle);
 
         /// <summary>Draws an arc representing a portion of an ellipse specified by a pair of coordinates, a width, and a height.</summary>
         /// <param name="pen">System.Drawing.Pen that determines the color, width, and style of the arc.</param>
-        /// <param name="left">The x-coordinate of the upper-left corner of the rectangle that defines the ellipse.</param>
-        /// <param name="top">The y-coordinate of the upper-left corner of the rectangle that defines the ellipse.</param>
+        /// <param name="ellipseX">The x-coordinate of the upper-left corner of the rectangle that defines the ellipse.</param>
+        /// <param name="ellipseY">The y-coordinate of the upper-left corner of the rectangle that defines the ellipse.</param>
         /// <param name="width">Width of the rectangle that defines the ellipse.</param>
         /// <param name="height">Height of the rectangle that defines the ellipse.</param>
         /// <param name="startAngle">Angle in degrees measured clockwise from the x-axis to the starting point of the arc.</param>
         /// <param name="sweepAngle">Angle in degrees measured clockwise from the startAngle parameter to ending point of the arc.</param>
         /// <exception cref="System.ArgumentNullException">pen is null.</exception>
-        void DrawArc(Pen pen, float left, float top, float width, float height, float startAngle, float sweepAngle);
+        void DrawArc(Pen pen, float ellipseX, float ellipseY, float width, float height, float startAngle, float sweepAngle);
 
         /// <summary>Draws an arc representing a portion of an ellipse specified by a pair of coordinates, a width, and a height.</summary>
         /// <param name="pen">System.Drawing.Pen that determines the color, width, and style of the arc.</param>
-        /// <param name="left">The x-coordinate of the upper-left corner of the rectangle that defines the ellipse.</param>
-        /// <param name="top">The y-coordinate of the upper-left corner of the rectangle that defines the ellipse.</param>
+        /// <param name="ellipseX">The x-coordinate of the upper-left corner of the rectangle that defines the ellipse.</param>
+        /// <param name="ellipseY">The y-coordinate of the upper-left corner of the rectangle that defines the ellipse.</param>
         /// <param name="width">Width of the rectangle that defines the ellipse.</param>
         /// <param name="height">Height of the rectangle that defines the ellipse.</param>
         /// <param name="startAngle">Angle in degrees measured clockwise from the x-axis to the starting point of the arc.</param>
         /// <param name="sweepAngle">Angle in degrees measured clockwise from the startAngle parameter to ending point of the arc.</param>
         /// <exception cref="System.ArgumentNullException">pen is null.</exception>
-        void DrawArc(Pen pen, int left, int top, int width, int height, int startAngle, int sweepAngle);
+        void DrawArc(Pen pen, int ellipseX, int ellipseY, int width, int height, int startAngle, int sweepAngle);
 
         /// <summary>Draws a Bézier spline defined by four System.Drawing.Point structures.</summary>
         /// <param name="pen">System.Drawing.Pen structure that determines the color, width, and style of the curve.</param>
@@ -235,16 +235,16 @@ namespace Tournaments.Graphics
 
         /// <summary>Draws a Bézier spline defined by four ordered pairs of coordinates that represent points.</summary>
         /// <param name="pen">System.Drawing.Pen that determines the color, width, and style of the curve.</param>
-        /// <param name="startX">The x-coordinate of the starting point of the curve.</param>
-        /// <param name="startY">The y-coordinate of the starting point of the curve.</param>
+        /// <param name="x1">The x-coordinate of the starting point of the curve.</param>
+        /// <param name="y1">The y-coordinate of the starting point of the curve.</param>
         /// <param name="x2">The x-coordinate of the first control point of the curve.</param>
         /// <param name="y2">The y-coordinate of the first control point of the curve.</param>
         /// <param name="x3">The x-coordinate of the second control point of the curve.</param>
         /// <param name="y3">The y-coordinate of the second control point of the curve.</param>
-        /// <param name="endX">The x-coordinate of the ending point of the curve.</param>
-        /// <param name="endY">The y-coordinate of the ending point of the curve.</param>
+        /// <param name="x4">The x-coordinate of the ending point of the curve.</param>
+        /// <param name="y4">The y-coordinate of the ending point of the curve.</param>
         /// <exception cref="System.ArgumentNullException">pen is null.</exception>
-        void DrawBezier(Pen pen, float startX, float startY, float x2, float y2, float x3, float y3, float endX, float endY);
+        void DrawBezier(Pen pen, float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4);
 
         /// <summary>Draws a series of Bézier splines from an array of System.Drawing.Point structures.</summary>
         /// <param name="pen">System.Drawing.Pen that determines the color, width, and style of the curve.</param>
@@ -340,33 +340,33 @@ namespace Tournaments.Graphics
 
         /// <summary>Draws an ellipse specified by a bounding System.Drawing.Rectangle structure.</summary>
         /// <param name="pen">System.Drawing.Pen that determines the color, width, and style of the ellipse.</param>
-        /// <param name="rect">System.Drawing.Rectangle structure that defines the boundaries of the ellipse.</param>
+        /// <param name="rectangle">System.Drawing.Rectangle structure that defines the boundaries of the ellipse.</param>
         /// <exception cref="System.ArgumentNullException">pen is null.</exception>
-        void DrawEllipse(Pen pen, Rectangle rect);
+        void DrawEllipse(Pen pen, Rectangle rectangle);
 
         /// <summary>Draws an ellipse defined by a bounding System.Drawing.RectangleF.</summary>
         /// <param name="pen">System.Drawing.Pen that determines the color, width, and style of the ellipse.</param>
-        /// <param name="rect">System.Drawing.RectangleF structure that defines the boundaries of the ellipse.</param>
+        /// <param name="rectangle">System.Drawing.RectangleF structure that defines the boundaries of the ellipse.</param>
         /// <exception cref="System.ArgumentNullException">pen is null.</exception>
-        void DrawEllipse(Pen pen, RectangleF rect);
+        void DrawEllipse(Pen pen, RectangleF rectangle);
 
         /// <summary>Draws an ellipse defined by a bounding rectangle specified by a pair of coordinates, a height, and a width.</summary>
         /// <param name="pen">System.Drawing.Pen that determines the color, width, and style of the ellipse.</param>
-        /// <param name="x">The x-coordinate of the upper-left corner of the bounding rectangle that defines the ellipse.</param>
-        /// <param name="y">The y-coordinate of the upper-left corner of the bounding rectangle that defines the ellipse.</param>
+        /// <param name="ellipseX">The x-coordinate of the upper-left corner of the bounding rectangle that defines the ellipse.</param>
+        /// <param name="ellipseY">The y-coordinate of the upper-left corner of the bounding rectangle that defines the ellipse.</param>
         /// <param name="width">Width of the bounding rectangle that defines the ellipse.</param>
         /// <param name="height">Height of the bounding rectangle that defines the ellipse.</param>
         /// <exception cref="System.ArgumentNullException">pen is null.</exception>
-        void DrawEllipse(Pen pen, float x, float y, float width, float height);
+        void DrawEllipse(Pen pen, float ellipseX, float ellipseY, float width, float height);
 
         /// <summary>Draws an ellipse defined by a bounding rectangle specified by a pair of coordinates, a height, and a width.</summary>
         /// <param name="pen">System.Drawing.Pen that determines the color, width, and style of the ellipse.</param>
-        /// <param name="x">The x-coordinate of the upper-left corner of the bounding rectangle that defines the ellipse.</param>
-        /// <param name="y">The y-coordinate of the upper-left corner of the bounding rectangle that defines the ellipse.</param>
+        /// <param name="ellipseX">The x-coordinate of the upper-left corner of the bounding rectangle that defines the ellipse.</param>
+        /// <param name="ellipseY">The y-coordinate of the upper-left corner of the bounding rectangle that defines the ellipse.</param>
         /// <param name="width">Width of the bounding rectangle that defines the ellipse.</param>
         /// <param name="height">Height of the bounding rectangle that defines the ellipse.</param>
         /// <exception cref="System.ArgumentNullException">pen is null.</exception>
-        void DrawEllipse(Pen pen, int x, int y, int width, int height);
+        void DrawEllipse(Pen pen, int ellipseX, int ellipseY, int width, int height);
 
         /// <summary>Draws the image represented by the specified System.Drawing.Icon within the area specified by a System.Drawing.Rectangle structure.</summary>
         /// <param name="icon">System.Drawing.Icon to draw.</param>
@@ -376,10 +376,10 @@ namespace Tournaments.Graphics
 
         /// <summary>Draws the image represented by the specified System.Drawing.Icon at the specified coordinates.</summary>
         /// <param name="icon">System.Drawing.Icon to draw.</param>
-        /// <param name="x">The x-coordinate of the upper-left corner of the drawn image.</param>
-        /// <param name="y">The y-coordinate of the upper-left corner of the drawn image.</param>
+        /// <param name="iconX">The x-coordinate of the upper-left corner of the drawn image.</param>
+        /// <param name="iconY">The y-coordinate of the upper-left corner of the drawn image.</param>
         /// <exception cref="System.ArgumentNullException">icon is null.</exception>
-        void DrawIcon(Icon icon, int x, int y);
+        void DrawIcon(Icon icon, int iconX, int iconY);
 
         /// <summary>Draws the image represented by the specified System.Drawing.Icon without scaling the image.</summary>
         /// <param name="icon">System.Drawing.Icon to draw.</param>
@@ -413,29 +413,29 @@ namespace Tournaments.Graphics
 
         /// <summary>Draws the specified System.Drawing.Image at the specified location and with the specified size.</summary>
         /// <param name="image">System.Drawing.Image to draw.</param>
-        /// <param name="rect">System.Drawing.Rectangle structure that specifies the location and size of the drawn image.</param>
+        /// <param name="rectangle">System.Drawing.Rectangle structure that specifies the location and size of the drawn image.</param>
         /// <exception cref="System.ArgumentNullException">image is null.</exception>
-        void DrawImage(Image image, Rectangle rect);
+        void DrawImage(Image image, Rectangle rectangle);
 
         /// <summary>Draws the specified System.Drawing.Image at the specified location and with the specified size.</summary>
         /// <param name="image">System.Drawing.Image to draw.</param>
-        /// <param name="rect">System.Drawing.RectangleF structure that specifies the location and size of the drawn image.</param>
+        /// <param name="rectangle">System.Drawing.RectangleF structure that specifies the location and size of the drawn image.</param>
         /// <exception cref="System.ArgumentNullException">image is null.</exception>
-        void DrawImage(Image image, RectangleF rect);
+        void DrawImage(Image image, RectangleF rectangle);
 
         /// <summary>Draws the specified System.Drawing.Image, using its original physical size, at the specified location.</summary>
         /// <param name="image">System.Drawing.Image to draw.</param>
-        /// <param name="x">The x-coordinate of the upper-left corner of the drawn image.</param>
-        /// <param name="y">The y-coordinate of the upper-left corner of the drawn image.</param>
+        /// <param name="imageX">The x-coordinate of the upper-left corner of the drawn image.</param>
+        /// <param name="imageY">The y-coordinate of the upper-left corner of the drawn image.</param>
         /// <exception cref="System.ArgumentNullException">image is null.</exception>
-        void DrawImage(Image image, float x, float y);
+        void DrawImage(Image image, float imageX, float imageY);
 
         /// <summary>Draws the specified image, using its original physical size, at the location specified by a coordinate pair.</summary>
         /// <param name="image">System.Drawing.Image to draw.</param>
-        /// <param name="x">The x-coordinate of the upper-left corner of the drawn image.</param>
-        /// <param name="y">The y-coordinate of the upper-left corner of the drawn image.</param>
+        /// <param name="imageX">The x-coordinate of the upper-left corner of the drawn image.</param>
+        /// <param name="imageY">The y-coordinate of the upper-left corner of the drawn image.</param>
         /// <exception cref="System.ArgumentNullException">image is null.</exception>
-        void DrawImage(Image image, int x, int y);
+        void DrawImage(Image image, int imageX, int imageY);
 
         /// <summary>Draws the specified portion of the specified System.Drawing.Image at the specified location and with the specified size.</summary>
         /// <param name="image">System.Drawing.Image to draw.</param>
@@ -471,198 +471,198 @@ namespace Tournaments.Graphics
 
         /// <summary>Draws the specified System.Drawing.Image at the specified location and with the specified size.</summary>
         /// <param name="image">System.Drawing.Image to draw.</param>
-        /// <param name="x">The x-coordinate of the upper-left corner of the drawn image.</param>
-        /// <param name="y">The y-coordinate of the upper-left corner of the drawn image.</param>
+        /// <param name="imageX">The x-coordinate of the upper-left corner of the drawn image.</param>
+        /// <param name="imageY">The y-coordinate of the upper-left corner of the drawn image.</param>
         /// <param name="width">Width of the drawn image.</param>
         /// <param name="height">Height of the drawn image.</param>
         /// <exception cref="System.ArgumentNullException">image is null.</exception>
-        void DrawImage(Image image, float x, float y, float width, float height);
+        void DrawImage(Image image, float imageX, float imageY, float width, float height);
 
         /// <summary>Draws a portion of an image at a specified location.</summary>
         /// <param name="image">System.Drawing.Image to draw.</param>
-        /// <param name="x">The x-coordinate of the upper-left corner of the drawn image.</param>
-        /// <param name="y">The y-coordinate of the upper-left corner of the drawn image.</param>
+        /// <param name="imageX">The x-coordinate of the upper-left corner of the drawn image.</param>
+        /// <param name="imageY">The y-coordinate of the upper-left corner of the drawn image.</param>
         /// <param name="sourceRectangle">System.Drawing.RectangleF structure that specifies the portion of the System.Drawing.Image to draw.</param>
         /// <param name="sourceUnit">Member of the System.Drawing.GraphicsUnit enumeration that specifies the units of measure used by the sourceRectangle parameter.</param>
         /// <exception cref="System.ArgumentNullException">image is null.</exception>
-        void DrawImage(Image image, float x, float y, RectangleF sourceRectangle, GraphicsUnit sourceUnit);
+        void DrawImage(Image image, float imageX, float imageY, RectangleF sourceRectangle, GraphicsUnit sourceUnit);
 
         /// <summary>Draws the specified System.Drawing.Image at the specified location and with the specified size.</summary>
         /// <param name="image">System.Drawing.Image to draw.</param>
-        /// <param name="x">The x-coordinate of the upper-left corner of the drawn image.</param>
-        /// <param name="y">The y-coordinate of the upper-left corner of the drawn image.</param>
+        /// <param name="imageX">The x-coordinate of the upper-left corner of the drawn image.</param>
+        /// <param name="imageY">The y-coordinate of the upper-left corner of the drawn image.</param>
         /// <param name="width">Width of the drawn image.</param>
         /// <param name="height">Height of the drawn image.</param>
         /// <exception cref="System.ArgumentNullException">image is null.</exception>
-        void DrawImage(Image image, int x, int y, int width, int height);
+        void DrawImage(Image image, int imageX, int imageY, int width, int height);
 
         /// <summary>Draws a portion of an image at a specified location.</summary>
         /// <param name="image">System.Drawing.Image to draw.</param>
-        /// <param name="x">The x-coordinate of the upper-left corner of the drawn image.</param>
-        /// <param name="y">The y-coordinate of the upper-left corner of the drawn image.</param>
+        /// <param name="imageX">The x-coordinate of the upper-left corner of the drawn image.</param>
+        /// <param name="imageY">The y-coordinate of the upper-left corner of the drawn image.</param>
         /// <param name="sourceRectangle">System.Drawing.Rectangle structure that specifies the portion of the image object to draw.</param>
         /// <param name="sourceUnit">Member of the System.Drawing.GraphicsUnit enumeration that specifies the units of measure used by the sourceRectangle parameter.</param>
         /// <exception cref="System.ArgumentNullException">image is null.</exception>
-        void DrawImage(Image image, int x, int y, Rectangle sourceRectangle, GraphicsUnit sourceUnit);
+        void DrawImage(Image image, int imageX, int imageY, Rectangle sourceRectangle, GraphicsUnit sourceUnit);
 
         /// <summary>Draws the specified portion of the specified System.Drawing.Image at the specified location.</summary>
         /// <param name="image">System.Drawing.Image to draw.</param>
         /// <param name="destinationPoints">Array of three System.Drawing.Point structures that define a parallelogram.</param>
         /// <param name="sourceRectangle">System.Drawing.Rectangle structure that specifies the portion of the image object to draw.</param>
         /// <param name="sourceUnit">Member of the System.Drawing.GraphicsUnit enumeration that specifies the units of measure used by the sourceRectangle parameter.</param>
-        /// <param name="imageAttr">System.Drawing.Imaging.ImageAttributes that specifies recoloring and gamma information for the image object.</param>
+        /// <param name="imageAttributes">System.Drawing.Imaging.ImageAttributes that specifies recoloring and gamma information for the image object.</param>
         /// <exception cref="System.ArgumentNullException">image is null.</exception>
-        void DrawImage(Image image, Point[] destinationPoints, Rectangle sourceRectangle, GraphicsUnit sourceUnit, ImageAttributes imageAttr);
+        void DrawImage(Image image, Point[] destinationPoints, Rectangle sourceRectangle, GraphicsUnit sourceUnit, ImageAttributes imageAttributes);
 
         /// <summary>Draws the specified portion of the specified System.Drawing.Image at the specified location and with the specified size.</summary>
         /// <param name="image">System.Drawing.Image to draw.</param>
         /// <param name="destinationPoints">Array of three System.Drawing.PointF structures that define a parallelogram.</param>
         /// <param name="sourceRectangle">System.Drawing.RectangleF structure that specifies the portion of the image object to draw.</param>
         /// <param name="sourceUnit">Member of the System.Drawing.GraphicsUnit enumeration that specifies the units of measure used by the sourceRectangle parameter.</param>
-        /// <param name="imageAttr">System.Drawing.Imaging.ImageAttributes that specifies recoloring and gamma information for the image object.</param>
+        /// <param name="imageAttributes">System.Drawing.Imaging.ImageAttributes that specifies recoloring and gamma information for the image object.</param>
         /// <exception cref="System.ArgumentNullException">image is null.</exception>
-        void DrawImage(Image image, PointF[] destinationPoints, RectangleF sourceRectangle, GraphicsUnit sourceUnit, ImageAttributes imageAttr);
+        void DrawImage(Image image, PointF[] destinationPoints, RectangleF sourceRectangle, GraphicsUnit sourceUnit, ImageAttributes imageAttributes);
 
         /// <summary>Draws the specified portion of the specified System.Drawing.Image at the specified location and with the specified size.</summary>
         /// <param name="image">System.Drawing.Image to draw.</param>
         /// <param name="destinationPoints">Array of three System.Drawing.PointF structures that define a parallelogram.</param>
         /// <param name="sourceRectangle">System.Drawing.Rectangle structure that specifies the portion of the image object to draw.</param>
         /// <param name="sourceUnit">Member of the System.Drawing.GraphicsUnit enumeration that specifies the units of measure used by the sourceRectangle parameter.</param>
-        /// <param name="imageAttr">System.Drawing.Imaging.ImageAttributes that specifies recoloring and gamma information for the image object.</param>
+        /// <param name="imageAttributes">System.Drawing.Imaging.ImageAttributes that specifies recoloring and gamma information for the image object.</param>
         /// <param name="callback">System.Drawing.Graphics.DrawImageAbort delegate that specifies a method to call during the drawing of the image. This method is called frequently to check whether to stop execution of the System.Drawing.Graphics.DrawImage(System.Drawing.Image,System.Drawing.Point[],System.Drawing.Rectangle,System.Drawing.GraphicsUnit,System.Drawing.Imaging.ImageAttributes,System.Drawing.Graphics.DrawImageAbort) method according to application-determined criteria.</param>
         /// <exception cref="System.ArgumentNullException">image is null.</exception>
-        void DrawImage(Image image, Point[] destinationPoints, Rectangle sourceRectangle, GraphicsUnit sourceUnit, ImageAttributes imageAttr, Graphics.DrawImageAbort callback);
+        void DrawImage(Image image, Point[] destinationPoints, Rectangle sourceRectangle, GraphicsUnit sourceUnit, ImageAttributes imageAttributes, Graphics.DrawImageAbort callback);
 
         /// <summary>Draws the specified portion of the specified System.Drawing.Image at the specified location and with the specified size.</summary>
         /// <param name="image">System.Drawing.Image to draw.</param>
         /// <param name="destinationPoints">Array of three System.Drawing.PointF structures that define a parallelogram.</param>
         /// <param name="sourceRectangle">System.Drawing.RectangleF structure that specifies the portion of the image object to draw.</param>
         /// <param name="sourceUnit">Member of the System.Drawing.GraphicsUnit enumeration that specifies the units of measure used by the sourceRectangle parameter.</param>
-        /// <param name="imageAttr">System.Drawing.Imaging.ImageAttributes that specifies recoloring and gamma information for the image object.</param>
+        /// <param name="imageAttributes">System.Drawing.Imaging.ImageAttributes that specifies recoloring and gamma information for the image object.</param>
         /// <param name="callback">System.Drawing.Graphics.DrawImageAbort delegate that specifies a method to call during the drawing of the image. This method is called frequently to check whether to stop execution of the System.Drawing.Graphics.DrawImage(System.Drawing.Image,System.Drawing.PointF[],System.Drawing.RectangleF,System.Drawing.GraphicsUnit,System.Drawing.Imaging.ImageAttributes,System.Drawing.Graphics.DrawImageAbort) method according to application-determined criteria.</param>
         /// <exception cref="System.ArgumentNullException">image is null.</exception>
-        void DrawImage(Image image, PointF[] destinationPoints, RectangleF sourceRectangle, GraphicsUnit sourceUnit, ImageAttributes imageAttr, Graphics.DrawImageAbort callback);
+        void DrawImage(Image image, PointF[] destinationPoints, RectangleF sourceRectangle, GraphicsUnit sourceUnit, ImageAttributes imageAttributes, Graphics.DrawImageAbort callback);
 
         /// <summary>Draws the specified portion of the specified System.Drawing.Image at the specified location and with the specified size.</summary>
         /// <param name="image">System.Drawing.Image to draw.</param>
         /// <param name="destinationPoints">Array of three System.Drawing.PointF structures that define a parallelogram.</param>
         /// <param name="sourceRectangle">System.Drawing.Rectangle structure that specifies the portion of the image object to draw.</param>
         /// <param name="sourceUnit">Member of the System.Drawing.GraphicsUnit enumeration that specifies the units of measure used by the sourceRectangle parameter.</param>
-        /// <param name="imageAttr">System.Drawing.Imaging.ImageAttributes that specifies recoloring and gamma information for the image object.</param>
+        /// <param name="imageAttributes">System.Drawing.Imaging.ImageAttributes that specifies recoloring and gamma information for the image object.</param>
         /// <param name="callback">System.Drawing.Graphics.DrawImageAbort delegate that specifies a method to call during the drawing of the image. This method is called frequently to check whether to stop execution of the System.Drawing.Graphics.DrawImage(System.Drawing.Image,System.Drawing.Point[],System.Drawing.Rectangle,System.Drawing.GraphicsUnit,System.Drawing.Imaging.ImageAttributes,System.Drawing.Graphics.DrawImageAbort,System.Int32) method according to application-determined criteria.</param>
         /// <param name="callbackData">Value specifying additional data for the System.Drawing.Graphics.DrawImageAbort delegate to use when checking whether to stop execution of the System.Drawing.Graphics.DrawImage(System.Drawing.Image,System.Drawing.Point[],System.Drawing.Rectangle,System.Drawing.GraphicsUnit,System.Drawing.Imaging.ImageAttributes,System.Drawing.Graphics.DrawImageAbort,System.Int32) method.</param>
-        void DrawImage(Image image, Point[] destinationPoints, Rectangle sourceRectangle, GraphicsUnit sourceUnit, ImageAttributes imageAttr, Graphics.DrawImageAbort callback, int callbackData);
+        void DrawImage(Image image, Point[] destinationPoints, Rectangle sourceRectangle, GraphicsUnit sourceUnit, ImageAttributes imageAttributes, Graphics.DrawImageAbort callback, int callbackData);
 
         /// <summary>Draws the specified portion of the specified System.Drawing.Image at the specified location and with the specified size.</summary>
         /// <param name="image">System.Drawing.Image to draw.</param>
         /// <param name="destinationPoints">Array of three System.Drawing.PointF structures that define a parallelogram.</param>
         /// <param name="sourceRectangle">System.Drawing.RectangleF structure that specifies the portion of the image object to draw.</param>
         /// <param name="sourceUnit">Member of the System.Drawing.GraphicsUnit enumeration that specifies the units of measure used by the sourceRectangle parameter.</param>
-        /// <param name="imageAttr">System.Drawing.Imaging.ImageAttributes that specifies recoloring and gamma information for the image object.</param>
+        /// <param name="imageAttributes">System.Drawing.Imaging.ImageAttributes that specifies recoloring and gamma information for the image object.</param>
         /// <param name="callback">System.Drawing.Graphics.DrawImageAbort delegate that specifies a method to call during the drawing of the image. This method is called frequently to check whether to stop execution of the System.Drawing.Graphics.DrawImage(System.Drawing.Image,System.Drawing.PointF[],System.Drawing.RectangleF,System.Drawing.GraphicsUnit,System.Drawing.Imaging.ImageAttributes,System.Drawing.Graphics.DrawImageAbort,System.Int32) method according to application-determined criteria.</param>
         /// <param name="callbackData">Value specifying additional data for the System.Drawing.Graphics.DrawImageAbort delegate to use when checking whether to stop execution of the System.Drawing.Graphics.DrawImage(System.Drawing.Image,System.Drawing.PointF[],System.Drawing.RectangleF,System.Drawing.GraphicsUnit,System.Drawing.Imaging.ImageAttributes,System.Drawing.Graphics.DrawImageAbort,System.Int32) method.</param>
         /// <exception cref="System.ArgumentNullException">image is null.</exception>
-        void DrawImage(Image image, PointF[] destinationPoints, RectangleF sourceRectangle, GraphicsUnit sourceUnit, ImageAttributes imageAttr, Graphics.DrawImageAbort callback, int callbackData);
+        void DrawImage(Image image, PointF[] destinationPoints, RectangleF sourceRectangle, GraphicsUnit sourceUnit, ImageAttributes imageAttributes, Graphics.DrawImageAbort callback, int callbackData);
 
         /// <summary>Draws the specified portion of the specified System.Drawing.Image at the specified location and with the specified size.</summary>
         /// <param name="image">System.Drawing.Image to draw.</param>
         /// <param name="destinationRectangle">System.Drawing.Rectangle structure that specifies the location and size of the drawn image. The image is scaled to fit the rectangle.</param>
-        /// <param name="srcX">The x-coordinate of the upper-left corner of the portion of the source image to draw.</param>
-        /// <param name="srcY">The y-coordinate of the upper-left corner of the portion of the source image to draw.</param>
-        /// <param name="srcWidth">Width of the portion of the source image to draw.</param>
-        /// <param name="srcHeight">Height of the portion of the source image to draw.</param>
+        /// <param name="sourceLeft">The x-coordinate of the upper-left corner of the portion of the source image to draw.</param>
+        /// <param name="sourceTop">The y-coordinate of the upper-left corner of the portion of the source image to draw.</param>
+        /// <param name="sourceWidth">Width of the portion of the source image to draw.</param>
+        /// <param name="sourceHeight">Height of the portion of the source image to draw.</param>
         /// <param name="sourceUnit">Member of the System.Drawing.GraphicsUnit enumeration that specifies the units of measure used to determine the source rectangle.</param>
         /// <exception cref="System.ArgumentNullException">image is null.</exception>
-        void DrawImage(Image image, Rectangle destinationRectangle, float srcX, float srcY, float srcWidth, float srcHeight, GraphicsUnit sourceUnit);
+        void DrawImage(Image image, Rectangle destinationRectangle, float sourceLeft, float sourceTop, float sourceWidth, float sourceHeight, GraphicsUnit sourceUnit);
 
         /// <summary>Draws the specified portion of the specified System.Drawing.Image at the specified location and with the specified size.</summary>
         /// <param name="image">System.Drawing.Image to draw.</param>
         /// <param name="destinationRectangle">System.Drawing.Rectangle structure that specifies the location and size of the drawn image. The image is scaled to fit the rectangle.</param>
-        /// <param name="srcX">The x-coordinate of the upper-left corner of the portion of the source image to draw.</param>
-        /// <param name="srcY">The y-coordinate of the upper-left corner of the portion of the source image to draw.</param>
-        /// <param name="srcWidth">Width of the portion of the source image to draw.</param>
-        /// <param name="srcHeight">Height of the portion of the source image to draw.</param>
+        /// <param name="sourceLeft">The x-coordinate of the upper-left corner of the portion of the source image to draw.</param>
+        /// <param name="sourceTop">The y-coordinate of the upper-left corner of the portion of the source image to draw.</param>
+        /// <param name="sourceWidth">Width of the portion of the source image to draw.</param>
+        /// <param name="sourceHeight">Height of the portion of the source image to draw.</param>
         /// <param name="sourceUnit">Member of the System.Drawing.GraphicsUnit enumeration that specifies the units of measure used to determine the source rectangle.</param>
         /// <exception cref="System.ArgumentNullException">image is null.</exception>
-        void DrawImage(Image image, Rectangle destinationRectangle, int srcX, int srcY, int srcWidth, int srcHeight, GraphicsUnit sourceUnit);
+        void DrawImage(Image image, Rectangle destinationRectangle, int sourceLeft, int sourceTop, int sourceWidth, int sourceHeight, GraphicsUnit sourceUnit);
 
         /// <summary>Draws the specified portion of the specified System.Drawing.Image at the specified location and with the specified size.</summary>
         /// <param name="image">System.Drawing.Image to draw.</param>
         /// <param name="destinationRectangle">System.Drawing.Rectangle structure that specifies the location and size of the drawn image. The image is scaled to fit the rectangle.</param>
-        /// <param name="srcX">The x-coordinate of the upper-left corner of the portion of the source image to draw.</param>
-        /// <param name="srcY">The y-coordinate of the upper-left corner of the portion of the source image to draw.</param>
-        /// <param name="srcWidth">Width of the portion of the source image to draw.</param>
-        /// <param name="srcHeight">Height of the portion of the source image to draw.</param>
+        /// <param name="sourceLeft">The x-coordinate of the upper-left corner of the portion of the source image to draw.</param>
+        /// <param name="sourceTop">The y-coordinate of the upper-left corner of the portion of the source image to draw.</param>
+        /// <param name="sourceWidth">Width of the portion of the source image to draw.</param>
+        /// <param name="sourceHeight">Height of the portion of the source image to draw.</param>
         /// <param name="sourceUnit">Member of the System.Drawing.GraphicsUnit enumeration that specifies the units of measure used to determine the source rectangle.</param>
-        /// <param name="imageAttrs">System.Drawing.Imaging.ImageAttributes that specifies recoloring and gamma information for the image object.</param>
+        /// <param name="imageAttributes">System.Drawing.Imaging.ImageAttributes that specifies recoloring and gamma information for the image object.</param>
         /// <exception cref="System.ArgumentNullException">image is null.</exception>
-        void DrawImage(Image image, Rectangle destinationRectangle, float srcX, float srcY, float srcWidth, float srcHeight, GraphicsUnit sourceUnit, ImageAttributes imageAttrs);
+        void DrawImage(Image image, Rectangle destinationRectangle, float sourceLeft, float sourceTop, float sourceWidth, float sourceHeight, GraphicsUnit sourceUnit, ImageAttributes imageAttributes);
 
         /// <summary>Draws the specified portion of the specified System.Drawing.Image at the specified location and with the specified size.</summary>
         /// <param name="image">System.Drawing.Image to draw.</param>
         /// <param name="destinationRectangle">System.Drawing.Rectangle structure that specifies the location and size of the drawn image. The image is scaled to fit the rectangle.</param>
-        /// <param name="srcX">The x-coordinate of the upper-left corner of the portion of the source image to draw.</param>
-        /// <param name="srcY">The y-coordinate of the upper-left corner of the portion of the source image to draw.</param>
-        /// <param name="srcWidth">Width of the portion of the source image to draw.</param>
-        /// <param name="srcHeight">Height of the portion of the source image to draw.</param>
+        /// <param name="sourceLeft">The x-coordinate of the upper-left corner of the portion of the source image to draw.</param>
+        /// <param name="sourceTop">The y-coordinate of the upper-left corner of the portion of the source image to draw.</param>
+        /// <param name="sourceWidth">Width of the portion of the source image to draw.</param>
+        /// <param name="sourceHeight">Height of the portion of the source image to draw.</param>
         /// <param name="sourceUnit">Member of the System.Drawing.GraphicsUnit enumeration that specifies the units of measure used to determine the source rectangle.</param>
-        /// <param name="imageAttr">System.Drawing.Imaging.ImageAttributes that specifies recoloring and gamma information for the image object.</param>
+        /// <param name="imageAttributes">System.Drawing.Imaging.ImageAttributes that specifies recoloring and gamma information for the image object.</param>
         /// <exception cref="System.ArgumentNullException">image is null.</exception>
-        void DrawImage(Image image, Rectangle destinationRectangle, int srcX, int srcY, int srcWidth, int srcHeight, GraphicsUnit sourceUnit, ImageAttributes imageAttr);
+        void DrawImage(Image image, Rectangle destinationRectangle, int sourceLeft, int sourceTop, int sourceWidth, int sourceHeight, GraphicsUnit sourceUnit, ImageAttributes imageAttributes);
 
         /// <summary>Draws the specified portion of the specified System.Drawing.Image at the specified location and with the specified size.</summary>
         /// <param name="image">System.Drawing.Image to draw.</param>
         /// <param name="destinationRectangle">System.Drawing.Rectangle structure that specifies the location and size of the drawn image. The image is scaled to fit the rectangle.</param>
-        /// <param name="srcX">The x-coordinate of the upper-left corner of the portion of the source image to draw.</param>
-        /// <param name="srcY">The y-coordinate of the upper-left corner of the portion of the source image to draw.</param>
-        /// <param name="srcWidth">Width of the portion of the source image to draw.</param>
-        /// <param name="srcHeight">Height of the portion of the source image to draw.</param>
+        /// <param name="sourceLeft">The x-coordinate of the upper-left corner of the portion of the source image to draw.</param>
+        /// <param name="sourceTop">The y-coordinate of the upper-left corner of the portion of the source image to draw.</param>
+        /// <param name="sourceWidth">Width of the portion of the source image to draw.</param>
+        /// <param name="sourceHeight">Height of the portion of the source image to draw.</param>
         /// <param name="sourceUnit">Member of the System.Drawing.GraphicsUnit enumeration that specifies the units of measure used to determine the source rectangle.</param>
-        /// <param name="imageAttrs">System.Drawing.Imaging.ImageAttributes that specifies recoloring and gamma information for the image object.</param>
+        /// <param name="imageAttributes">System.Drawing.Imaging.ImageAttributes that specifies recoloring and gamma information for the image object.</param>
         /// <param name="callback">System.Drawing.Graphics.DrawImageAbort delegate that specifies a method to call during the drawing of the image. This method is called frequently to check whether to stop execution of the System.Drawing.Graphics.DrawImage(System.Drawing.Image,System.Drawing.Rectangle,System.Single,System.Single,System.Single,System.Single,System.Drawing.GraphicsUnit,System.Drawing.Imaging.ImageAttributes,System.Drawing.Graphics.DrawImageAbort) method according to application-determined criteria.</param>
         /// <exception cref="System.ArgumentNullException">image is null.</exception>
-        void DrawImage(Image image, Rectangle destinationRectangle, float srcX, float srcY, float srcWidth, float srcHeight, GraphicsUnit sourceUnit, ImageAttributes imageAttrs, Graphics.DrawImageAbort callback);
+        void DrawImage(Image image, Rectangle destinationRectangle, float sourceLeft, float sourceTop, float sourceWidth, float sourceHeight, GraphicsUnit sourceUnit, ImageAttributes imageAttributes, Graphics.DrawImageAbort callback);
 
         /// <summary>Draws the specified portion of the specified System.Drawing.Image at the specified location and with the specified size.</summary>
         /// <param name="image">System.Drawing.Image to draw.</param>
         /// <param name="destinationRectangle">System.Drawing.Rectangle structure that specifies the location and size of the drawn image. The image is scaled to fit the rectangle.</param>
-        /// <param name="srcX">The x-coordinate of the upper-left corner of the portion of the source image to draw.</param>
-        /// <param name="srcY">The y-coordinate of the upper-left corner of the portion of the source image to draw.</param>
-        /// <param name="srcWidth">Width of the portion of the source image to draw.</param>
-        /// <param name="srcHeight">Height of the portion of the source image to draw.</param>
+        /// <param name="sourceLeft">The x-coordinate of the upper-left corner of the portion of the source image to draw.</param>
+        /// <param name="sourceTop">The y-coordinate of the upper-left corner of the portion of the source image to draw.</param>
+        /// <param name="sourceWidth">Width of the portion of the source image to draw.</param>
+        /// <param name="sourceHeight">Height of the portion of the source image to draw.</param>
         /// <param name="sourceUnit">Member of the System.Drawing.GraphicsUnit enumeration that specifies the units of measure used to determine the source rectangle.</param>
-        /// <param name="imageAttr">System.Drawing.Imaging.ImageAttributes that specifies recoloring and gamma information for image.</param>
+        /// <param name="imageAttributes">System.Drawing.Imaging.ImageAttributes that specifies recoloring and gamma information for image.</param>
         /// <param name="callback">System.Drawing.Graphics.DrawImageAbort delegate that specifies a method to call during the drawing of the image. This method is called frequently to check whether to stop execution of the System.Drawing.Graphics.DrawImage(System.Drawing.Image,System.Drawing.Rectangle,System.Int32,System.Int32,System.Int32,System.Int32,System.Drawing.GraphicsUnit,System.Drawing.Imaging.ImageAttributes,System.Drawing.Graphics.DrawImageAbort) method according to application-determined criteria.</param>
         /// <exception cref="System.ArgumentNullException">image is null.</exception>
-        void DrawImage(Image image, Rectangle destinationRectangle, int srcX, int srcY, int srcWidth, int srcHeight, GraphicsUnit sourceUnit, ImageAttributes imageAttr, Graphics.DrawImageAbort callback);
+        void DrawImage(Image image, Rectangle destinationRectangle, int sourceLeft, int sourceTop, int sourceWidth, int sourceHeight, GraphicsUnit sourceUnit, ImageAttributes imageAttributes, Graphics.DrawImageAbort callback);
 
         /// <summary>Draws the specified portion of the specified System.Drawing.Image at the specified location and with the specified size.</summary>
         /// <param name="image">System.Drawing.Image to draw.</param>
         /// <param name="destinationRectangle">System.Drawing.Rectangle structure that specifies the location and size of the drawn image. The image is scaled to fit the rectangle.</param>
-        /// <param name="srcX">The x-coordinate of the upper-left corner of the portion of the source image to draw.</param>
-        /// <param name="srcY">The y-coordinate of the upper-left corner of the portion of the source image to draw.</param>
-        /// <param name="srcWidth">Width of the portion of the source image to draw.</param>
-        /// <param name="srcHeight">Height of the portion of the source image to draw.</param>
+        /// <param name="sourceLeft">The x-coordinate of the upper-left corner of the portion of the source image to draw.</param>
+        /// <param name="sourceTop">The y-coordinate of the upper-left corner of the portion of the source image to draw.</param>
+        /// <param name="sourceWidth">Width of the portion of the source image to draw.</param>
+        /// <param name="sourceHeight">Height of the portion of the source image to draw.</param>
         /// <param name="sourceUnit">Member of the System.Drawing.GraphicsUnit enumeration that specifies the units of measure used to determine the source rectangle.</param>
-        /// <param name="imageAttrs">System.Drawing.Imaging.ImageAttributes that specifies recoloring and gamma information for the image object.</param>
+        /// <param name="imageAttributes">System.Drawing.Imaging.ImageAttributes that specifies recoloring and gamma information for the image object.</param>
         /// <param name="callback">System.Drawing.Graphics.DrawImageAbort delegate that specifies a method to call during the drawing of the image. This method is called frequently to check whether to stop execution of the System.Drawing.Graphics.DrawImage(System.Drawing.Image,System.Drawing.Rectangle,System.Single,System.Single,System.Single,System.Single,System.Drawing.GraphicsUnit,System.Drawing.Imaging.ImageAttributes,System.Drawing.Graphics.DrawImageAbort,System.IntPtr) method according to application-determined criteria.</param>
         /// <param name="callbackData">Value specifying additional data for the System.Drawing.Graphics.DrawImageAbort delegate to use when checking whether to stop execution of the DrawImage method.</param>
         /// <exception cref="System.ArgumentNullException">image is null.</exception>
-        void DrawImage(Image image, Rectangle destinationRectangle, float srcX, float srcY, float srcWidth, float srcHeight, GraphicsUnit sourceUnit, ImageAttributes imageAttrs, Graphics.DrawImageAbort callback, IntPtr callbackData);
+        void DrawImage(Image image, Rectangle destinationRectangle, float sourceLeft, float sourceTop, float sourceWidth, float sourceHeight, GraphicsUnit sourceUnit, ImageAttributes imageAttributes, Graphics.DrawImageAbort callback, IntPtr callbackData);
 
         /// <summary>Draws the specified portion of the specified System.Drawing.Image at the specified location and with the specified size.</summary>
         /// <param name="image">System.Drawing.Image to draw.</param>
         /// <param name="destinationRectangle">System.Drawing.Rectangle structure that specifies the location and size of the drawn image. The image is scaled to fit the rectangle.</param>
-        /// <param name="srcX">The x-coordinate of the upper-left corner of the portion of the source image to draw.</param>
-        /// <param name="srcY">The y-coordinate of the upper-left corner of the portion of the source image to draw.</param>
-        /// <param name="srcWidth">Width of the portion of the source image to draw.</param>
-        /// <param name="srcHeight">Height of the portion of the source image to draw.</param>
+        /// <param name="sourceLeft">The x-coordinate of the upper-left corner of the portion of the source image to draw.</param>
+        /// <param name="sourceTop">The y-coordinate of the upper-left corner of the portion of the source image to draw.</param>
+        /// <param name="sourceWidth">Width of the portion of the source image to draw.</param>
+        /// <param name="sourceHeight">Height of the portion of the source image to draw.</param>
         /// <param name="sourceUnit">Member of the System.Drawing.GraphicsUnit enumeration that specifies the units of measure used to determine the source rectangle.</param>
-        /// <param name="imageAttrs">System.Drawing.Imaging.ImageAttributes that specifies recoloring and gamma information for the image object.</param>
+        /// <param name="imageAttributes">System.Drawing.Imaging.ImageAttributes that specifies recoloring and gamma information for the image object.</param>
         /// <param name="callback">System.Drawing.Graphics.DrawImageAbort delegate that specifies a method to call during the drawing of the image. This method is called frequently to check whether to stop execution of the System.Drawing.Graphics.DrawImage(System.Drawing.Image,System.Drawing.Rectangle,System.Int32,System.Int32,System.Int32,System.Int32,System.Drawing.GraphicsUnit,System.Drawing.Imaging.ImageAttributes,System.Drawing.Graphics.DrawImageAbort,System.IntPtr) method according to application-determined criteria.</param>
         /// <param name="callbackData">Value specifying additional data for the System.Drawing.Graphics.DrawImageAbort delegate to use when checking whether to stop execution of the DrawImage method.</param>
         /// <exception cref="System.ArgumentNullException">image is null.</exception>
-        void DrawImage(Image image, Rectangle destinationRectangle, int srcX, int srcY, int srcWidth, int srcHeight, GraphicsUnit sourceUnit, ImageAttributes imageAttrs, Graphics.DrawImageAbort callback, IntPtr callbackData);
+        void DrawImage(Image image, Rectangle destinationRectangle, int sourceLeft, int sourceTop, int sourceWidth, int sourceHeight, GraphicsUnit sourceUnit, ImageAttributes imageAttributes, Graphics.DrawImageAbort callback, IntPtr callbackData);
 
         /// <summary>Draws a specified image using its original physical size at a specified location.</summary>
         /// <param name="image">System.Drawing.Image to draw.</param>
@@ -672,9 +672,9 @@ namespace Tournaments.Graphics
 
         /// <summary>Draws a specified image using its original physical size at a specified location.</summary>
         /// <param name="image">System.Drawing.Image to draw.</param>
-        /// <param name="rect">System.Drawing.Rectangle that specifies the upper-left corner of the drawn image. The X and Y properties of the rectangle specify the upper-left corner. The Width and Height properties are ignored.</param>
+        /// <param name="rectangle">System.Drawing.Rectangle that specifies the upper-left corner of the drawn image. The X and Y properties of the rectangle specify the upper-left corner. The Width and Height properties are ignored.</param>
         /// <exception cref="System.ArgumentNullException">image is null.</exception>
-        void DrawImageUnscaled(Image image, Rectangle rect);
+        void DrawImageUnscaled(Image image, Rectangle rectangle);
 
         /// <summary>Draws the specified image using its original physical size at the location specified by a coordinate pair.</summary>
         /// <param name="image">System.Drawing.Image to draw.</param>
@@ -694,9 +694,9 @@ namespace Tournaments.Graphics
 
         /// <summary>Draws the specified image without scaling and clips it, if necessary, to fit in the specified rectangle.</summary>
         /// <param name="image">The System.Drawing.Image to draw.</param>
-        /// <param name="rect">The System.Drawing.Rectangle in which to draw the image.</param>
+        /// <param name="rectangle">The System.Drawing.Rectangle in which to draw the image.</param>
         /// <exception cref="System.ArgumentNullException">image is null.</exception>
-        void DrawImageUnscaledAndClipped(Image image, Rectangle rect);
+        void DrawImageUnscaledAndClipped(Image image, Rectangle rectangle);
 
         /// <summary>Draws a line connecting two System.Drawing.Point structures.</summary>
         /// <param name="pen">System.Drawing.Pen that determines the color, width, and style of the line.</param>
@@ -714,21 +714,21 @@ namespace Tournaments.Graphics
 
         /// <summary>Draws a line connecting the two points specified by the coordinate pairs.</summary>
         /// <param name="pen">System.Drawing.Pen that determines the color, width, and style of the line.</param>
-        /// <param name="x1">The x-coordinate of the first point.</param>
-        /// <param name="y1">The y-coordinate of the first point.</param>
-        /// <param name="x2">The x-coordinate of the second point.</param>
-        /// <param name="y2">The y-coordinate of the second point.</param>
+        /// <param name="startX">The x-coordinate of the first point.</param>
+        /// <param name="startY">The y-coordinate of the first point.</param>
+        /// <param name="endX">The x-coordinate of the second point.</param>
+        /// <param name="endY">The y-coordinate of the second point.</param>
         /// <exception cref="System.ArgumentNullException">pen is null.</exception>
-        void DrawLine(Pen pen, float x1, float y1, float x2, float y2);
+        void DrawLine(Pen pen, float startX, float startY, float endX, float endY);
 
         /// <summary>Draws a line connecting the two points specified by the coordinate pairs.</summary>
         /// <param name="pen">System.Drawing.Pen that determines the color, width, and style of the line.</param>
-        /// <param name="x1">The x-coordinate of the first point.</param>
-        /// <param name="y1">The y-coordinate of the first point.</param>
-        /// <param name="x2">The x-coordinate of the second point.</param>
-        /// <param name="y2">The y-coordinate of the second point.</param>
+        /// <param name="startX">The x-coordinate of the first point.</param>
+        /// <param name="startY">The y-coordinate of the first point.</param>
+        /// <param name="endX">The x-coordinate of the second point.</param>
+        /// <param name="endY">The y-coordinate of the second point.</param>
         /// <exception cref="System.ArgumentNullException">pen is null.</exception>
-        void DrawLine(Pen pen, int x1, int y1, int x2, int y2);
+        void DrawLine(Pen pen, int startX, int startY, int endX, int endY);
 
         /// <summary>Draws a series of line segments that connect an array of System.Drawing.Point structures.</summary>
         /// <param name="pen">System.Drawing.Pen that determines the color, width, and style of the line segments.</param>
@@ -750,41 +750,41 @@ namespace Tournaments.Graphics
 
         /// <summary>Draws a pie shape defined by an ellipse specified by a System.Drawing.Rectangle structure and two radial lines.</summary>
         /// <param name="pen">System.Drawing.Pen that determines the color, width, and style of the pie shape.</param>
-        /// <param name="rect">System.Drawing.Rectangle structure that represents the bounding rectangle that defines the ellipse from which the pie shape comes.</param>
+        /// <param name="rectangle">System.Drawing.Rectangle structure that represents the bounding rectangle that defines the ellipse from which the pie shape comes.</param>
         /// <param name="startAngle">Angle measured in degrees clockwise from the x-axis to the first side of the pie shape.</param>
         /// <param name="sweepAngle">Angle measured in degrees clockwise from the startAngle parameter to the second side of the pie shape.</param>
         /// <exception cref="System.ArgumentNullException">pen is null.</exception>
-        void DrawPie(Pen pen, Rectangle rect, float startAngle, float sweepAngle);
+        void DrawPie(Pen pen, Rectangle rectangle, float startAngle, float sweepAngle);
 
         /// <summary>Draws a pie shape defined by an ellipse specified by a System.Drawing.RectangleF structure and two radial lines.</summary>
         /// <param name="pen">System.Drawing.Pen that determines the color, width, and style of the pie shape.</param>
-        /// <param name="rect">System.Drawing.RectangleF structure that represents the bounding rectangle that defines the ellipse from which the pie shape comes.</param>
+        /// <param name="rectangle">System.Drawing.RectangleF structure that represents the bounding rectangle that defines the ellipse from which the pie shape comes.</param>
         /// <param name="startAngle">Angle measured in degrees clockwise from the x-axis to the first side of the pie shape.</param>
         /// <param name="sweepAngle">Angle measured in degrees clockwise from the startAngle parameter to the second side of the pie shape.</param>
         /// <exception cref="System.ArgumentNullException">pen is null.</exception>
-        void DrawPie(Pen pen, RectangleF rect, float startAngle, float sweepAngle);
+        void DrawPie(Pen pen, RectangleF rectangle, float startAngle, float sweepAngle);
 
         /// <summary>Draws a pie shape defined by an ellipse specified by a coordinate pair, a width, a height, and two radial lines.</summary>
         /// <param name="pen">System.Drawing.Pen that determines the color, width, and style of the pie shape.</param>
-        /// <param name="x">The x-coordinate of the upper-left corner of the bounding rectangle that defines the ellipse from which the pie shape comes.</param>
-        /// <param name="y">The y-coordinate of the upper-left corner of the bounding rectangle that defines the ellipse from which the pie shape comes.</param>
+        /// <param name="imageX">The x-coordinate of the upper-left corner of the bounding rectangle that defines the ellipse from which the pie shape comes.</param>
+        /// <param name="imageY">The y-coordinate of the upper-left corner of the bounding rectangle that defines the ellipse from which the pie shape comes.</param>
         /// <param name="width">Width of the bounding rectangle that defines the ellipse from which the pie shape comes.</param>
         /// <param name="height">Height of the bounding rectangle that defines the ellipse from which the pie shape comes.</param>
         /// <param name="startAngle">Angle measured in degrees clockwise from the x-axis to the first side of the pie shape.</param>
         /// <param name="sweepAngle">Angle measured in degrees clockwise from the startAngle parameter to the second side of the pie shape.</param>
         /// <exception cref="System.ArgumentNullException">pen is null.</exception>
-        void DrawPie(Pen pen, float x, float y, float width, float height, float startAngle, float sweepAngle);
+        void DrawPie(Pen pen, float imageX, float imageY, float width, float height, float startAngle, float sweepAngle);
 
         /// <summary>Draws a pie shape defined by an ellipse specified by a coordinate pair, a width, a height, and two radial lines.</summary>
         /// <param name="pen">System.Drawing.Pen that determines the color, width, and style of the pie shape.</param>
-        /// <param name="x">The x-coordinate of the upper-left corner of the bounding rectangle that defines the ellipse from which the pie shape comes.</param>
-        /// <param name="y">The y-coordinate of the upper-left corner of the bounding rectangle that defines the ellipse from which the pie shape comes.</param>
+        /// <param name="imageX">The x-coordinate of the upper-left corner of the bounding rectangle that defines the ellipse from which the pie shape comes.</param>
+        /// <param name="imageY">The y-coordinate of the upper-left corner of the bounding rectangle that defines the ellipse from which the pie shape comes.</param>
         /// <param name="width">Width of the bounding rectangle that defines the ellipse from which the pie shape comes.</param>
         /// <param name="height">Height of the bounding rectangle that defines the ellipse from which the pie shape comes.</param>
         /// <param name="startAngle">Angle measured in degrees clockwise from the x-axis to the first side of the pie shape.</param>
         /// <param name="sweepAngle">Angle measured in degrees clockwise from the startAngle parameter to the second side of the pie shape.</param>
         /// <exception cref="System.ArgumentNullException">pen is null.</exception>
-        void DrawPie(Pen pen, int x, int y, int width, int height, int startAngle, int sweepAngle);
+        void DrawPie(Pen pen, int imageX, int imageY, int width, int height, int startAngle, int sweepAngle);
 
         /// <summary>Draws a polygon defined by an array of System.Drawing.Point structures.</summary>
         /// <param name="pen">System.Drawing.Pen that determines the color, width, and style of the polygon.</param>
@@ -800,27 +800,27 @@ namespace Tournaments.Graphics
 
         /// <summary>Draws a rectangle specified by a System.Drawing.Rectangle structure.</summary>
         /// <param name="pen">A System.Drawing.Pen that determines the color, width, and style of the rectangle.</param>
-        /// <param name="rect">A System.Drawing.Rectangle structure that represents the rectangle to draw.</param>
+        /// <param name="rectangle">A System.Drawing.Rectangle structure that represents the rectangle to draw.</param>
         /// <exception cref="System.ArgumentNullException">pen is null.</exception>
-        void DrawRectangle(Pen pen, Rectangle rect);
+        void DrawRectangle(Pen pen, Rectangle rectangle);
 
         /// <summary>Draws a rectangle specified by a coordinate pair, a width, and a height.</summary>
         /// <param name="pen">A System.Drawing.Pen that determines the color, width, and style of the rectangle.</param>
-        /// <param name="x">The x-coordinate of the upper-left corner of the rectangle to draw.</param>
-        /// <param name="y">The y-coordinate of the upper-left corner of the rectangle to draw.</param>
+        /// <param name="imageX">The x-coordinate of the upper-left corner of the rectangle to draw.</param>
+        /// <param name="imageY">The y-coordinate of the upper-left corner of the rectangle to draw.</param>
         /// <param name="width">The width of the rectangle to draw.</param>
         /// <param name="height">The height of the rectangle to draw.</param>
         /// <exception cref="System.ArgumentNullException">pen is null.</exception>
-        void DrawRectangle(Pen pen, float x, float y, float width, float height);
+        void DrawRectangle(Pen pen, float imageX, float imageY, float width, float height);
 
         /// <summary>Draws a rectangle specified by a coordinate pair, a width, and a height.</summary>
         /// <param name="pen">System.Drawing.Pen that determines the color, width, and style of the rectangle.</param>
-        /// <param name="x">The x-coordinate of the upper-left corner of the rectangle to draw.</param>
-        /// <param name="y">The y-coordinate of the upper-left corner of the rectangle to draw.</param>
+        /// <param name="imageX">The x-coordinate of the upper-left corner of the rectangle to draw.</param>
+        /// <param name="imageY">The y-coordinate of the upper-left corner of the rectangle to draw.</param>
         /// <param name="width">Width of the rectangle to draw.</param>
         /// <param name="height">Height of the rectangle to draw.</param>
         /// <exception cref="System.ArgumentNullException">pen is null.</exception>
-        void DrawRectangle(Pen pen, int x, int y, int width, int height);
+        void DrawRectangle(Pen pen, int imageX, int imageY, int width, int height);
 
         /// <summary>Draws a series of rectangles specified by System.Drawing.Rectangle structures.</summary>
         /// <param name="pen">System.Drawing.Pen that determines the color, width, and style of the outlines of the rectangles.</param>
@@ -893,9 +893,9 @@ namespace Tournaments.Graphics
 
         /// <summary>Sends the records in the specified System.Drawing.Imaging.Metafile, one at a time, to a callback method for display at a specified point.</summary>
         /// <param name="metafile">System.Drawing.Imaging.Metafile to enumerate.</param>
-        /// <param name="destPoint">System.Drawing.Point structure that specifies the location of the upper-left corner of the drawn metafile.</param>
+        /// <param name="destinationPoint">System.Drawing.Point structure that specifies the location of the upper-left corner of the drawn metafile.</param>
         /// <param name="callback">System.Drawing.Graphics.EnumerateMetafileProc delegate that specifies the method to which the metafile records are sent.</param>
-        void EnumerateMetafile(Metafile metafile, Point destPoint, Graphics.EnumerateMetafileProc callback);
+        void EnumerateMetafile(Metafile metafile, Point destinationPoint, Graphics.EnumerateMetafileProc callback);
 
         /// <summary>Sends the records in the specified System.Drawing.Imaging.Metafile, one at a time, to a callback method for display in a specified parallelogram.</summary>
         /// <param name="metafile">System.Drawing.Imaging.Metafile to enumerate.</param>
@@ -905,9 +905,9 @@ namespace Tournaments.Graphics
 
         /// <summary>Sends the records in the specified System.Drawing.Imaging.Metafile, one at a time, to a callback method for display at a specified point.</summary>
         /// <param name="metafile">System.Drawing.Imaging.Metafile to enumerate.</param>
-        /// <param name="destPoint">System.Drawing.PointF structure that specifies the location of the upper-left corner of the drawn metafile.</param>
+        /// <param name="destinationPoint">System.Drawing.PointF structure that specifies the location of the upper-left corner of the drawn metafile.</param>
         /// <param name="callback">System.Drawing.Graphics.EnumerateMetafileProc delegate that specifies the method to which the metafile records are sent.</param>
-        void EnumerateMetafile(Metafile metafile, PointF destPoint, Graphics.EnumerateMetafileProc callback);
+        void EnumerateMetafile(Metafile metafile, PointF destinationPoint, Graphics.EnumerateMetafileProc callback);
 
         /// <summary>Sends the records in the specified System.Drawing.Imaging.Metafile, one at a time, to a callback method for display in a specified parallelogram.</summary>
         /// <param name="metafile">System.Drawing.Imaging.Metafile to enumerate.</param>
@@ -929,10 +929,10 @@ namespace Tournaments.Graphics
 
         /// <summary>Sends the records in the specified System.Drawing.Imaging.Metafile, one at a time, to a callback method for display at a specified point.</summary>
         /// <param name="metafile">System.Drawing.Imaging.Metafile to enumerate.</param>
-        /// <param name="destPoint">System.Drawing.Point structure that specifies the location of the upper-left corner of the drawn metafile.</param>
+        /// <param name="destinationPoint">System.Drawing.Point structure that specifies the location of the upper-left corner of the drawn metafile.</param>
         /// <param name="callback">System.Drawing.Graphics.EnumerateMetafileProc delegate that specifies the method to which the metafile records are sent.</param>
         /// <param name="callbackData">Internal pointer that is required, but ignored. You can pass System.IntPtr.Zero for this parameter.</param>
-        void EnumerateMetafile(Metafile metafile, Point destPoint, Graphics.EnumerateMetafileProc callback, IntPtr callbackData);
+        void EnumerateMetafile(Metafile metafile, Point destinationPoint, Graphics.EnumerateMetafileProc callback, IntPtr callbackData);
 
         /// <summary>Sends the records in the specified System.Drawing.Imaging.Metafile, one at a time, to a callback method for display in a specified parallelogram.</summary>
         /// <param name="metafile">System.Drawing.Imaging.Metafile to enumerate.</param>
@@ -943,10 +943,10 @@ namespace Tournaments.Graphics
 
         /// <summary>Sends the records in the specified System.Drawing.Imaging.Metafile, one at a time, to a callback method for display at a specified point.</summary>
         /// <param name="metafile">System.Drawing.Imaging.Metafile to enumerate.</param>
-        /// <param name="destPoint">System.Drawing.PointF structure that specifies the location of the upper-left corner of the drawn metafile.</param>
+        /// <param name="destinationPoint">System.Drawing.PointF structure that specifies the location of the upper-left corner of the drawn metafile.</param>
         /// <param name="callback">System.Drawing.Graphics.EnumerateMetafileProc delegate that specifies the method to which the metafile records are sent.</param>
         /// <param name="callbackData">Internal pointer that is required, but ignored. You can pass System.IntPtr.Zero for this parameter.</param>
-        void EnumerateMetafile(Metafile metafile, PointF destPoint, Graphics.EnumerateMetafileProc callback, IntPtr callbackData);
+        void EnumerateMetafile(Metafile metafile, PointF destinationPoint, Graphics.EnumerateMetafileProc callback, IntPtr callbackData);
 
         /// <summary>Sends the records in the specified System.Drawing.Imaging.Metafile, one at a time, to a callback method for display in a specified parallelogram.</summary>
         /// <param name="metafile">System.Drawing.Imaging.Metafile to enumerate.</param>
@@ -971,27 +971,27 @@ namespace Tournaments.Graphics
 
         /// <summary>Sends the records in the specified System.Drawing.Imaging.Metafile, one at a time, to a callback method for display at a specified point using specified image attributes.</summary>
         /// <param name="metafile">System.Drawing.Imaging.Metafile to enumerate.</param>
-        /// <param name="destPoint">System.Drawing.Point structure that specifies the location of the upper-left corner of the drawn metafile.</param>
+        /// <param name="destinationPoint">System.Drawing.Point structure that specifies the location of the upper-left corner of the drawn metafile.</param>
         /// <param name="callback">System.Drawing.Graphics.EnumerateMetafileProc delegate that specifies the method to which the metafile records are sent.</param>
         /// <param name="callbackData">Internal pointer that is required, but ignored. You can pass System.IntPtr.Zero for this parameter.</param>
-        /// <param name="imageAttr">System.Drawing.Imaging.ImageAttributes that specifies image attribute information for the drawn image.</param>
-        void EnumerateMetafile(Metafile metafile, Point destPoint, Graphics.EnumerateMetafileProc callback, IntPtr callbackData, ImageAttributes imageAttr);
+        /// <param name="imageAttributes">System.Drawing.Imaging.ImageAttributes that specifies image attribute information for the drawn image.</param>
+        void EnumerateMetafile(Metafile metafile, Point destinationPoint, Graphics.EnumerateMetafileProc callback, IntPtr callbackData, ImageAttributes imageAttributes);
 
         /// <summary>Sends the records in a selected rectangle from a System.Drawing.Imaging.Metafile, one at a time, to a callback method for display at a specified point.</summary>
         /// <param name="metafile">System.Drawing.Imaging.Metafile to enumerate.</param>
-        /// <param name="destPoint">System.Drawing.Point structure that specifies the location of the upper-left corner of the drawn metafile.</param>
+        /// <param name="destinationPoint">System.Drawing.Point structure that specifies the location of the upper-left corner of the drawn metafile.</param>
         /// <param name="sourceRectangle">System.Drawing.Rectangle structure that specifies the portion of the metafile, relative to its upper-left corner, to draw.</param>
         /// <param name="sourceUnit">Member of the System.Drawing.GraphicsUnit enumeration that specifies the unit of measure used to determine the portion of the metafile that the rectangle specified by the sourceRectangle parameter contains.</param>
         /// <param name="callback">System.Drawing.Graphics.EnumerateMetafileProc delegate that specifies the method to which the metafile records are sent.</param>
-        void EnumerateMetafile(Metafile metafile, Point destPoint, Rectangle sourceRectangle, GraphicsUnit sourceUnit, Graphics.EnumerateMetafileProc callback);
+        void EnumerateMetafile(Metafile metafile, Point destinationPoint, Rectangle sourceRectangle, GraphicsUnit sourceUnit, Graphics.EnumerateMetafileProc callback);
 
         /// <summary>Sends the records in the specified System.Drawing.Imaging.Metafile, one at a time, to a callback method for display in a specified parallelogram using specified image attributes.</summary>
         /// <param name="metafile">System.Drawing.Imaging.Metafile to enumerate.</param>
         /// <param name="destinationPoints">Array of three System.Drawing.Point structures that define a parallelogram that determines the size and location of the drawn metafile.</param>
         /// <param name="callback">System.Drawing.Graphics.EnumerateMetafileProc delegate that specifies the method to which the metafile records are sent.</param>
         /// <param name="callbackData">Internal pointer that is required, but ignored. You can pass System.IntPtr.Zero for this parameter.</param>
-        /// <param name="imageAttr">System.Drawing.Imaging.ImageAttributes that specifies image attribute information for the drawn image.</param>
-        void EnumerateMetafile(Metafile metafile, Point[] destinationPoints, Graphics.EnumerateMetafileProc callback, IntPtr callbackData, ImageAttributes imageAttr);
+        /// <param name="imageAttributes">System.Drawing.Imaging.ImageAttributes that specifies image attribute information for the drawn image.</param>
+        void EnumerateMetafile(Metafile metafile, Point[] destinationPoints, Graphics.EnumerateMetafileProc callback, IntPtr callbackData, ImageAttributes imageAttributes);
 
         /// <summary>Sends the records in a selected rectangle from a System.Drawing.Imaging.Metafile, one at a time, to a callback method for display in a specified parallelogram.</summary>
         /// <param name="metafile">System.Drawing.Imaging.Metafile to enumerate.</param>
@@ -1003,27 +1003,27 @@ namespace Tournaments.Graphics
 
         /// <summary>Sends the records in the specified System.Drawing.Imaging.Metafile, one at a time, to a callback method for display at a specified point using specified image attributes.</summary>
         /// <param name="metafile">System.Drawing.Imaging.Metafile to enumerate.</param>
-        /// <param name="destPoint">System.Drawing.PointF structure that specifies the location of the upper-left corner of the drawn metafile.</param>
+        /// <param name="destinationPoint">System.Drawing.PointF structure that specifies the location of the upper-left corner of the drawn metafile.</param>
         /// <param name="callback">System.Drawing.Graphics.EnumerateMetafileProc delegate that specifies the method to which the metafile records are sent.</param>
         /// <param name="callbackData">Internal pointer that is required, but ignored. You can pass System.IntPtr.Zero for this parameter.</param>
-        /// <param name="imageAttr">System.Drawing.Imaging.ImageAttributes that specifies image attribute information for the drawn image.</param>
-        void EnumerateMetafile(Metafile metafile, PointF destPoint, Graphics.EnumerateMetafileProc callback, IntPtr callbackData, ImageAttributes imageAttr);
+        /// <param name="imageAttributes">System.Drawing.Imaging.ImageAttributes that specifies image attribute information for the drawn image.</param>
+        void EnumerateMetafile(Metafile metafile, PointF destinationPoint, Graphics.EnumerateMetafileProc callback, IntPtr callbackData, ImageAttributes imageAttributes);
 
         /// <summary>Sends the records in a selected rectangle from a System.Drawing.Imaging.Metafile, one at a time, to a callback method for display at a specified point.</summary>
         /// <param name="metafile">System.Drawing.Imaging.Metafile to enumerate.</param>
-        /// <param name="destPoint">System.Drawing.PointF structure that specifies the location of the upper-left corner of the drawn metafile.</param>
+        /// <param name="destinationPoint">System.Drawing.PointF structure that specifies the location of the upper-left corner of the drawn metafile.</param>
         /// <param name="sourceRectangle">System.Drawing.RectangleF structure that specifies the portion of the metafile, relative to its upper-left corner, to draw.</param>
         /// <param name="sourceUnit">Member of the System.Drawing.GraphicsUnit enumeration that specifies the unit of measure used to determine the portion of the metafile that the rectangle specified by the sourceRectangle parameter contains.</param>
         /// <param name="callback">System.Drawing.Graphics.EnumerateMetafileProc delegate that specifies the method to which the metafile records are sent.</param>
-        void EnumerateMetafile(Metafile metafile, PointF destPoint, RectangleF sourceRectangle, GraphicsUnit sourceUnit, Graphics.EnumerateMetafileProc callback);
+        void EnumerateMetafile(Metafile metafile, PointF destinationPoint, RectangleF sourceRectangle, GraphicsUnit sourceUnit, Graphics.EnumerateMetafileProc callback);
 
         /// <summary>Sends the records in the specified System.Drawing.Imaging.Metafile, one at a time, to a callback method for display in a specified parallelogram using specified image attributes.</summary>
         /// <param name="metafile">System.Drawing.Imaging.Metafile to enumerate.</param>
         /// <param name="destinationPoints">Array of three System.Drawing.PointF structures that define a parallelogram that determines the size and location of the drawn metafile.</param>
         /// <param name="callback">System.Drawing.Graphics.EnumerateMetafileProc delegate that specifies the method to which the metafile records are sent.</param>
         /// <param name="callbackData">Internal pointer that is required, but ignored. You can pass System.IntPtr.Zero for this parameter.</param>
-        /// <param name="imageAttr">System.Drawing.Imaging.ImageAttributes that specifies image attribute information for the drawn image.</param>
-        void EnumerateMetafile(Metafile metafile, PointF[] destinationPoints, Graphics.EnumerateMetafileProc callback, IntPtr callbackData, ImageAttributes imageAttr);
+        /// <param name="imageAttributes">System.Drawing.Imaging.ImageAttributes that specifies image attribute information for the drawn image.</param>
+        void EnumerateMetafile(Metafile metafile, PointF[] destinationPoints, Graphics.EnumerateMetafileProc callback, IntPtr callbackData, ImageAttributes imageAttributes);
 
         /// <summary>Sends the records in a selected rectangle from a System.Drawing.Imaging.Metafile, one at a time, to a callback method for display in a specified parallelogram.</summary>
         /// <param name="metafile">System.Drawing.Imaging.Metafile to enumerate.</param>
@@ -1038,8 +1038,8 @@ namespace Tournaments.Graphics
         /// <param name="destinationRectangle">System.Drawing.Rectangle structure that specifies the location and size of the drawn metafile.</param>
         /// <param name="callback">System.Drawing.Graphics.EnumerateMetafileProc delegate that specifies the method to which the metafile records are sent.</param>
         /// <param name="callbackData">Internal pointer that is required, but ignored. You can pass System.IntPtr.Zero for this parameter.</param>
-        /// <param name="imageAttr">System.Drawing.Imaging.ImageAttributes that specifies image attribute information for the drawn image.</param>
-        void EnumerateMetafile(Metafile metafile, Rectangle destinationRectangle, Graphics.EnumerateMetafileProc callback, IntPtr callbackData, ImageAttributes imageAttr);
+        /// <param name="imageAttributes">System.Drawing.Imaging.ImageAttributes that specifies image attribute information for the drawn image.</param>
+        void EnumerateMetafile(Metafile metafile, Rectangle destinationRectangle, Graphics.EnumerateMetafileProc callback, IntPtr callbackData, ImageAttributes imageAttributes);
 
         /// <summary>Sends the records of a selected rectangle from a System.Drawing.Imaging.Metafile, one at a time, to a callback method for display in a specified rectangle.</summary>
         /// <param name="metafile">System.Drawing.Imaging.Metafile to enumerate.</param>
@@ -1054,8 +1054,8 @@ namespace Tournaments.Graphics
         /// <param name="destinationRectangle">System.Drawing.RectangleF structure that specifies the location and size of the drawn metafile.</param>
         /// <param name="callback">System.Drawing.Graphics.EnumerateMetafileProc delegate that specifies the method to which the metafile records are sent.</param>
         /// <param name="callbackData">Internal pointer that is required, but ignored. You can pass System.IntPtr.Zero for this parameter.</param>
-        /// <param name="imageAttr">System.Drawing.Imaging.ImageAttributes that specifies image attribute information for the drawn image.</param>
-        void EnumerateMetafile(Metafile metafile, RectangleF destinationRectangle, Graphics.EnumerateMetafileProc callback, IntPtr callbackData, ImageAttributes imageAttr);
+        /// <param name="imageAttributes">System.Drawing.Imaging.ImageAttributes that specifies image attribute information for the drawn image.</param>
+        void EnumerateMetafile(Metafile metafile, RectangleF destinationRectangle, Graphics.EnumerateMetafileProc callback, IntPtr callbackData, ImageAttributes imageAttributes);
 
         /// <summary>Sends the records of a selected rectangle from a System.Drawing.Imaging.Metafile, one at a time, to a callback method for display in a specified rectangle.</summary>
         /// <param name="metafile">System.Drawing.Imaging.Metafile to enumerate.</param>
@@ -1067,12 +1067,12 @@ namespace Tournaments.Graphics
 
         /// <summary>Sends the records in a selected rectangle from a System.Drawing.Imaging.Metafile, one at a time, to a callback method for display at a specified point.</summary>
         /// <param name="metafile">System.Drawing.Imaging.Metafile to enumerate.</param>
-        /// <param name="destPoint">System.Drawing.Point structure that specifies the location of the upper-left corner of the drawn metafile.</param>
+        /// <param name="destinationPoint">System.Drawing.Point structure that specifies the location of the upper-left corner of the drawn metafile.</param>
         /// <param name="sourceRectangle">System.Drawing.Rectangle structure that specifies the portion of the metafile, relative to its upper-left corner, to draw.</param>
         /// <param name="sourceUnit">Member of the System.Drawing.GraphicsUnit enumeration that specifies the unit of measure used to determine the portion of the metafile that the rectangle specified by the sourceRectangle parameter contains.</param>
         /// <param name="callback">System.Drawing.Graphics.EnumerateMetafileProc delegate that specifies the method to which the metafile records are sent.</param>
         /// <param name="callbackData">Internal pointer that is required, but ignored. You can pass System.IntPtr.Zero for this parameter.</param>
-        void EnumerateMetafile(Metafile metafile, Point destPoint, Rectangle sourceRectangle, GraphicsUnit sourceUnit, Graphics.EnumerateMetafileProc callback, IntPtr callbackData);
+        void EnumerateMetafile(Metafile metafile, Point destinationPoint, Rectangle sourceRectangle, GraphicsUnit sourceUnit, Graphics.EnumerateMetafileProc callback, IntPtr callbackData);
 
         /// <summary>Sends the records in a selected rectangle from a System.Drawing.Imaging.Metafile, one at a time, to a callback method for display in a specified parallelogram.</summary>
         /// <param name="metafile">System.Drawing.Imaging.Metafile to enumerate.</param>
@@ -1085,12 +1085,12 @@ namespace Tournaments.Graphics
 
         /// <summary>Sends the records in a selected rectangle from a System.Drawing.Imaging.Metafile, one at a time, to a callback method for display at a specified point.</summary>
         /// <param name="metafile">System.Drawing.Imaging.Metafile to enumerate.</param>
-        /// <param name="destPoint">System.Drawing.PointF structure that specifies the location of the upper-left corner of the drawn metafile.</param>
+        /// <param name="destinationPoint">System.Drawing.PointF structure that specifies the location of the upper-left corner of the drawn metafile.</param>
         /// <param name="sourceRectangle">System.Drawing.RectangleF structure that specifies the portion of the metafile, relative to its upper-left corner, to draw.</param>
         /// <param name="sourceUnit">Member of the System.Drawing.GraphicsUnit enumeration that specifies the unit of measure used to determine the portion of the metafile that the rectangle specified by the sourceRectangle parameter contains.</param>
         /// <param name="callback">System.Drawing.Graphics.EnumerateMetafileProc delegate that specifies the method to which the metafile records are sent.</param>
         /// <param name="callbackData">Internal pointer that is required, but ignored. You can pass System.IntPtr.Zero for this parameter.</param>
-        void EnumerateMetafile(Metafile metafile, PointF destPoint, RectangleF sourceRectangle, GraphicsUnit sourceUnit, Graphics.EnumerateMetafileProc callback, IntPtr callbackData);
+        void EnumerateMetafile(Metafile metafile, PointF destinationPoint, RectangleF sourceRectangle, GraphicsUnit sourceUnit, Graphics.EnumerateMetafileProc callback, IntPtr callbackData);
 
         /// <summary>Sends the records in a selected rectangle from a System.Drawing.Imaging.Metafile, one at a time, to a callback method for display in a specified parallelogram.</summary>
         /// <param name="metafile">System.Drawing.Imaging.Metafile to enumerate.</param>
@@ -1121,13 +1121,13 @@ namespace Tournaments.Graphics
 
         /// <summary>Sends the records in a selected rectangle from a System.Drawing.Imaging.Metafile, one at a time, to a callback method for display at a specified point using specified image attributes.</summary>
         /// <param name="metafile">System.Drawing.Imaging.Metafile to enumerate.</param>
-        /// <param name="destPoint">System.Drawing.Point structure that specifies the location of the upper-left corner of the drawn metafile.</param>
+        /// <param name="destinationPoint">System.Drawing.Point structure that specifies the location of the upper-left corner of the drawn metafile.</param>
         /// <param name="sourceRectangle">System.Drawing.Rectangle structure that specifies the portion of the metafile, relative to its upper-left corner, to draw.</param>
         /// <param name="unit">Member of the System.Drawing.GraphicsUnit enumeration that specifies the unit of measure used to determine the portion of the metafile that the rectangle specified by the sourceRectangle parameter contains.</param>
         /// <param name="callback">System.Drawing.Graphics.EnumerateMetafileProc delegate that specifies the method to which the metafile records are sent.</param>
         /// <param name="callbackData">Internal pointer that is required, but ignored. You can pass System.IntPtr.Zero for this parameter.</param>
-        /// <param name="imageAttr">System.Drawing.Imaging.ImageAttributes that specifies image attribute information for the drawn image.</param>
-        void EnumerateMetafile(Metafile metafile, Point destPoint, Rectangle sourceRectangle, GraphicsUnit unit, Graphics.EnumerateMetafileProc callback, IntPtr callbackData, ImageAttributes imageAttr);
+        /// <param name="imageAttributes">System.Drawing.Imaging.ImageAttributes that specifies image attribute information for the drawn image.</param>
+        void EnumerateMetafile(Metafile metafile, Point destinationPoint, Rectangle sourceRectangle, GraphicsUnit unit, Graphics.EnumerateMetafileProc callback, IntPtr callbackData, ImageAttributes imageAttributes);
 
         /// <summary>Sends the records in a selected rectangle from a System.Drawing.Imaging.Metafile, one at a time, to a callback method for display in a specified parallelogram using specified image attributes.</summary>
         /// <param name="metafile">System.Drawing.Imaging.Metafile to enumerate.</param>
@@ -1136,18 +1136,18 @@ namespace Tournaments.Graphics
         /// <param name="unit">Member of the System.Drawing.GraphicsUnit enumeration that specifies the unit of measure used to determine the portion of the metafile that the rectangle specified by the sourceRectangle parameter contains.</param>
         /// <param name="callback">System.Drawing.Graphics.EnumerateMetafileProc delegate that specifies the method to which the metafile records are sent.</param>
         /// <param name="callbackData">Internal pointer that is required, but ignored. You can pass System.IntPtr.Zero for this parameter.</param>
-        /// <param name="imageAttr">System.Drawing.Imaging.ImageAttributes that specifies image attribute information for the drawn image.</param>
-        void EnumerateMetafile(Metafile metafile, Point[] destinationPoints, Rectangle sourceRectangle, GraphicsUnit unit, Graphics.EnumerateMetafileProc callback, IntPtr callbackData, ImageAttributes imageAttr);
+        /// <param name="imageAttributes">System.Drawing.Imaging.ImageAttributes that specifies image attribute information for the drawn image.</param>
+        void EnumerateMetafile(Metafile metafile, Point[] destinationPoints, Rectangle sourceRectangle, GraphicsUnit unit, Graphics.EnumerateMetafileProc callback, IntPtr callbackData, ImageAttributes imageAttributes);
 
         /// <summary>Sends the records in a selected rectangle from a System.Drawing.Imaging.Metafile, one at a time, to a callback method for display at a specified point using specified image attributes.</summary>
         /// <param name="metafile">System.Drawing.Imaging.Metafile to enumerate.</param>
-        /// <param name="destPoint">System.Drawing.PointF structure that specifies the location of the upper-left corner of the drawn metafile.</param>
+        /// <param name="destinationPoint">System.Drawing.PointF structure that specifies the location of the upper-left corner of the drawn metafile.</param>
         /// <param name="sourceRectangle">System.Drawing.RectangleF structure that specifies the portion of the metafile, relative to its upper-left corner, to draw.</param>
         /// <param name="unit">Member of the System.Drawing.GraphicsUnit enumeration that specifies the unit of measure used to determine the portion of the metafile that the rectangle specified by the sourceRectangle parameter contains.</param>
         /// <param name="callback">System.Drawing.Graphics.EnumerateMetafileProc delegate that specifies the method to which the metafile records are sent.</param>
         /// <param name="callbackData">Internal pointer that is required, but ignored. You can pass System.IntPtr.Zero for this parameter.</param>
-        /// <param name="imageAttr">System.Drawing.Imaging.ImageAttributes that specifies image attribute information for the drawn image.</param>
-        void EnumerateMetafile(Metafile metafile, PointF destPoint, RectangleF sourceRectangle, GraphicsUnit unit, Graphics.EnumerateMetafileProc callback, IntPtr callbackData, ImageAttributes imageAttr);
+        /// <param name="imageAttributes">System.Drawing.Imaging.ImageAttributes that specifies image attribute information for the drawn image.</param>
+        void EnumerateMetafile(Metafile metafile, PointF destinationPoint, RectangleF sourceRectangle, GraphicsUnit unit, Graphics.EnumerateMetafileProc callback, IntPtr callbackData, ImageAttributes imageAttributes);
 
         /// <summary>Sends the records in a selected rectangle from a System.Drawing.Imaging.Metafile, one at a time, to a callback method for display in a specified parallelogram using specified image attributes.</summary>
         /// <param name="metafile">System.Drawing.Imaging.Metafile to enumerate.</param>
@@ -1156,8 +1156,8 @@ namespace Tournaments.Graphics
         /// <param name="unit">Member of the System.Drawing.GraphicsUnit enumeration that specifies the unit of measure used to determine the portion of the metafile that the rectangle specified by the sourceRectangle parameter contains.</param>
         /// <param name="callback">System.Drawing.Graphics.EnumerateMetafileProc delegate that specifies the method to which the metafile records are sent.</param>
         /// <param name="callbackData">Internal pointer that is required, but ignored. You can pass System.IntPtr.Zero for this parameter.</param>
-        /// <param name="imageAttr">System.Drawing.Imaging.ImageAttributes that specifies image attribute information for the drawn image.</param>
-        void EnumerateMetafile(Metafile metafile, PointF[] destinationPoints, RectangleF sourceRectangle, GraphicsUnit unit, Graphics.EnumerateMetafileProc callback, IntPtr callbackData, ImageAttributes imageAttr);
+        /// <param name="imageAttributes">System.Drawing.Imaging.ImageAttributes that specifies image attribute information for the drawn image.</param>
+        void EnumerateMetafile(Metafile metafile, PointF[] destinationPoints, RectangleF sourceRectangle, GraphicsUnit unit, Graphics.EnumerateMetafileProc callback, IntPtr callbackData, ImageAttributes imageAttributes);
 
         /// <summary>Sends the records of a selected rectangle from a System.Drawing.Imaging.Metafile, one at a time, to a callback method for display in a specified rectangle using specified image attributes.</summary>
         /// <param name="metafile">System.Drawing.Imaging.Metafile to enumerate.</param>
@@ -1166,8 +1166,8 @@ namespace Tournaments.Graphics
         /// <param name="unit">Member of the System.Drawing.GraphicsUnit enumeration that specifies the unit of measure used to determine the portion of the metafile that the rectangle specified by the sourceRectangle parameter contains.</param>
         /// <param name="callback">System.Drawing.Graphics.EnumerateMetafileProc delegate that specifies the method to which the metafile records are sent.</param>
         /// <param name="callbackData">Internal pointer that is required, but ignored. You can pass System.IntPtr.Zero for this parameter.</param>
-        /// <param name="imageAttr">System.Drawing.Imaging.ImageAttributes that specifies image attribute information for the drawn image.</param>
-        void EnumerateMetafile(Metafile metafile, Rectangle destinationRectangle, Rectangle sourceRectangle, GraphicsUnit unit, Graphics.EnumerateMetafileProc callback, IntPtr callbackData, ImageAttributes imageAttr);
+        /// <param name="imageAttributes">System.Drawing.Imaging.ImageAttributes that specifies image attribute information for the drawn image.</param>
+        void EnumerateMetafile(Metafile metafile, Rectangle destinationRectangle, Rectangle sourceRectangle, GraphicsUnit unit, Graphics.EnumerateMetafileProc callback, IntPtr callbackData, ImageAttributes imageAttributes);
 
         /// <summary>Sends the records of a selected rectangle from a System.Drawing.Imaging.Metafile, one at a time, to a callback method for display in a specified rectangle using specified image attributes.</summary>
         /// <param name="metafile">System.Drawing.Imaging.Metafile to enumerate.</param>
@@ -1176,12 +1176,12 @@ namespace Tournaments.Graphics
         /// <param name="unit">Member of the System.Drawing.GraphicsUnit enumeration that specifies the unit of measure used to determine the portion of the metafile that the rectangle specified by the sourceRectangle parameter contains.</param>
         /// <param name="callback">System.Drawing.Graphics.EnumerateMetafileProc delegate that specifies the method to which the metafile records are sent.</param>
         /// <param name="callbackData">Internal pointer that is required, but ignored. You can pass System.IntPtr.Zero for this parameter.</param>
-        /// <param name="imageAttr">System.Drawing.Imaging.ImageAttributes that specifies image attribute information for the drawn image.</param>
-        void EnumerateMetafile(Metafile metafile, RectangleF destinationRectangle, RectangleF sourceRectangle, GraphicsUnit unit, Graphics.EnumerateMetafileProc callback, IntPtr callbackData, ImageAttributes imageAttr);
+        /// <param name="imageAttributes">System.Drawing.Imaging.ImageAttributes that specifies image attribute information for the drawn image.</param>
+        void EnumerateMetafile(Metafile metafile, RectangleF destinationRectangle, RectangleF sourceRectangle, GraphicsUnit unit, Graphics.EnumerateMetafileProc callback, IntPtr callbackData, ImageAttributes imageAttributes);
 
         /// <summary>Updates the clip region of this System.Drawing.Graphics to exclude the area specified by a System.Drawing.Rectangle structure.</summary>
-        /// <param name="rect">System.Drawing.Rectangle structure that specifies the rectangle to exclude from the clip region.</param>
-        void ExcludeClip(Rectangle rect);
+        /// <param name="rectangle">System.Drawing.Rectangle structure that specifies the rectangle to exclude from the clip region.</param>
+        void ExcludeClip(Rectangle rectangle);
 
         /// <summary>Updates the clip region of this System.Drawing.Graphics to exclude the area specified by a System.Drawing.Region.</summary>
         /// <param name="region">System.Drawing.Region that specifies the region to exclude from the clip region.</param>
@@ -1231,15 +1231,15 @@ namespace Tournaments.Graphics
 
         /// <summary>Fills the interior of an ellipse defined by a bounding rectangle specified by a System.Drawing.Rectangle structure.</summary>
         /// <param name="brush">System.Drawing.Brush that determines the characteristics of the fill.</param>
-        /// <param name="rect">System.Drawing.Rectangle structure that represents the bounding rectangle that defines the ellipse.</param>
+        /// <param name="rectangle">System.Drawing.Rectangle structure that represents the bounding rectangle that defines the ellipse.</param>
         /// <exception cref="System.ArgumentNullException">brush is null.</exception>
-        void FillEllipse(Brush brush, Rectangle rect);
+        void FillEllipse(Brush brush, Rectangle rectangle);
 
         /// <summary>Fills the interior of an ellipse defined by a bounding rectangle specified by a System.Drawing.RectangleF structure.</summary>
         /// <param name="brush">System.Drawing.Brush that determines the characteristics of the fill.</param>
-        /// <param name="rect">System.Drawing.RectangleF structure that represents the bounding rectangle that defines the ellipse.</param>
+        /// <param name="rectangle">System.Drawing.RectangleF structure that represents the bounding rectangle that defines the ellipse.</param>
         /// <exception cref="System.ArgumentNullException">brush is null.</exception>
-        void FillEllipse(Brush brush, RectangleF rect);
+        void FillEllipse(Brush brush, RectangleF rectangle);
 
         /// <summary>Fills the interior of an ellipse defined by a bounding rectangle specified by a pair of coordinates, a width, and a height.</summary>
         /// <param name="brush">System.Drawing.Brush that determines the characteristics of the fill.</param>
@@ -1267,11 +1267,11 @@ namespace Tournaments.Graphics
 
         /// <summary>Fills the interior of a pie section defined by an ellipse specified by a System.Drawing.RectangleF structure and two radial lines.</summary>
         /// <param name="brush">System.Drawing.Brush that determines the characteristics of the fill.</param>
-        /// <param name="rect">System.Drawing.Rectangle structure that represents the bounding rectangle that defines the ellipse from which the pie section comes.</param>
+        /// <param name="rectangle">System.Drawing.Rectangle structure that represents the bounding rectangle that defines the ellipse from which the pie section comes.</param>
         /// <param name="startAngle">Angle in degrees measured clockwise from the x-axis to the first side of the pie section.</param>
         /// <param name="sweepAngle">Angle in degrees measured clockwise from the startAngle parameter to the second side of the pie section.</param>
         /// <exception cref="System.ArgumentNullException">brush is null.</exception>
-        void FillPie(Brush brush, Rectangle rect, float startAngle, float sweepAngle);
+        void FillPie(Brush brush, Rectangle rectangle, float startAngle, float sweepAngle);
 
         /// <summary>Fills the interior of a pie section defined by an ellipse specified by a pair of coordinates, a width, a height, and two radial lines.</summary>
         /// <param name="brush">System.Drawing.Brush that determines the characteristics of the fill.</param>
@@ -1323,15 +1323,15 @@ namespace Tournaments.Graphics
 
         /// <summary>Fills the interior of a rectangle specified by a System.Drawing.Rectangle structure.</summary>
         /// <param name="brush">System.Drawing.Brush that determines the characteristics of the fill.</param>
-        /// <param name="rect">System.Drawing.Rectangle structure that represents the rectangle to fill.</param>
+        /// <param name="rectangle">System.Drawing.Rectangle structure that represents the rectangle to fill.</param>
         /// <exception cref="System.ArgumentNullException">brush is null.</exception>
-        void FillRectangle(Brush brush, Rectangle rect);
+        void FillRectangle(Brush brush, Rectangle rectangle);
 
         /// <summary>Fills the interior of a rectangle specified by a System.Drawing.RectangleF structure.</summary>
         /// <param name="brush">System.Drawing.Brush that determines the characteristics of the fill.</param>
-        /// <param name="rect">System.Drawing.RectangleF structure that represents the rectangle to fill.</param>
+        /// <param name="rectangle">System.Drawing.RectangleF structure that represents the rectangle to fill.</param>
         /// <exception cref="System.ArgumentNullException">brush is null.</exception>
-        void FillRectangle(Brush brush, RectangleF rect);
+        void FillRectangle(Brush brush, RectangleF rectangle);
 
         /// <summary>Fills the interior of a rectangle specified by a pair of coordinates, a width, and a height.</summary>
         /// <param name="brush">System.Drawing.Brush that determines the characteristics of the fill.</param>
@@ -1386,12 +1386,12 @@ namespace Tournaments.Graphics
         Color GetNearestColor(Color color);
 
         /// <summary>Updates the clip region of this System.Drawing.Graphics to the intersection of the current clip region and the specified System.Drawing.Rectangle structure.</summary>
-        /// <param name="rect">System.Drawing.Rectangle structure to intersect with the current clip region.</param>
-        void IntersectClip(Rectangle rect);
+        /// <param name="rectangle">System.Drawing.Rectangle structure to intersect with the current clip region.</param>
+        void IntersectClip(Rectangle rectangle);
 
         /// <summary>Updates the clip region of this System.Drawing.Graphics to the intersection of the current clip region and the specified System.Drawing.RectangleF structure.</summary>
-        /// <param name="rect">System.Drawing.RectangleF structure to intersect with the current clip region.</param>
-        void IntersectClip(RectangleF rect);
+        /// <param name="rectangle">System.Drawing.RectangleF structure to intersect with the current clip region.</param>
+        void IntersectClip(RectangleF rectangle);
 
         /// <summary>Updates the clip region of this System.Drawing.Graphics to the intersection of the current clip region and the specified System.Drawing.Region.</summary>
         /// <param name="region">System.Drawing.Region to intersect with the current region.</param>
@@ -1408,14 +1408,14 @@ namespace Tournaments.Graphics
         bool IsVisible(PointF point);
 
         /// <summary>Indicates whether the rectangle specified by a System.Drawing.Rectangle structure is contained within the visible clip region of this System.Drawing.Graphics.</summary>
-        /// <param name="rect">System.Drawing.Rectangle structure to test for visibility.</param>
-        /// <returns>true if the rectangle specified by the rect parameter is contained within the visible clip region of this System.Drawing.Graphics; otherwise, false.</returns>
-        bool IsVisible(Rectangle rect);
+        /// <param name="rectangle">System.Drawing.Rectangle structure to test for visibility.</param>
+        /// <returns>true if the rectangle specified by the rectangle parameter is contained within the visible clip region of this System.Drawing.Graphics; otherwise, false.</returns>
+        bool IsVisible(Rectangle rectangle);
 
         /// <summary>Indicates whether the rectangle specified by a System.Drawing.RectangleF structure is contained within the visible clip region of this System.Drawing.Graphics.</summary>
-        /// <param name="rect">System.Drawing.RectangleF structure to test for visibility.</param>
-        /// <returns>true if the rectangle specified by the rect parameter is contained within the visible clip region of this System.Drawing.Graphics; otherwise, false.</returns>
-        bool IsVisible(RectangleF rect);
+        /// <param name="rectangle">System.Drawing.RectangleF structure to test for visibility.</param>
+        /// <returns>true if the rectangle specified by the rectangle parameter is contained within the visible clip region of this System.Drawing.Graphics; otherwise, false.</returns>
+        bool IsVisible(RectangleF rectangle);
 
         /// <summary>Indicates whether the point specified by a pair of coordinates is contained within the visible clip region of this System.Drawing.Graphics.</summary>
         /// <param name="x">The x-coordinate of the point to test for visibility.</param>
@@ -1534,8 +1534,8 @@ namespace Tournaments.Graphics
         void ResetTransform();
 
         /// <summary>Restores the state of this System.Drawing.Graphics to the state represented by a System.Drawing.Drawing2D.GraphicsState.</summary>
-        /// <param name="gstate">System.Drawing.Drawing2D.GraphicsState that represents the state to which to restore this System.Drawing.Graphics.</param>
-        void Restore(GraphicsState gstate);
+        /// <param name="graphicsState">System.Drawing.Drawing2D.GraphicsState that represents the state to which to restore this System.Drawing.Graphics.</param>
+        void Restore(GraphicsState graphicsState);
 
         /// <summary>Applies the specified rotation to the transformation matrix of this System.Drawing.Graphics.</summary>
         /// <param name="angle">Angle of rotation in degrees.</param>
@@ -1570,12 +1570,12 @@ namespace Tournaments.Graphics
         void SetClip(GraphicsPath path);
 
         /// <summary>Sets the clipping region of this System.Drawing.Graphics to the rectangle specified by a System.Drawing.Rectangle structure.</summary>
-        /// <param name="rect">System.Drawing.Rectangle structure that represents the new clip region.</param>
-        void SetClip(Rectangle rect);
+        /// <param name="rectangle">System.Drawing.Rectangle structure that represents the new clip region.</param>
+        void SetClip(Rectangle rectangle);
 
         /// <summary>Sets the clipping region of this System.Drawing.Graphics to the rectangle specified by a System.Drawing.RectangleF structure.</summary>
-        /// <param name="rect">System.Drawing.RectangleF structure that represents the new clip region.</param>
-        void SetClip(RectangleF rect);
+        /// <param name="rectangle">System.Drawing.RectangleF structure that represents the new clip region.</param>
+        void SetClip(RectangleF rectangle);
 
         /// <summary>Sets the clipping region of this System.Drawing.Graphics to the result of the specified combining operation of the current clip region and the System.Drawing.Graphics.Clip property of the specified System.Drawing.Graphics.</summary>
         /// <param name="g">System.Drawing.Graphics that specifies the clip region to combine.</param>
@@ -1588,14 +1588,14 @@ namespace Tournaments.Graphics
         void SetClip(GraphicsPath path, CombineMode combineMode);
 
         /// <summary>Sets the clipping region of this System.Drawing.Graphics to the result of the specified operation combining the current clip region and the rectangle specified by a System.Drawing.Rectangle structure.</summary>
-        /// <param name="rect">System.Drawing.Rectangle structure to combine.</param>
+        /// <param name="rectangle">System.Drawing.Rectangle structure to combine.</param>
         /// <param name="combineMode">Member of the System.Drawing.Drawing2D.CombineMode enumeration that specifies the combining operation to use.</param>
-        void SetClip(Rectangle rect, CombineMode combineMode);
+        void SetClip(Rectangle rectangle, CombineMode combineMode);
 
         /// <summary>Sets the clipping region of this System.Drawing.Graphics to the result of the specified operation combining the current clip region and the rectangle specified by a System.Drawing.RectangleF structure.</summary>
-        /// <param name="rect">System.Drawing.RectangleF structure to combine.</param>
+        /// <param name="rectangle">System.Drawing.RectangleF structure to combine.</param>
         /// <param name="combineMode">Member of the System.Drawing.Drawing2D.CombineMode enumeration that specifies the combining operation to use.</param>
-        void SetClip(RectangleF rect, CombineMode combineMode);
+        void SetClip(RectangleF rectangle, CombineMode combineMode);
 
         /// <summary>Sets the clipping region of this System.Drawing.Graphics to the result of the specified operation combining the current clip region and the specified System.Drawing.Region.</summary>
         /// <param name="region">System.Drawing.Region to combine.</param>
@@ -1603,16 +1603,16 @@ namespace Tournaments.Graphics
         void SetClip(Region region, CombineMode combineMode);
 
         /// <summary>Transforms an array of points from one coordinate space to another using the current world and page transformations of this System.Drawing.Graphics.</summary>
-        /// <param name="destSpace">Member of the System.Drawing.Drawing2D.CoordinateSpace enumeration that specifies the destination coordinate space.</param>
-        /// <param name="srcSpace">Member of the System.Drawing.Drawing2D.CoordinateSpace enumeration that specifies the source coordinate space.</param>
+        /// <param name="destinationSpace">Member of the System.Drawing.Drawing2D.CoordinateSpace enumeration that specifies the destination coordinate space.</param>
+        /// <param name="sourceSpace">Member of the System.Drawing.Drawing2D.CoordinateSpace enumeration that specifies the source coordinate space.</param>
         /// <param name="pts">Array of System.Drawing.Point structures that represents the points to transformation.</param>
-        void TransformPoints(CoordinateSpace destSpace, CoordinateSpace srcSpace, Point[] pts);
+        void TransformPoints(CoordinateSpace destinationSpace, CoordinateSpace sourceSpace, Point[] pts);
 
         /// <summary>Transforms an array of points from one coordinate space to another using the current world and page transformations of this System.Drawing.Graphics.</summary>
-        /// <param name="destSpace">Member of the System.Drawing.Drawing2D.CoordinateSpace enumeration that specifies the destination coordinate space.</param>
-        /// <param name="srcSpace">Member of the System.Drawing.Drawing2D.CoordinateSpace enumeration that specifies the source coordinate space.</param>
+        /// <param name="destinationSpace">Member of the System.Drawing.Drawing2D.CoordinateSpace enumeration that specifies the destination coordinate space.</param>
+        /// <param name="sourceSpace">Member of the System.Drawing.Drawing2D.CoordinateSpace enumeration that specifies the source coordinate space.</param>
         /// <param name="pts">Array of System.Drawing.PointF structures that represent the points to transform.</param>
-        void TransformPoints(CoordinateSpace destSpace, CoordinateSpace srcSpace, PointF[] pts);
+        void TransformPoints(CoordinateSpace destinationSpace, CoordinateSpace sourceSpace, PointF[] pts);
 
         /// <summary>Translates the clipping region of this System.Drawing.Graphics by specified amounts in the horizontal and vertical directions.</summary>
         /// <param name="dx">The x-coordinate of the translation.</param>

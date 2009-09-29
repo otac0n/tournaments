@@ -68,10 +68,10 @@ namespace Tournaments.Standard
         public void CopyFromScreen(int sourceX, int sourceY, int destinationX, int destinationY, Size blockRegionSize) { baseGraphics.CopyFromScreen(sourceX, sourceY, destinationX, destinationY, blockRegionSize); }
         public void CopyFromScreen(int sourceX, int sourceY, int destinationX, int destinationY, Size blockRegionSize, CopyPixelOperation copyPixelOperation) { baseGraphics.CopyFromScreen(sourceX, sourceY, destinationX, destinationY, blockRegionSize, copyPixelOperation); }
         public void Dispose() { baseGraphics.Dispose(); }
-        public void DrawArc(Pen pen, Rectangle rect, float startAngle, float sweepAngle) { baseGraphics.DrawArc(pen, rect, startAngle, sweepAngle); }
-        public void DrawArc(Pen pen, RectangleF rect, float startAngle, float sweepAngle) { baseGraphics.DrawArc(pen, rect, startAngle, sweepAngle); }
-        public void DrawArc(Pen pen, float x, float y, float width, float height, float startAngle, float sweepAngle) { baseGraphics.DrawArc(pen, x, y, width, height, startAngle, sweepAngle); }
-        public void DrawArc(Pen pen, int x, int y, int width, int height, int startAngle, int sweepAngle) { baseGraphics.DrawArc(pen, x, y, width, height, startAngle, sweepAngle); }
+        public void DrawArc(Pen pen, Rectangle rectangle, float startAngle, float sweepAngle) { baseGraphics.DrawArc(pen, rectangle, startAngle, sweepAngle); }
+        public void DrawArc(Pen pen, RectangleF rectangle, float startAngle, float sweepAngle) { baseGraphics.DrawArc(pen, rectangle, startAngle, sweepAngle); }
+        public void DrawArc(Pen pen, float ellipseX, float ellipseY, float width, float height, float startAngle, float sweepAngle) { baseGraphics.DrawArc(pen, ellipseX, ellipseY, width, height, startAngle, sweepAngle); }
+        public void DrawArc(Pen pen, int ellipseX, int ellipseY, int width, int height, int startAngle, int sweepAngle) { baseGraphics.DrawArc(pen, ellipseX, ellipseY, width, height, startAngle, sweepAngle); }
         public void DrawBezier(Pen pen, Point pt1, Point pt2, Point pt3, Point pt4) { baseGraphics.DrawBezier(pen, pt1, pt2, pt3, pt4); }
         public void DrawBezier(Pen pen, PointF pt1, PointF pt2, PointF pt3, PointF pt4) { baseGraphics.DrawBezier(pen, pt1, pt2, pt3, pt4); }
         public void DrawBezier(Pen pen, float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4) { baseGraphics.DrawBezier(pen, x1, y1, x2, y2, x3, y3, x4, y4); }
@@ -88,64 +88,64 @@ namespace Tournaments.Standard
         public void DrawCurve(Pen pen, PointF[] points, int offset, int numberOfSegments) { baseGraphics.DrawCurve(pen, points, offset, numberOfSegments); }
         public void DrawCurve(Pen pen, Point[] points, int offset, int numberOfSegments, float tension) { baseGraphics.DrawCurve(pen, points, offset, numberOfSegments, tension); }
         public void DrawCurve(Pen pen, PointF[] points, int offset, int numberOfSegments, float tension) { baseGraphics.DrawCurve(pen, points, offset, numberOfSegments, tension); }
-        public void DrawEllipse(Pen pen, Rectangle rect) { baseGraphics.DrawEllipse(pen, rect); }
-        public void DrawEllipse(Pen pen, RectangleF rect) { baseGraphics.DrawEllipse(pen, rect); }
-        public void DrawEllipse(Pen pen, float x, float y, float width, float height) { baseGraphics.DrawEllipse(pen, x, y, width, height); }
-        public void DrawEllipse(Pen pen, int x, int y, int width, int height) { baseGraphics.DrawEllipse(pen, x, y, width, height); }
+        public void DrawEllipse(Pen pen, Rectangle rectangle) { baseGraphics.DrawEllipse(pen, rectangle); }
+        public void DrawEllipse(Pen pen, RectangleF rectangle) { baseGraphics.DrawEllipse(pen, rectangle); }
+        public void DrawEllipse(Pen pen, float ellipseX, float ellipseY, float width, float height) { baseGraphics.DrawEllipse(pen, ellipseX, ellipseY, width, height); }
+        public void DrawEllipse(Pen pen, int ellipseX, int ellipseY, int width, int height) { baseGraphics.DrawEllipse(pen, ellipseX, ellipseY, width, height); }
         public void DrawIcon(Icon icon, Rectangle targetRect) { baseGraphics.DrawIcon(icon, targetRect); }
-        public void DrawIcon(Icon icon, int x, int y) { baseGraphics.DrawIcon(icon, x, y); }
+        public void DrawIcon(Icon icon, int iconX, int iconY) { baseGraphics.DrawIcon(icon, iconX, iconY); }
         public void DrawIconUnstretched(Icon icon, Rectangle targetRect) { baseGraphics.DrawIconUnstretched(icon, targetRect); }
         public void DrawImage(Image image, Point point) { baseGraphics.DrawImage(image, point); }
         public void DrawImage(Image image, Point[] destinationPoints) { baseGraphics.DrawImage(image, destinationPoints); }
         public void DrawImage(Image image, PointF point) { baseGraphics.DrawImage(image, point); }
         public void DrawImage(Image image, PointF[] destinationPoints) { baseGraphics.DrawImage(image, destinationPoints); }
-        public void DrawImage(Image image, Rectangle rect) { baseGraphics.DrawImage(image, rect); }
-        public void DrawImage(Image image, RectangleF rect) { baseGraphics.DrawImage(image, rect); }
-        public void DrawImage(Image image, float x, float y) { baseGraphics.DrawImage(image, x, y); }
-        public void DrawImage(Image image, int x, int y) { baseGraphics.DrawImage(image, x, y); }
+        public void DrawImage(Image image, Rectangle rectangle) { baseGraphics.DrawImage(image, rectangle); }
+        public void DrawImage(Image image, RectangleF rectangle) { baseGraphics.DrawImage(image, rectangle); }
+        public void DrawImage(Image image, float imageX, float imageY) { baseGraphics.DrawImage(image, imageX, imageY); }
+        public void DrawImage(Image image, int imageX, int imageY) { baseGraphics.DrawImage(image, imageX, imageY); }
         public void DrawImage(Image image, Point[] destinationPoints, Rectangle sourceRectangle, GraphicsUnit sourceUnit) { baseGraphics.DrawImage(image, destinationPoints, sourceRectangle, sourceUnit); }
         public void DrawImage(Image image, PointF[] destinationPoints, RectangleF sourceRectangle, GraphicsUnit sourceUnit) { baseGraphics.DrawImage(image, destinationPoints, sourceRectangle, sourceUnit); }
         public void DrawImage(Image image, Rectangle destinationRectangle, Rectangle sourceRectangle, GraphicsUnit sourceUnit) { baseGraphics.DrawImage(image, destinationRectangle, sourceRectangle, sourceUnit); }
         public void DrawImage(Image image, RectangleF destinationRectangle, RectangleF sourceRectangle, GraphicsUnit sourceUnit) { baseGraphics.DrawImage(image, destinationRectangle, sourceRectangle, sourceUnit); }
-        public void DrawImage(Image image, float x, float y, float width, float height) { baseGraphics.DrawImage(image, x, y, width, height); }
-        public void DrawImage(Image image, float x, float y, RectangleF sourceRectangle, GraphicsUnit sourceUnit) { baseGraphics.DrawImage(image, x, y, sourceRectangle, sourceUnit); }
-        public void DrawImage(Image image, int x, int y, int width, int height) { baseGraphics.DrawImage(image, x, y, width, height); }
-        public void DrawImage(Image image, int x, int y, Rectangle sourceRectangle, GraphicsUnit sourceUnit) { baseGraphics.DrawImage(image, x, y, sourceRectangle, sourceUnit); }
-        public void DrawImage(Image image, Point[] destinationPoints, Rectangle sourceRectangle, GraphicsUnit sourceUnit, ImageAttributes imageAttr) { baseGraphics.DrawImage(image, destinationPoints, sourceRectangle, sourceUnit, imageAttr); }
-        public void DrawImage(Image image, PointF[] destinationPoints, RectangleF sourceRectangle, GraphicsUnit sourceUnit, ImageAttributes imageAttr) { baseGraphics.DrawImage(image, destinationPoints, sourceRectangle, sourceUnit, imageAttr); }
-        public void DrawImage(Image image, Point[] destinationPoints, Rectangle sourceRectangle, GraphicsUnit sourceUnit, ImageAttributes imageAttr, System.Drawing.Graphics.DrawImageAbort callback) { baseGraphics.DrawImage(image, destinationPoints, sourceRectangle, sourceUnit, imageAttr, callback); }
-        public void DrawImage(Image image, PointF[] destinationPoints, RectangleF sourceRectangle, GraphicsUnit sourceUnit, ImageAttributes imageAttr, System.Drawing.Graphics.DrawImageAbort callback) { baseGraphics.DrawImage(image, destinationPoints, sourceRectangle, sourceUnit, imageAttr, callback); }
-        public void DrawImage(Image image, Point[] destinationPoints, Rectangle sourceRectangle, GraphicsUnit sourceUnit, ImageAttributes imageAttr, System.Drawing.Graphics.DrawImageAbort callback, int callbackData) { baseGraphics.DrawImage(image, destinationPoints, sourceRectangle, sourceUnit, imageAttr, callback, callbackData); }
-        public void DrawImage(Image image, PointF[] destinationPoints, RectangleF sourceRectangle, GraphicsUnit sourceUnit, ImageAttributes imageAttr, System.Drawing.Graphics.DrawImageAbort callback, int callbackData) { baseGraphics.DrawImage(image, destinationPoints, sourceRectangle, sourceUnit, imageAttr, callback, callbackData); }
-        public void DrawImage(Image image, Rectangle destinationRectangle, float srcX, float srcY, float srcWidth, float srcHeight, GraphicsUnit sourceUnit) { baseGraphics.DrawImage(image, destinationRectangle, srcX, srcY, srcWidth, srcHeight, sourceUnit); }
-        public void DrawImage(Image image, Rectangle destinationRectangle, int srcX, int srcY, int srcWidth, int srcHeight, GraphicsUnit sourceUnit) { baseGraphics.DrawImage(image, destinationRectangle, srcX, srcY, srcWidth, srcHeight, sourceUnit); }
-        public void DrawImage(Image image, Rectangle destinationRectangle, float srcX, float srcY, float srcWidth, float srcHeight, GraphicsUnit sourceUnit, ImageAttributes imageAttrs) { baseGraphics.DrawImage(image, destinationRectangle, srcX, srcY, srcWidth, srcHeight, sourceUnit, imageAttrs); }
-        public void DrawImage(Image image, Rectangle destinationRectangle, int srcX, int srcY, int srcWidth, int srcHeight, GraphicsUnit sourceUnit, ImageAttributes imageAttr) { baseGraphics.DrawImage(image, destinationRectangle, srcX, srcY, srcWidth, srcHeight, sourceUnit, imageAttr); }
-        public void DrawImage(Image image, Rectangle destinationRectangle, float srcX, float srcY, float srcWidth, float srcHeight, GraphicsUnit sourceUnit, ImageAttributes imageAttrs, System.Drawing.Graphics.DrawImageAbort callback) { baseGraphics.DrawImage(image, destinationRectangle, srcX, srcY, srcWidth, srcHeight, sourceUnit, imageAttrs, callback); }
-        public void DrawImage(Image image, Rectangle destinationRectangle, int srcX, int srcY, int srcWidth, int srcHeight, GraphicsUnit sourceUnit, ImageAttributes imageAttr, System.Drawing.Graphics.DrawImageAbort callback) { baseGraphics.DrawImage(image, destinationRectangle, srcX, srcY, srcWidth, srcHeight, sourceUnit, imageAttr, callback); }
-        public void DrawImage(Image image, Rectangle destinationRectangle, float srcX, float srcY, float srcWidth, float srcHeight, GraphicsUnit sourceUnit, ImageAttributes imageAttrs, System.Drawing.Graphics.DrawImageAbort callback, IntPtr callbackData) { baseGraphics.DrawImage(image, destinationRectangle, srcX, srcY, srcWidth, srcHeight, sourceUnit, imageAttrs, callback, callbackData); }
-        public void DrawImage(Image image, Rectangle destinationRectangle, int srcX, int srcY, int srcWidth, int srcHeight, GraphicsUnit sourceUnit, ImageAttributes imageAttrs, System.Drawing.Graphics.DrawImageAbort callback, IntPtr callbackData) { baseGraphics.DrawImage(image, destinationRectangle, srcX, srcY, srcWidth, srcHeight, sourceUnit, imageAttrs, callback, callbackData); }
+        public void DrawImage(Image image, float imageX, float imageY, float width, float height) { baseGraphics.DrawImage(image, imageX, imageY, width, height); }
+        public void DrawImage(Image image, float imageX, float imageY, RectangleF sourceRectangle, GraphicsUnit sourceUnit) { baseGraphics.DrawImage(image, imageX, imageY, sourceRectangle, sourceUnit); }
+        public void DrawImage(Image image, int imageX, int imageY, int width, int height) { baseGraphics.DrawImage(image, imageX, imageY, width, height); }
+        public void DrawImage(Image image, int imageX, int imageY, Rectangle sourceRectangle, GraphicsUnit sourceUnit) { baseGraphics.DrawImage(image, imageX, imageY, sourceRectangle, sourceUnit); }
+        public void DrawImage(Image image, Point[] destinationPoints, Rectangle sourceRectangle, GraphicsUnit sourceUnit, ImageAttributes imageAttributes) { baseGraphics.DrawImage(image, destinationPoints, sourceRectangle, sourceUnit, imageAttributes); }
+        public void DrawImage(Image image, PointF[] destinationPoints, RectangleF sourceRectangle, GraphicsUnit sourceUnit, ImageAttributes imageAttributes) { baseGraphics.DrawImage(image, destinationPoints, sourceRectangle, sourceUnit, imageAttributes); }
+        public void DrawImage(Image image, Point[] destinationPoints, Rectangle sourceRectangle, GraphicsUnit sourceUnit, ImageAttributes imageAttributes, System.Drawing.Graphics.DrawImageAbort callback) { baseGraphics.DrawImage(image, destinationPoints, sourceRectangle, sourceUnit, imageAttributes, callback); }
+        public void DrawImage(Image image, PointF[] destinationPoints, RectangleF sourceRectangle, GraphicsUnit sourceUnit, ImageAttributes imageAttributes, System.Drawing.Graphics.DrawImageAbort callback) { baseGraphics.DrawImage(image, destinationPoints, sourceRectangle, sourceUnit, imageAttributes, callback); }
+        public void DrawImage(Image image, Point[] destinationPoints, Rectangle sourceRectangle, GraphicsUnit sourceUnit, ImageAttributes imageAttributes, System.Drawing.Graphics.DrawImageAbort callback, int callbackData) { baseGraphics.DrawImage(image, destinationPoints, sourceRectangle, sourceUnit, imageAttributes, callback, callbackData); }
+        public void DrawImage(Image image, PointF[] destinationPoints, RectangleF sourceRectangle, GraphicsUnit sourceUnit, ImageAttributes imageAttributes, System.Drawing.Graphics.DrawImageAbort callback, int callbackData) { baseGraphics.DrawImage(image, destinationPoints, sourceRectangle, sourceUnit, imageAttributes, callback, callbackData); }
+        public void DrawImage(Image image, Rectangle destinationRectangle, float sourceLeft, float sourceTop, float sourceWidth, float sourceHeight, GraphicsUnit sourceUnit) { baseGraphics.DrawImage(image, destinationRectangle, sourceLeft, sourceTop, sourceWidth, sourceHeight, sourceUnit); }
+        public void DrawImage(Image image, Rectangle destinationRectangle, int sourceLeft, int sourceTop, int sourceWidth, int sourceHeight, GraphicsUnit sourceUnit) { baseGraphics.DrawImage(image, destinationRectangle, sourceLeft, sourceTop, sourceWidth, sourceHeight, sourceUnit); }
+        public void DrawImage(Image image, Rectangle destinationRectangle, float sourceLeft, float sourceTop, float sourceWidth, float sourceHeight, GraphicsUnit sourceUnit, ImageAttributes imageAttributes) { baseGraphics.DrawImage(image, destinationRectangle, sourceLeft, sourceTop, sourceWidth, sourceHeight, sourceUnit, imageAttributes); }
+        public void DrawImage(Image image, Rectangle destinationRectangle, int sourceLeft, int sourceTop, int sourceWidth, int sourceHeight, GraphicsUnit sourceUnit, ImageAttributes imageAttributes) { baseGraphics.DrawImage(image, destinationRectangle, sourceLeft, sourceTop, sourceWidth, sourceHeight, sourceUnit, imageAttributes); }
+        public void DrawImage(Image image, Rectangle destinationRectangle, float sourceLeft, float sourceTop, float sourceWidth, float sourceHeight, GraphicsUnit sourceUnit, ImageAttributes imageAttributes, System.Drawing.Graphics.DrawImageAbort callback) { baseGraphics.DrawImage(image, destinationRectangle, sourceLeft, sourceTop, sourceWidth, sourceHeight, sourceUnit, imageAttributes, callback); }
+        public void DrawImage(Image image, Rectangle destinationRectangle, int sourceLeft, int sourceTop, int sourceWidth, int sourceHeight, GraphicsUnit sourceUnit, ImageAttributes imageAttributes, System.Drawing.Graphics.DrawImageAbort callback) { baseGraphics.DrawImage(image, destinationRectangle, sourceLeft, sourceTop, sourceWidth, sourceHeight, sourceUnit, imageAttributes, callback); }
+        public void DrawImage(Image image, Rectangle destinationRectangle, float sourceLeft, float sourceTop, float sourceWidth, float sourceHeight, GraphicsUnit sourceUnit, ImageAttributes imageAttributes, System.Drawing.Graphics.DrawImageAbort callback, IntPtr callbackData) { baseGraphics.DrawImage(image, destinationRectangle, sourceLeft, sourceTop, sourceWidth, sourceHeight, sourceUnit, imageAttributes, callback, callbackData); }
+        public void DrawImage(Image image, Rectangle destinationRectangle, int sourceLeft, int sourceTop, int sourceWidth, int sourceHeight, GraphicsUnit sourceUnit, ImageAttributes imageAttributes, System.Drawing.Graphics.DrawImageAbort callback, IntPtr callbackData) { baseGraphics.DrawImage(image, destinationRectangle, sourceLeft, sourceTop, sourceWidth, sourceHeight, sourceUnit, imageAttributes, callback, callbackData); }
         public void DrawImageUnscaled(Image image, Point point) { baseGraphics.DrawImageUnscaled(image, point); }
-        public void DrawImageUnscaled(Image image, Rectangle rect) { baseGraphics.DrawImageUnscaled(image, rect); }
+        public void DrawImageUnscaled(Image image, Rectangle rectangle) { baseGraphics.DrawImageUnscaled(image, rectangle); }
         public void DrawImageUnscaled(Image image, int x, int y) { baseGraphics.DrawImageUnscaled(image, x, y); }
         public void DrawImageUnscaled(Image image, int x, int y, int width, int height) { baseGraphics.DrawImageUnscaled(image, x, y, width, height); }
-        public void DrawImageUnscaledAndClipped(Image image, Rectangle rect) { baseGraphics.DrawImageUnscaledAndClipped(image, rect); }
+        public void DrawImageUnscaledAndClipped(Image image, Rectangle rectangle) { baseGraphics.DrawImageUnscaledAndClipped(image, rectangle); }
         public void DrawLine(Pen pen, Point pt1, Point pt2) { baseGraphics.DrawLine(pen, pt1, pt2); }
         public void DrawLine(Pen pen, PointF pt1, PointF pt2) { baseGraphics.DrawLine(pen, pt1, pt2); }
-        public void DrawLine(Pen pen, float x1, float y1, float x2, float y2) { baseGraphics.DrawLine(pen, x1, y1, x2, y2); }
-        public void DrawLine(Pen pen, int x1, int y1, int x2, int y2) { baseGraphics.DrawLine(pen, x1, y1, x2, y2); }
+        public void DrawLine(Pen pen, float startX, float startY, float endX, float endY) { baseGraphics.DrawLine(pen, startX, startY, endX, endY); }
+        public void DrawLine(Pen pen, int startX, int startY, int endX, int endY) { baseGraphics.DrawLine(pen, startX, startY, endX, endY); }
         public void DrawLines(Pen pen, Point[] points) { baseGraphics.DrawLines(pen, points); }
         public void DrawLines(Pen pen, PointF[] points) { baseGraphics.DrawLines(pen, points); }
         public void DrawPath(Pen pen, GraphicsPath path) { baseGraphics.DrawPath(pen, path); }
-        public void DrawPie(Pen pen, Rectangle rect, float startAngle, float sweepAngle) { baseGraphics.DrawPie(pen, rect, startAngle, sweepAngle); }
-        public void DrawPie(Pen pen, RectangleF rect, float startAngle, float sweepAngle) { baseGraphics.DrawPie(pen, rect, startAngle, sweepAngle); }
-        public void DrawPie(Pen pen, float x, float y, float width, float height, float startAngle, float sweepAngle) { baseGraphics.DrawPie(pen, x, y, width, height, startAngle, sweepAngle); }
-        public void DrawPie(Pen pen, int x, int y, int width, int height, int startAngle, int sweepAngle) { baseGraphics.DrawPie(pen, x, y, width, height, startAngle, sweepAngle); }
+        public void DrawPie(Pen pen, Rectangle rectangle, float startAngle, float sweepAngle) { baseGraphics.DrawPie(pen, rectangle, startAngle, sweepAngle); }
+        public void DrawPie(Pen pen, RectangleF rectangle, float startAngle, float sweepAngle) { baseGraphics.DrawPie(pen, rectangle, startAngle, sweepAngle); }
+        public void DrawPie(Pen pen, float imageX, float imageY, float width, float height, float startAngle, float sweepAngle) { baseGraphics.DrawPie(pen, imageX, imageY, width, height, startAngle, sweepAngle); }
+        public void DrawPie(Pen pen, int imageX, int imageY, int width, int height, int startAngle, int sweepAngle) { baseGraphics.DrawPie(pen, imageX, imageY, width, height, startAngle, sweepAngle); }
         public void DrawPolygon(Pen pen, Point[] points) { baseGraphics.DrawPolygon(pen, points); }
         public void DrawPolygon(Pen pen, PointF[] points) { baseGraphics.DrawPolygon(pen, points); }
-        public void DrawRectangle(Pen pen, Rectangle rect) { baseGraphics.DrawRectangle(pen, rect); }
-        public void DrawRectangle(Pen pen, float x, float y, float width, float height) { baseGraphics.DrawRectangle(pen, x, y, width, height); }
-        public void DrawRectangle(Pen pen, int x, int y, int width, int height) { baseGraphics.DrawRectangle(pen, x, y, width, height); }
+        public void DrawRectangle(Pen pen, Rectangle rectangle) { baseGraphics.DrawRectangle(pen, rectangle); }
+        public void DrawRectangle(Pen pen, float imageX, float imageY, float width, float height) { baseGraphics.DrawRectangle(pen, imageX, imageY, width, height); }
+        public void DrawRectangle(Pen pen, int imageX, int imageY, int width, int height) { baseGraphics.DrawRectangle(pen, imageX, imageY, width, height); }
         public void DrawRectangles(Pen pen, Rectangle[] rects) { baseGraphics.DrawRectangles(pen, rects); }
         public void DrawRectangles(Pen pen, RectangleF[] rects) { baseGraphics.DrawRectangles(pen, rects); }
         public void DrawString(string s, Font font, Brush brush, PointF point) { baseGraphics.DrawString(s, font, brush, point); }
@@ -155,43 +155,43 @@ namespace Tournaments.Standard
         public void DrawString(string s, Font font, Brush brush, RectangleF layoutRectangle, StringFormat format) { baseGraphics.DrawString(s, font, brush, layoutRectangle, format); }
         public void DrawString(string s, Font font, Brush brush, float x, float y, StringFormat format) { baseGraphics.DrawString(s, font, brush, x, y, format); }
         public void EndContainer(GraphicsContainer container) { baseGraphics.EndContainer(container); }
-        public void EnumerateMetafile(Metafile metafile, Point destPoint, System.Drawing.Graphics.EnumerateMetafileProc callback) { baseGraphics.EnumerateMetafile(metafile, destPoint, callback); }
+        public void EnumerateMetafile(Metafile metafile, Point destinationPoint, System.Drawing.Graphics.EnumerateMetafileProc callback) { baseGraphics.EnumerateMetafile(metafile, destinationPoint, callback); }
         public void EnumerateMetafile(Metafile metafile, Point[] destinationPoints, System.Drawing.Graphics.EnumerateMetafileProc callback) { baseGraphics.EnumerateMetafile(metafile, destinationPoints, callback); }
-        public void EnumerateMetafile(Metafile metafile, PointF destPoint, System.Drawing.Graphics.EnumerateMetafileProc callback) { baseGraphics.EnumerateMetafile(metafile, destPoint, callback); }
+        public void EnumerateMetafile(Metafile metafile, PointF destinationPoint, System.Drawing.Graphics.EnumerateMetafileProc callback) { baseGraphics.EnumerateMetafile(metafile, destinationPoint, callback); }
         public void EnumerateMetafile(Metafile metafile, PointF[] destinationPoints, System.Drawing.Graphics.EnumerateMetafileProc callback) { baseGraphics.EnumerateMetafile(metafile, destinationPoints, callback); }
         public void EnumerateMetafile(Metafile metafile, Rectangle destinationRectangle, System.Drawing.Graphics.EnumerateMetafileProc callback) { baseGraphics.EnumerateMetafile(metafile, destinationRectangle, callback); }
         public void EnumerateMetafile(Metafile metafile, RectangleF destinationRectangle, System.Drawing.Graphics.EnumerateMetafileProc callback) { baseGraphics.EnumerateMetafile(metafile, destinationRectangle, callback); }
-        public void EnumerateMetafile(Metafile metafile, Point destPoint, System.Drawing.Graphics.EnumerateMetafileProc callback, IntPtr callbackData) { baseGraphics.EnumerateMetafile(metafile, destPoint, callback, callbackData); }
+        public void EnumerateMetafile(Metafile metafile, Point destinationPoint, System.Drawing.Graphics.EnumerateMetafileProc callback, IntPtr callbackData) { baseGraphics.EnumerateMetafile(metafile, destinationPoint, callback, callbackData); }
         public void EnumerateMetafile(Metafile metafile, Point[] destinationPoints, System.Drawing.Graphics.EnumerateMetafileProc callback, IntPtr callbackData) { baseGraphics.EnumerateMetafile(metafile, destinationPoints, callback, callbackData); }
-        public void EnumerateMetafile(Metafile metafile, PointF destPoint, System.Drawing.Graphics.EnumerateMetafileProc callback, IntPtr callbackData) { baseGraphics.EnumerateMetafile(metafile, destPoint, callback, callbackData); }
+        public void EnumerateMetafile(Metafile metafile, PointF destinationPoint, System.Drawing.Graphics.EnumerateMetafileProc callback, IntPtr callbackData) { baseGraphics.EnumerateMetafile(metafile, destinationPoint, callback, callbackData); }
         public void EnumerateMetafile(Metafile metafile, PointF[] destinationPoints, System.Drawing.Graphics.EnumerateMetafileProc callback, IntPtr callbackData) { baseGraphics.EnumerateMetafile(metafile, destinationPoints, callback, callbackData); }
         public void EnumerateMetafile(Metafile metafile, Rectangle destinationRectangle, System.Drawing.Graphics.EnumerateMetafileProc callback, IntPtr callbackData) { baseGraphics.EnumerateMetafile(metafile, destinationRectangle, callback, callbackData); }
         public void EnumerateMetafile(Metafile metafile, RectangleF destinationRectangle, System.Drawing.Graphics.EnumerateMetafileProc callback, IntPtr callbackData) { baseGraphics.EnumerateMetafile(metafile, destinationRectangle, callback, callbackData); }
-        public void EnumerateMetafile(Metafile metafile, Point destPoint, System.Drawing.Graphics.EnumerateMetafileProc callback, IntPtr callbackData, ImageAttributes imageAttr) { baseGraphics.EnumerateMetafile(metafile, destPoint, callback, callbackData, imageAttr); }
-        public void EnumerateMetafile(Metafile metafile, Point destPoint, Rectangle sourceRectangle, GraphicsUnit sourceUnit, System.Drawing.Graphics.EnumerateMetafileProc callback) { baseGraphics.EnumerateMetafile(metafile, destPoint, sourceRectangle, sourceUnit, callback); }
-        public void EnumerateMetafile(Metafile metafile, Point[] destinationPoints, System.Drawing.Graphics.EnumerateMetafileProc callback, IntPtr callbackData, ImageAttributes imageAttr) { baseGraphics.EnumerateMetafile(metafile, destinationPoints, callback, callbackData, imageAttr); }
+        public void EnumerateMetafile(Metafile metafile, Point destinationPoint, System.Drawing.Graphics.EnumerateMetafileProc callback, IntPtr callbackData, ImageAttributes imageAttributes) { baseGraphics.EnumerateMetafile(metafile, destinationPoint, callback, callbackData, imageAttributes); }
+        public void EnumerateMetafile(Metafile metafile, Point destinationPoint, Rectangle sourceRectangle, GraphicsUnit sourceUnit, System.Drawing.Graphics.EnumerateMetafileProc callback) { baseGraphics.EnumerateMetafile(metafile, destinationPoint, sourceRectangle, sourceUnit, callback); }
+        public void EnumerateMetafile(Metafile metafile, Point[] destinationPoints, System.Drawing.Graphics.EnumerateMetafileProc callback, IntPtr callbackData, ImageAttributes imageAttributes) { baseGraphics.EnumerateMetafile(metafile, destinationPoints, callback, callbackData, imageAttributes); }
         public void EnumerateMetafile(Metafile metafile, Point[] destinationPoints, Rectangle sourceRectangle, GraphicsUnit sourceUnit, System.Drawing.Graphics.EnumerateMetafileProc callback) { baseGraphics.EnumerateMetafile(metafile, destinationPoints, sourceRectangle, sourceUnit, callback); }
-        public void EnumerateMetafile(Metafile metafile, PointF destPoint, System.Drawing.Graphics.EnumerateMetafileProc callback, IntPtr callbackData, ImageAttributes imageAttr) { baseGraphics.EnumerateMetafile(metafile, destPoint, callback, callbackData, imageAttr); }
-        public void EnumerateMetafile(Metafile metafile, PointF destPoint, RectangleF sourceRectangle, GraphicsUnit sourceUnit, System.Drawing.Graphics.EnumerateMetafileProc callback) { baseGraphics.EnumerateMetafile(metafile, destPoint, sourceRectangle, sourceUnit, callback); }
-        public void EnumerateMetafile(Metafile metafile, PointF[] destinationPoints, System.Drawing.Graphics.EnumerateMetafileProc callback, IntPtr callbackData, ImageAttributes imageAttr) { baseGraphics.EnumerateMetafile(metafile, destinationPoints, callback, callbackData, imageAttr); }
+        public void EnumerateMetafile(Metafile metafile, PointF destinationPoint, System.Drawing.Graphics.EnumerateMetafileProc callback, IntPtr callbackData, ImageAttributes imageAttributes) { baseGraphics.EnumerateMetafile(metafile, destinationPoint, callback, callbackData, imageAttributes); }
+        public void EnumerateMetafile(Metafile metafile, PointF destinationPoint, RectangleF sourceRectangle, GraphicsUnit sourceUnit, System.Drawing.Graphics.EnumerateMetafileProc callback) { baseGraphics.EnumerateMetafile(metafile, destinationPoint, sourceRectangle, sourceUnit, callback); }
+        public void EnumerateMetafile(Metafile metafile, PointF[] destinationPoints, System.Drawing.Graphics.EnumerateMetafileProc callback, IntPtr callbackData, ImageAttributes imageAttributes) { baseGraphics.EnumerateMetafile(metafile, destinationPoints, callback, callbackData, imageAttributes); }
         public void EnumerateMetafile(Metafile metafile, PointF[] destinationPoints, RectangleF sourceRectangle, GraphicsUnit sourceUnit, System.Drawing.Graphics.EnumerateMetafileProc callback) { baseGraphics.EnumerateMetafile(metafile, destinationPoints, sourceRectangle, sourceUnit, callback); }
-        public void EnumerateMetafile(Metafile metafile, Rectangle destinationRectangle, System.Drawing.Graphics.EnumerateMetafileProc callback, IntPtr callbackData, ImageAttributes imageAttr) { baseGraphics.EnumerateMetafile(metafile, destinationRectangle, callback, callbackData, imageAttr); }
+        public void EnumerateMetafile(Metafile metafile, Rectangle destinationRectangle, System.Drawing.Graphics.EnumerateMetafileProc callback, IntPtr callbackData, ImageAttributes imageAttributes) { baseGraphics.EnumerateMetafile(metafile, destinationRectangle, callback, callbackData, imageAttributes); }
         public void EnumerateMetafile(Metafile metafile, Rectangle destinationRectangle, Rectangle sourceRectangle, GraphicsUnit sourceUnit, System.Drawing.Graphics.EnumerateMetafileProc callback) { baseGraphics.EnumerateMetafile(metafile, destinationRectangle, sourceRectangle, sourceUnit, callback); }
-        public void EnumerateMetafile(Metafile metafile, RectangleF destinationRectangle, System.Drawing.Graphics.EnumerateMetafileProc callback, IntPtr callbackData, ImageAttributes imageAttr) { baseGraphics.EnumerateMetafile(metafile, destinationRectangle, callback, callbackData, imageAttr); }
+        public void EnumerateMetafile(Metafile metafile, RectangleF destinationRectangle, System.Drawing.Graphics.EnumerateMetafileProc callback, IntPtr callbackData, ImageAttributes imageAttributes) { baseGraphics.EnumerateMetafile(metafile, destinationRectangle, callback, callbackData, imageAttributes); }
         public void EnumerateMetafile(Metafile metafile, RectangleF destinationRectangle, RectangleF sourceRectangle, GraphicsUnit sourceUnit, System.Drawing.Graphics.EnumerateMetafileProc callback) { baseGraphics.EnumerateMetafile(metafile, destinationRectangle, sourceRectangle, sourceUnit, callback); }
-        public void EnumerateMetafile(Metafile metafile, Point destPoint, Rectangle sourceRectangle, GraphicsUnit sourceUnit, System.Drawing.Graphics.EnumerateMetafileProc callback, IntPtr callbackData) { baseGraphics.EnumerateMetafile(metafile, destPoint, sourceRectangle, sourceUnit, callback, callbackData); }
+        public void EnumerateMetafile(Metafile metafile, Point destinationPoint, Rectangle sourceRectangle, GraphicsUnit sourceUnit, System.Drawing.Graphics.EnumerateMetafileProc callback, IntPtr callbackData) { baseGraphics.EnumerateMetafile(metafile, destinationPoint, sourceRectangle, sourceUnit, callback, callbackData); }
         public void EnumerateMetafile(Metafile metafile, Point[] destinationPoints, Rectangle sourceRectangle, GraphicsUnit sourceUnit, System.Drawing.Graphics.EnumerateMetafileProc callback, IntPtr callbackData) { baseGraphics.EnumerateMetafile(metafile, destinationPoints, sourceRectangle, sourceUnit, callback, callbackData); }
-        public void EnumerateMetafile(Metafile metafile, PointF destPoint, RectangleF sourceRectangle, GraphicsUnit sourceUnit, System.Drawing.Graphics.EnumerateMetafileProc callback, IntPtr callbackData) { baseGraphics.EnumerateMetafile(metafile, destPoint, sourceRectangle, sourceUnit, callback, callbackData); }
+        public void EnumerateMetafile(Metafile metafile, PointF destinationPoint, RectangleF sourceRectangle, GraphicsUnit sourceUnit, System.Drawing.Graphics.EnumerateMetafileProc callback, IntPtr callbackData) { baseGraphics.EnumerateMetafile(metafile, destinationPoint, sourceRectangle, sourceUnit, callback, callbackData); }
         public void EnumerateMetafile(Metafile metafile, PointF[] destinationPoints, RectangleF sourceRectangle, GraphicsUnit sourceUnit, System.Drawing.Graphics.EnumerateMetafileProc callback, IntPtr callbackData) { baseGraphics.EnumerateMetafile(metafile, destinationPoints, sourceRectangle, sourceUnit, callback, callbackData); }
         public void EnumerateMetafile(Metafile metafile, Rectangle destinationRectangle, Rectangle sourceRectangle, GraphicsUnit sourceUnit, System.Drawing.Graphics.EnumerateMetafileProc callback, IntPtr callbackData) { baseGraphics.EnumerateMetafile(metafile, destinationRectangle, sourceRectangle, sourceUnit, callback, callbackData); }
         public void EnumerateMetafile(Metafile metafile, RectangleF destinationRectangle, RectangleF sourceRectangle, GraphicsUnit sourceUnit, System.Drawing.Graphics.EnumerateMetafileProc callback, IntPtr callbackData) { baseGraphics.EnumerateMetafile(metafile, destinationRectangle, sourceRectangle, sourceUnit, callback, callbackData); }
-        public void EnumerateMetafile(Metafile metafile, Point destPoint, Rectangle sourceRectangle, GraphicsUnit unit, System.Drawing.Graphics.EnumerateMetafileProc callback, IntPtr callbackData, ImageAttributes imageAttr) { baseGraphics.EnumerateMetafile(metafile, destPoint, sourceRectangle, unit, callback, callbackData, imageAttr); }
-        public void EnumerateMetafile(Metafile metafile, Point[] destinationPoints, Rectangle sourceRectangle, GraphicsUnit unit, System.Drawing.Graphics.EnumerateMetafileProc callback, IntPtr callbackData, ImageAttributes imageAttr) { baseGraphics.EnumerateMetafile(metafile, destinationPoints, sourceRectangle, unit, callback, callbackData, imageAttr); }
-        public void EnumerateMetafile(Metafile metafile, PointF destPoint, RectangleF sourceRectangle, GraphicsUnit unit, System.Drawing.Graphics.EnumerateMetafileProc callback, IntPtr callbackData, ImageAttributes imageAttr) { baseGraphics.EnumerateMetafile(metafile, destPoint, sourceRectangle, unit, callback, callbackData, imageAttr); }
-        public void EnumerateMetafile(Metafile metafile, PointF[] destinationPoints, RectangleF sourceRectangle, GraphicsUnit unit, System.Drawing.Graphics.EnumerateMetafileProc callback, IntPtr callbackData, ImageAttributes imageAttr) { baseGraphics.EnumerateMetafile(metafile, destinationPoints, sourceRectangle, unit, callback, callbackData, imageAttr); }
-        public void EnumerateMetafile(Metafile metafile, Rectangle destinationRectangle, Rectangle sourceRectangle, GraphicsUnit unit, System.Drawing.Graphics.EnumerateMetafileProc callback, IntPtr callbackData, ImageAttributes imageAttr) { baseGraphics.EnumerateMetafile(metafile, destinationRectangle, sourceRectangle, unit, callback, callbackData, imageAttr); }
-        public void EnumerateMetafile(Metafile metafile, RectangleF destinationRectangle, RectangleF sourceRectangle, GraphicsUnit unit, System.Drawing.Graphics.EnumerateMetafileProc callback, IntPtr callbackData, ImageAttributes imageAttr) { baseGraphics.EnumerateMetafile(metafile, destinationRectangle, sourceRectangle, unit, callback, callbackData, imageAttr); }
-        public void ExcludeClip(Rectangle rect) { baseGraphics.ExcludeClip(rect); }
+        public void EnumerateMetafile(Metafile metafile, Point destinationPoint, Rectangle sourceRectangle, GraphicsUnit unit, System.Drawing.Graphics.EnumerateMetafileProc callback, IntPtr callbackData, ImageAttributes imageAttributes) { baseGraphics.EnumerateMetafile(metafile, destinationPoint, sourceRectangle, unit, callback, callbackData, imageAttributes); }
+        public void EnumerateMetafile(Metafile metafile, Point[] destinationPoints, Rectangle sourceRectangle, GraphicsUnit unit, System.Drawing.Graphics.EnumerateMetafileProc callback, IntPtr callbackData, ImageAttributes imageAttributes) { baseGraphics.EnumerateMetafile(metafile, destinationPoints, sourceRectangle, unit, callback, callbackData, imageAttributes); }
+        public void EnumerateMetafile(Metafile metafile, PointF destinationPoint, RectangleF sourceRectangle, GraphicsUnit unit, System.Drawing.Graphics.EnumerateMetafileProc callback, IntPtr callbackData, ImageAttributes imageAttributes) { baseGraphics.EnumerateMetafile(metafile, destinationPoint, sourceRectangle, unit, callback, callbackData, imageAttributes); }
+        public void EnumerateMetafile(Metafile metafile, PointF[] destinationPoints, RectangleF sourceRectangle, GraphicsUnit unit, System.Drawing.Graphics.EnumerateMetafileProc callback, IntPtr callbackData, ImageAttributes imageAttributes) { baseGraphics.EnumerateMetafile(metafile, destinationPoints, sourceRectangle, unit, callback, callbackData, imageAttributes); }
+        public void EnumerateMetafile(Metafile metafile, Rectangle destinationRectangle, Rectangle sourceRectangle, GraphicsUnit unit, System.Drawing.Graphics.EnumerateMetafileProc callback, IntPtr callbackData, ImageAttributes imageAttributes) { baseGraphics.EnumerateMetafile(metafile, destinationRectangle, sourceRectangle, unit, callback, callbackData, imageAttributes); }
+        public void EnumerateMetafile(Metafile metafile, RectangleF destinationRectangle, RectangleF sourceRectangle, GraphicsUnit unit, System.Drawing.Graphics.EnumerateMetafileProc callback, IntPtr callbackData, ImageAttributes imageAttributes) { baseGraphics.EnumerateMetafile(metafile, destinationRectangle, sourceRectangle, unit, callback, callbackData, imageAttributes); }
+        public void ExcludeClip(Rectangle rectangle) { baseGraphics.ExcludeClip(rectangle); }
         public void ExcludeClip(Region region) { baseGraphics.ExcludeClip(region); }
         public void FillClosedCurve(Brush brush, Point[] points) { baseGraphics.FillClosedCurve(brush, points); }
         public void FillClosedCurve(Brush brush, PointF[] points) { baseGraphics.FillClosedCurve(brush, points); }
@@ -199,20 +199,20 @@ namespace Tournaments.Standard
         public void FillClosedCurve(Brush brush, PointF[] points, FillMode fillMode) { baseGraphics.FillClosedCurve(brush, points, fillMode); }
         public void FillClosedCurve(Brush brush, Point[] points, FillMode fillMode, float tension) { baseGraphics.FillClosedCurve(brush, points, fillMode, tension); }
         public void FillClosedCurve(Brush brush, PointF[] points, FillMode fillMode, float tension) { baseGraphics.FillClosedCurve(brush, points, fillMode, tension); }
-        public void FillEllipse(Brush brush, Rectangle rect) { baseGraphics.FillEllipse(brush, rect); }
-        public void FillEllipse(Brush brush, RectangleF rect) { baseGraphics.FillEllipse(brush, rect); }
+        public void FillEllipse(Brush brush, Rectangle rectangle) { baseGraphics.FillEllipse(brush, rectangle); }
+        public void FillEllipse(Brush brush, RectangleF rectangle) { baseGraphics.FillEllipse(brush, rectangle); }
         public void FillEllipse(Brush brush, float x, float y, float width, float height) { baseGraphics.FillEllipse(brush, x, y, width, height); }
         public void FillEllipse(Brush brush, int x, int y, int width, int height) { baseGraphics.FillEllipse(brush, x, y, width, height); }
         public void FillPath(Brush brush, GraphicsPath path) { baseGraphics.FillPath(brush, path); }
-        public void FillPie(Brush brush, Rectangle rect, float startAngle, float sweepAngle) { baseGraphics.FillPie(brush, rect, startAngle, sweepAngle); }
+        public void FillPie(Brush brush, Rectangle rectangle, float startAngle, float sweepAngle) { baseGraphics.FillPie(brush, rectangle, startAngle, sweepAngle); }
         public void FillPie(Brush brush, float x, float y, float width, float height, float startAngle, float sweepAngle) { baseGraphics.FillPie(brush, x, y, width, height, startAngle, sweepAngle); }
         public void FillPie(Brush brush, int x, int y, int width, int height, int startAngle, int sweepAngle) { baseGraphics.FillPie(brush, x, y, width, height, startAngle, sweepAngle); }
         public void FillPolygon(Brush brush, Point[] points) { baseGraphics.FillPolygon(brush, points); }
         public void FillPolygon(Brush brush, PointF[] points) { baseGraphics.FillPolygon(brush, points); }
         public void FillPolygon(Brush brush, Point[] points, FillMode fillMode) { baseGraphics.FillPolygon(brush, points, fillMode); }
         public void FillPolygon(Brush brush, PointF[] points, FillMode fillMode) { baseGraphics.FillPolygon(brush, points, fillMode); }
-        public void FillRectangle(Brush brush, Rectangle rect) { baseGraphics.FillRectangle(brush, rect); }
-        public void FillRectangle(Brush brush, RectangleF rect) { baseGraphics.FillRectangle(brush, rect); }
+        public void FillRectangle(Brush brush, Rectangle rectangle) { baseGraphics.FillRectangle(brush, rectangle); }
+        public void FillRectangle(Brush brush, RectangleF rectangle) { baseGraphics.FillRectangle(brush, rectangle); }
         public void FillRectangle(Brush brush, float x, float y, float width, float height) { baseGraphics.FillRectangle(brush, x, y, width, height); }
         public void FillRectangle(Brush brush, int x, int y, int width, int height) { baseGraphics.FillRectangle(brush, x, y, width, height); }
         public void FillRectangles(Brush brush, Rectangle[] rects) { baseGraphics.FillRectangles(brush, rects); }
@@ -222,13 +222,13 @@ namespace Tournaments.Standard
         public void Flush(FlushIntention intention) { baseGraphics.Flush(intention); }
         public IntPtr GetHdc() { return baseGraphics.GetHdc(); }
         public Color GetNearestColor(Color color) { return baseGraphics.GetNearestColor(color); }
-        public void IntersectClip(Rectangle rect) { baseGraphics.IntersectClip(rect); }
-        public void IntersectClip(RectangleF rect) { baseGraphics.IntersectClip(rect); }
+        public void IntersectClip(Rectangle rectangle) { baseGraphics.IntersectClip(rectangle); }
+        public void IntersectClip(RectangleF rectangle) { baseGraphics.IntersectClip(rectangle); }
         public void IntersectClip(Region region) { baseGraphics.IntersectClip(region); }
         public bool IsVisible(Point point) { return baseGraphics.IsVisible(point); }
         public bool IsVisible(PointF point) { return baseGraphics.IsVisible(point); }
-        public bool IsVisible(Rectangle rect) { return baseGraphics.IsVisible(rect); }
-        public bool IsVisible(RectangleF rect) { return baseGraphics.IsVisible(rect); }
+        public bool IsVisible(Rectangle rectangle) { return baseGraphics.IsVisible(rectangle); }
+        public bool IsVisible(RectangleF rectangle) { return baseGraphics.IsVisible(rectangle); }
         public bool IsVisible(float x, float y) { return baseGraphics.IsVisible(x, y); }
         public bool IsVisible(int x, int y) { return baseGraphics.IsVisible(x, y); }
         public bool IsVisible(float x, float y, float width, float height) { return baseGraphics.IsVisible(x, y, width, height); }
@@ -248,7 +248,7 @@ namespace Tournaments.Standard
         public void ReleaseHdcInternal(IntPtr hdc) { baseGraphics.ReleaseHdcInternal(hdc); }
         public void ResetClip() { baseGraphics.ResetClip(); }
         public void ResetTransform() { baseGraphics.ResetTransform(); }
-        public void Restore(GraphicsState gstate) { baseGraphics.Restore(gstate); }
+        public void Restore(GraphicsState graphicsState) { baseGraphics.Restore(graphicsState); }
         public void RotateTransform(float angle) { baseGraphics.RotateTransform(angle); }
         public void RotateTransform(float angle, MatrixOrder order) { baseGraphics.RotateTransform(angle, order); }
         public GraphicsState Save() { return baseGraphics.Save(); }
@@ -256,15 +256,15 @@ namespace Tournaments.Standard
         public void ScaleTransform(float sx, float sy, MatrixOrder order) { baseGraphics.ScaleTransform(sx, sy, order); }
         public void SetClip(System.Drawing.Graphics g) { baseGraphics.SetClip(g); }
         public void SetClip(GraphicsPath path) { baseGraphics.SetClip(path); }
-        public void SetClip(Rectangle rect) { baseGraphics.SetClip(rect); }
-        public void SetClip(RectangleF rect) { baseGraphics.SetClip(rect); }
+        public void SetClip(Rectangle rectangle) { baseGraphics.SetClip(rectangle); }
+        public void SetClip(RectangleF rectangle) { baseGraphics.SetClip(rectangle); }
         public void SetClip(System.Drawing.Graphics g, CombineMode combineMode) { baseGraphics.SetClip(g, combineMode); }
         public void SetClip(GraphicsPath path, CombineMode combineMode) { baseGraphics.SetClip(path, combineMode); }
-        public void SetClip(Rectangle rect, CombineMode combineMode) { baseGraphics.SetClip(rect, combineMode); }
-        public void SetClip(RectangleF rect, CombineMode combineMode) { baseGraphics.SetClip(rect, combineMode); }
+        public void SetClip(Rectangle rectangle, CombineMode combineMode) { baseGraphics.SetClip(rectangle, combineMode); }
+        public void SetClip(RectangleF rectangle, CombineMode combineMode) { baseGraphics.SetClip(rectangle, combineMode); }
         public void SetClip(Region region, CombineMode combineMode) { baseGraphics.SetClip(region, combineMode); }
-        public void TransformPoints(CoordinateSpace destSpace, CoordinateSpace srcSpace, Point[] pts) { baseGraphics.TransformPoints(destSpace, srcSpace, pts); }
-        public void TransformPoints(CoordinateSpace destSpace, CoordinateSpace srcSpace, PointF[] pts) { baseGraphics.TransformPoints(destSpace, srcSpace, pts); }
+        public void TransformPoints(CoordinateSpace destinationSpace, CoordinateSpace sourceSpace, Point[] pts) { baseGraphics.TransformPoints(destinationSpace, sourceSpace, pts); }
+        public void TransformPoints(CoordinateSpace destinationSpace, CoordinateSpace sourceSpace, PointF[] pts) { baseGraphics.TransformPoints(destinationSpace, sourceSpace, pts); }
         public void TranslateClip(float dx, float dy) { baseGraphics.TranslateClip(dx, dy); }
         public void TranslateClip(int dx, int dy) { baseGraphics.TranslateClip(dx, dy); }
         public void TranslateTransform(float dx, float dy) { baseGraphics.TranslateTransform(dx, dy); }
