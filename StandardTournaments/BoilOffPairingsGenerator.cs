@@ -135,7 +135,7 @@ namespace Tournaments.Standard
 
                 // TODO: If not in the first round, allow additional eliminations. (Given that all players in a tie must be eliminated/kept together.)
                 var required = from nt in newTeams
-                               where !rankingTeams.Contains(team)
+                               where !rankingTeams.Contains(nt)
                                select nt;
 
                 if (required.Any())
