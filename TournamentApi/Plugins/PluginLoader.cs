@@ -54,7 +54,7 @@ namespace Tournaments.Plugins
         {
             if (!File.Exists(fileName))
             {
-                return null;
+                throw new LoadPluginsFailureException("Unable to load plugins:  The file '" + fileName + "' could not be found.");
             }
             else
             {

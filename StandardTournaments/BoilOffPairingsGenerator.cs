@@ -124,20 +124,23 @@ namespace Tournaments.Standard
                 List<TournamentTeam> rankingTeams = new List<TournamentTeam>(from ranking in rankings
                                                                              select ranking.Team);
 
-                foreach (var team in rankingTeams)
+                var ineligible = from rt in rankingTeams
+                                 where !newTeams.Contains(rt)
+                                 select rt;
+
+                if (ineligible.Any())
                 {
-                    if (!newTeams.Contains(team))
-                    {
-                        throw new InvalidTournamentStateException("The rounds alread executed in this tournament make it invalid as a boil-off tournament for the following reason:  There is at least one competitor who should not have competed in a round.");
-                    }
+                    throw new InvalidTournamentStateException("The rounds alread executed in this tournament make it invalid as a boil-off tournament for the following reason:  There is at least one competitor who should not have competed in a round.");
                 }
 
-                foreach (var team in newTeams)
+                // TODO: If not in the first round, allow additional eliminations. (Given that all players in a tie must be eliminated/kept together.)
+                var required = from nt in newTeams
+                               where !rankingTeams.Contains(team)
+                               select nt;
+
+                if (required.Any())
                 {
-                    if (!rankingTeams.Contains(team))
-                    {
-                        throw new InvalidTournamentStateException("The rounds alread executed in this tournament make it invalid as a boil-off tournament for the following reason:  There is at least one competitor who should have competed in a round who did not.");
-                    }
+                    throw new InvalidTournamentStateException("The rounds alread executed in this tournament make it invalid as a boil-off tournament for the following reason:  There is at least one competitor who should have competed in a round who did not.");
                 }
 
                 int roundNumber = GetRoundNumber(newTeams.Count, BoilOffPairingsGenerator.lastRound);
@@ -224,21 +227,7 @@ namespace Tournaments.Standard
 
                 if(newCount >= teamCount)
                 {
-                    if (Math.Abs(teamCount - newCount) < Math.Abs(teamCount - previousCount))
-                    {
-                        return round;
-                    }
-                    else
-                    {
-                        if (round > 1)
-                        {
-                            return round - 1;
-                        }
-                        else
-                        {
-                            return round;
-                        }
-                    }
+                    return round;
                 }
 
                 previousCount = newCount;
