@@ -5,22 +5,26 @@ using System.Text;
 
 namespace Tournaments.Standard
 {
-    public class SingleEliminationNode
+    public class EliminationNode
     {
-        private SingleEliminationNode parent;
-        private SingleEliminationNode childA;
-        private SingleEliminationNode childB;
+        private EliminationNode parent;
+        private EliminationNode childA;
+        private EliminationNode childB;
+        private EliminationNode loserNode;
         private TeamRanking team;
         private bool locked;
         private Score score;
+        private int eliminationLevel;
 
-        public SingleEliminationNode(TeamRanking team)
+        public EliminationNode(TeamRanking team, int eliminationLevel)
         {
             this.team = team;
+            this.eliminationLevel = eliminationLevel;
         }
 
-        public SingleEliminationNode()
+        public EliminationNode(int eliminationLevel)
         {
+            this.eliminationLevel = eliminationLevel;
         }
 
         public bool Locked
@@ -49,7 +53,27 @@ namespace Tournaments.Standard
             }
         }
 
-        public SingleEliminationNode Parent
+        public int EliminationLevel
+        {
+            get
+            {
+                return this.eliminationLevel;
+            }
+        }
+
+        public EliminationNode LoserNode
+        {
+            get
+            {
+                return this.loserNode;
+            }
+            set
+            {
+                this.loserNode = value;
+            }
+        }
+
+        public EliminationNode Parent
         {
             get
             {
@@ -141,7 +165,7 @@ namespace Tournaments.Standard
             }
         }
 
-        public SingleEliminationNode ChildA
+        public EliminationNode ChildA
         {
             get
             {
@@ -183,7 +207,7 @@ namespace Tournaments.Standard
             }
         }
 
-        public SingleEliminationNode ChildB
+        public EliminationNode ChildB
         {
             get
             {
@@ -260,9 +284,14 @@ namespace Tournaments.Standard
             }
         }
 
-        public void MakeSiblingA(SingleEliminationNode siblingA)
+        public void MakeSiblingA(EliminationNode siblingA)
         {
-            SingleEliminationNode newParent = new SingleEliminationNode();
+            if (siblingA != null && siblingA.eliminationLevel != this.eliminationLevel)
+            {
+                throw new InvalidOperationException();
+            }
+
+            EliminationNode newParent = new EliminationNode(this.eliminationLevel);
             newParent.ChildA = siblingA;
 
             if (this.parent != null)
@@ -280,9 +309,14 @@ namespace Tournaments.Standard
             newParent.ChildB = this;
         }
 
-        public void MakeSiblingB(SingleEliminationNode siblingB)
+        public void MakeSiblingB(EliminationNode siblingB)
         {
-            SingleEliminationNode newParent = new SingleEliminationNode();
+            if (siblingB != null && siblingB.eliminationLevel != this.eliminationLevel)
+            {
+                throw new InvalidOperationException();
+            }
+
+            EliminationNode newParent = new EliminationNode(this.eliminationLevel);
             newParent.ChildB = siblingB;
 
             if (this.parent != null)
@@ -302,7 +336,7 @@ namespace Tournaments.Standard
 
         public void SwapChildren()
         {
-            SingleEliminationNode temp = this.childA;
+            EliminationNode temp = this.childA;
             this.childA = this.childB;
             this.childB = temp;
         }

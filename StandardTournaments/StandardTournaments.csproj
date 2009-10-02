@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BoilOffPairingsGenerator.cs" />
+    <Compile Include="DoubleEliminationTournament.cs" />
     <Compile Include="Helpers\SingleEliminationNode.cs" />
     <Compile Include="Helpers\TeamRanking.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

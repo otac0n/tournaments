@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="SingleEliminationTournament.cs" company="(none)">
+// <copyright file="DoubleEliminationTournament.cs" company="(none)">
 //  Copyright (c) 2009 John Gietzen
 //
 //  Permission is hereby granted, free of charge, to any person obtaining
@@ -36,9 +36,9 @@ namespace Tournaments.Standard
     using Tournaments.Graphics;
 
     /// <summary>
-    /// Implements a Singe Elmination Tournament
+    /// Implements a Double Elmination Tournament
     /// </summary>
-    public class SingleEliminationTournament : IPairingsGenerator, ITournamentVisualizer
+    public class DoubleEliminationTournament : IPairingsGenerator, ITournamentVisualizer
     {
         private List<TournamentTeam> loadedTeams;
         private List<EliminationNode> loadedNodes;
@@ -48,7 +48,7 @@ namespace Tournaments.Standard
         {
             get
             {
-                return "Single-elimination";
+                return "Double-elimination";
             }
         }
 
@@ -146,6 +146,13 @@ namespace Tournaments.Standard
                     node.MakeSiblingB(null);
                     nodes.Add(node.Parent);
                 }
+
+                var rootNode = (from n in nodes
+                                where n.Level == 0
+                                select n).SingleOrDefault();
+
+                var elimNodes = AttachEliminationNodes(rootNode);
+                nodes.AddRange(elimNodes);
             }
 
             bool byePaired = false;
@@ -157,7 +164,7 @@ namespace Tournaments.Standard
                 {
                     if (pairing.TeamScores.Count > 2)
                     {
-                        throw new InvalidTournamentStateException("At least one pairing had more than two teams competing.  This is invalid in a single elimination tournament.");
+                        throw new InvalidTournamentStateException("At least one pairing had more than two teams competing.  This is invalid in a double elimination tournament.");
                     }
 
                     if (pairing.TeamScores.Count == 0)
@@ -272,6 +279,8 @@ namespace Tournaments.Standard
                         {
                             // We did not find a matching pair, so we need to create one by swapping.
 
+                            // TODO: We need to verify that the nodes are from the same elimination level.
+
                             var teamANodes = from n in nodes
                                              where n.Locked == false
                                              where n.ChildAMatches(teamA.TeamId) || n.ChildBMatches(teamA.TeamId)
@@ -379,6 +388,13 @@ namespace Tournaments.Standard
             this.loadedNodes = nodes;
             this.loadedTeams = new List<TournamentTeam>(teams);
             this.state = PairingsGeneratorState.Initialized;
+        }
+
+        private IEnumerable<EliminationNode> AttachEliminationNodes(EliminationNode rootNode)
+        {
+            EliminationNode node = new EliminationNode(rootNode.EliminationLevel + 1);
+            rootNode.LoserNode = node;
+            yield return node;
         }
 
         private static void SwapChildrenAA(EliminationNode node1, EliminationNode node2)
@@ -534,36 +550,46 @@ namespace Tournaments.Standard
 
         public SizeF Measure(IGraphics graphics, TournamentNameTable teamNames)
         {
-            var rootNode = (from n in this.loadedNodes
-                            where n.Parent == null
-                            select n).SingleOrDefault();
+            var rootNodes = (from n in this.loadedNodes
+                             where n.Parent == null
+                             orderby n.EliminationLevel
+                             select n).ToList();
 
-            if (rootNode == null)
-            {
-                return new Size(0, 0);
-            }
+            SizeF baseSize = new SizeF(0, 0);
 
             var textHeight = GetTextHeight(graphics);
 
-            var size = this.MeasureNode(rootNode, textHeight);
+            var size = new SizeF(baseSize.Width, baseSize.Height + 5);
+            for(int i = 0; i < rootNodes.Count; i++)
+            {
+                var rootNode = rootNodes[i];
+                var addSize = this.MeasureNode(rootNode, textHeight);
+                size = new SizeF(Math.Max(size.Width, addSize.Width), size.Height + addSize.Height + (i > 0 ? BracketVSpacing : 0));
+            }
 
             return new SizeF(size.Width + 10, size.Height + 10);
         }
 
         public void Render(IGraphics graphics, TournamentNameTable teamNames)
         {
-            var rootNode = (from n in this.loadedNodes
+            var rootNodes = (from n in this.loadedNodes
                             where n.Parent == null
-                            select n).SingleOrDefault();
+                            orderby n.EliminationLevel
+                            select n).ToList();
 
-            if (rootNode == null)
+            if (rootNodes.Count == 0)
             {
                 return;
             }
 
             var textHeight = GetTextHeight(graphics);
 
-            this.RenderNode(graphics, textHeight, rootNode, 5, 5, teamNames);
+            var yOffset = 5.0f;
+            foreach (var rootNode in rootNodes)
+            {
+                this.RenderNode(graphics, textHeight, rootNode, 5, yOffset, teamNames);
+                yOffset += MeasureNode(rootNode, textHeight).Height + BracketVSpacing;
+            }
         }
 
         private const float MinBracketWidth = 120;

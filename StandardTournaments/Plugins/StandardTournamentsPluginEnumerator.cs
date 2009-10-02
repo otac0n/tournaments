@@ -49,6 +49,9 @@ namespace Tournaments.Standard
             yield return new PairingsGeneratorFactory<SingleEliminationTournament>();
             yield return new TournamentVisualizerFactory<SingleEliminationTournament>();
 
+            yield return new PairingsGeneratorFactory<DoubleEliminationTournament>();
+            yield return new TournamentVisualizerFactory<DoubleEliminationTournament>();
+
             yield break;
         }
     }
