@@ -15,7 +15,7 @@ namespace Tournaments.Sample
     {
         private IPairingsGenerator generator;
         private ITournamentVisualizer visualizer;
-        private SystemGraphics measureGraphics = new SystemGraphics(System.Drawing.Graphics.FromImage(new Bitmap(1, 1)));
+        private SystemGraphics measureGraphics = new SystemGraphics();
         private List<TournamentTeam> teams = new List<TournamentTeam>();
         private List<TournamentRound> rounds = new List<TournamentRound>();
         private Dictionary<long, string> teamNames = new Dictionary<long, string>();
@@ -88,7 +88,7 @@ namespace Tournaments.Sample
                         if (size.Height > 0 && size.Width > 0)
                         {
                             var rendered = new Bitmap((int)Math.Ceiling(size.Width), (int)Math.Ceiling(size.Height));
-                            this.visualizer.Render(new SystemGraphics(System.Drawing.Graphics.FromImage(rendered)), names);
+                            this.visualizer.Render(new SystemGraphics(rendered), names);
                             this.Visualization.Image = rendered;
                         }
                         else
