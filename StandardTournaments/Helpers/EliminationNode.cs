@@ -30,9 +30,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Drawing;
+using Tournaments.Graphics;
+using System.Diagnostics;
 
 namespace Tournaments.Standard
 {
+    [DebuggerDisplay("[{this}: {this.Decider}]")]
     public abstract class EliminationNode
     {
         protected EliminationDecider decider = null;
@@ -65,5 +69,9 @@ namespace Tournaments.Standard
         public bool Locked { get; set; }
 
         public int Level { get; set; }
+
+        public abstract NodeMeasurement Measure(IGraphics g, TournamentNameTable names, float textHeight);
+
+        public abstract void Render(IGraphics g, TournamentNameTable names, float x, float y, float textHeight);
     }
 }

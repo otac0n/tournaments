@@ -50,6 +50,7 @@
     <Compile Include="Helpers\ContinuationDecider.cs" />
     <Compile Include="Helpers\EliminationDecider.cs" />
     <Compile Include="Helpers\LoserNode.cs" />
+    <Compile Include="Helpers\NodeMeasurement.cs" />
     <Compile Include="Helpers\PassThroughDecider.cs" />
     <Compile Include="Helpers\EliminationNode.cs" />
     <Compile Include="Helpers\StayDecider.cs" />

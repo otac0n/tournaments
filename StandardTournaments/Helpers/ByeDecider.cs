@@ -23,6 +23,7 @@
 //  SOFTWARE
 // </copyright>
 // <author>Katie Johnson</author>
+// <author>John Gietzen</author>
 //-----------------------------------------------------------------------
 
 namespace Tournaments.Standard
@@ -45,6 +46,28 @@ namespace Tournaments.Standard
         }
 
         public override TournamentTeam GetLoser()
+        {
+            throw new InvalidOperationException("Cannot determine a loser from a bye entry.");
+        }
+
+        public override NodeMeasurement MeasureWinner(Tournaments.Graphics.IGraphics g, TournamentNameTable names, float textHeight, Score score)
+        {
+            return this.MeasureTextBox(textHeight);
+        }
+
+        public override NodeMeasurement MeasureLoser(Tournaments.Graphics.IGraphics g, TournamentNameTable names, float textHeight, Score score)
+        {
+            throw new InvalidOperationException("Cannot determine a loser from a bye entry.");
+        }
+
+        public override void RenderWinner(Tournaments.Graphics.IGraphics g, TournamentNameTable names, float x, float y, float textHeight, Score score)
+        {
+            var m = this.MeasureWinner(g, names, textHeight, score);
+
+            this.RenderTextBox(g, m, x, y, textHeight, "bye", score);
+        }
+
+        public override void RenderLoser(Tournaments.Graphics.IGraphics g, TournamentNameTable names, float x, float y, float textHeight, Score score)
         {
             throw new InvalidOperationException("Cannot determine a loser from a bye entry.");
         }

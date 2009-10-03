@@ -44,5 +44,15 @@ namespace Tournaments.Standard
         {
             get { return this.decider.GetWinner(); }
         }
+
+        public override NodeMeasurement Measure(Tournaments.Graphics.IGraphics g, TournamentNameTable names, float textHeight)
+        {
+            return this.decider.MeasureWinner(g, names, textHeight, this.Score);
+        }
+
+        public override void Render(Tournaments.Graphics.IGraphics g, TournamentNameTable names, float x, float y, float textHeight)
+        {
+            this.decider.RenderWinner(g, names, x, y, textHeight, this.Score);
+        }
     }
 }

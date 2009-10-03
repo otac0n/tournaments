@@ -82,7 +82,7 @@ namespace Tournaments.Standard
 
         public override bool IsDecidable
         {
-            get { return this.nodeA.IsDecided && nodeB.IsDecided && nodeA.Score != null && nodeB.Score != null && nodeA.Score != nodeB.Score; }
+            get { return this.nodeA.IsDecided && nodeB.IsDecided && ((nodeA.Team == null || nodeB.Team == null) || (nodeA.Score != null && nodeB.Score != null && nodeA.Score != nodeB.Score)); }
         }
 
         public override TournamentTeam GetWinner()
@@ -95,6 +95,15 @@ namespace Tournaments.Standard
             if (!this.nodeB.IsDecided)
             {
                 throw new InvalidOperationException("Cannot determine a winner from a node that is undecided.");
+            }
+
+            if (this.nodeB.Team == null)
+            {
+                return this.nodeA.Team;
+            }
+            else if (this.nodeA.Team == null)
+            {
+                return this.nodeB.Team;
             }
 
             if (this.nodeA.Score == null)
@@ -127,6 +136,15 @@ namespace Tournaments.Standard
                 throw new InvalidOperationException("Cannot determine a loser from a node that is undecided.");
             }
 
+            if (this.nodeA.Team == null)
+            {
+                return this.nodeA.Team;
+            }
+            else if (this.nodeB.Team == null)
+            {
+                return this.nodeB.Team;
+            }
+
             if (this.nodeA.Score == null)
             {
                 throw new InvalidOperationException("Cannot determine a loser from a node without a score.");
@@ -150,6 +168,51 @@ namespace Tournaments.Standard
             var tempNode = this.nodeA;
             this.nodeA = this.nodeB;
             this.nodeB = tempNode;
+        }
+
+        public override NodeMeasurement MeasureWinner(Tournaments.Graphics.IGraphics g, TournamentNameTable names, float textHeight, Score score)
+        {
+            var m = this.MeasureTree(g, names, textHeight,
+                this.nodeA,
+                this.nodeB);
+
+            var t = this.MeasureTextBox(textHeight);
+
+            return new NodeMeasurement(m.Width + t.Width, m.Height, m.CenterLine);
+        }
+
+        public override NodeMeasurement MeasureLoser(Tournaments.Graphics.IGraphics g, TournamentNameTable names, float textHeight, Score score)
+        {
+            return this.MeasureTextBox(textHeight);
+        }
+
+        public override void RenderWinner(Tournaments.Graphics.IGraphics g, TournamentNameTable names, float x, float y, float textHeight, Score score)
+        {
+            var m = this.MeasureWinner(g, names, textHeight, score);
+
+            string teamName = "";
+            if (this.IsDecidable)
+            {
+                teamName = names[this.GetWinner().TeamId];
+            }
+
+            this.RenderTextBox(g, m, x, y, textHeight, teamName, score);
+            this.RenderTree(g, names, x, y, textHeight,
+                this.nodeA,
+                this.nodeB);
+        }
+
+        public override void RenderLoser(Tournaments.Graphics.IGraphics g, TournamentNameTable names, float x, float y, float textHeight, Score score)
+        {
+            var m = this.MeasureLoser(g, names, textHeight, score);
+
+            string teamName = "";
+            if (this.IsDecidable)
+            {
+                teamName = names[this.GetLoser().TeamId];
+            }
+
+            this.RenderTextBox(g, m, x, y, textHeight, teamName, score);
         }
     }
 }

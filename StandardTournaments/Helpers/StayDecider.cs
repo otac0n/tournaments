@@ -23,12 +23,14 @@
 //  SOFTWARE
 // </copyright>
 // <author>Katie Johnson</author>
+// <author>John Gietzen</author>
 //-----------------------------------------------------------------------
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Tournaments.Graphics;
 
 namespace Tournaments.Standard
 {
@@ -126,6 +128,43 @@ namespace Tournaments.Standard
             }
 
             return this.nodeA.Score > this.nodeB.Score ? this.nodeB.Team : this.nodeA.Team;
+        }
+
+        public override NodeMeasurement MeasureWinner(IGraphics g, TournamentNameTable names, float textHeight, Score score)
+        {
+            var m = this.MeasureTree(g, names, textHeight,
+                this.nodeA,
+                this.nodeB);
+
+            var t = this.MeasureTextBox(textHeight);
+
+            return new NodeMeasurement(m.Width + t.Width, m.Height, m.CenterLine);
+        }
+
+        public override NodeMeasurement MeasureLoser(IGraphics g, TournamentNameTable names, float textHeight, Score score)
+        {
+            throw new InvalidOperationException("Rendering the loser node of a stay decider is invalid.");
+        }
+
+        public override void RenderWinner(IGraphics g, TournamentNameTable names, float x, float y, float textHeight, Score score)
+        {
+            var m = this.MeasureWinner(g, names, textHeight, score);
+
+            string teamName = "";
+            if (this.IsDecidable)
+            {
+                teamName = names[this.GetWinner().TeamId];
+            }
+
+            this.RenderTextBox(g, m, x, y, textHeight, teamName, score);
+            this.RenderTree(g, names, x, y, textHeight,
+                this.nodeA,
+                this.nodeB);
+        }
+
+        public override void RenderLoser(IGraphics g, TournamentNameTable names, float x, float y, float textHeight, Score score)
+        {
+            throw new InvalidOperationException("Rendering the loser node of a stay decider is invalid.");
         }
     }
 }

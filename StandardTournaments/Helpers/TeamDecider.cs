@@ -23,12 +23,15 @@
 //  SOFTWARE
 // </copyright>
 // <author>Katie Johnson</author>
+// <author>John Gietzen</author>
 //-----------------------------------------------------------------------
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Drawing;
+using Tournaments.Graphics;
 
 namespace Tournaments.Standard
 {
@@ -57,6 +60,28 @@ namespace Tournaments.Standard
         }
 
         public override TournamentTeam GetLoser()
+        {
+            throw new InvalidOperationException("Cannot determine a loser from an individual team entry.");
+        }
+
+        public override NodeMeasurement MeasureWinner(IGraphics g, TournamentNameTable names, float textHeight, Score score)
+        {
+            return this.MeasureTextBox(textHeight);
+        }
+
+        public override NodeMeasurement MeasureLoser(IGraphics g, TournamentNameTable names, float textHeight, Score score)
+        {
+            throw new InvalidOperationException("Cannot determine a loser from an individual team entry.");
+        }
+
+        public override void RenderWinner(IGraphics g, TournamentNameTable names, float x, float y, float textHeight, Score score)
+        {
+            var m = this.MeasureWinner(g, names, textHeight, score);
+
+            this.RenderTextBox(g, m, x, y, textHeight, names[this.team.TeamId], score);
+        }
+
+        public override void RenderLoser(IGraphics g, TournamentNameTable names, float x, float y, float textHeight, Score score)
         {
             throw new InvalidOperationException("Cannot determine a loser from an individual team entry.");
         }

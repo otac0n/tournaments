@@ -88,6 +88,7 @@ namespace Tournaments.Standard
             }
 
             List<EliminationNode> nodes = new List<EliminationNode>();
+            Dictionary<EliminationNode, EliminationDecider> parents = new Dictionary<EliminationNode, EliminationDecider>();
 
             if (teams.Count() >= 2)
             {
@@ -107,12 +108,20 @@ namespace Tournaments.Standard
                 var teamRankings = teamsOrder.ToList();
                 foreach (var teamRanking in teamRankings)
                 {
+                    if (i == nextRoundAt)
+                    {
+                        nextRoundAt *= 2;
+                        roundNumber += 1;
+                        mask = (1 << roundNumber) - 1;
+                    }
+
                     EliminationNode newNode = new WinnerNode(new TeamDecider(teamRanking.Team));
                     newNode.Locked = true;
 
                     if (nodes.Count == 0)
                     {
                         nodes.Add(newNode);
+                        parents.Add(newNode, null);
                         newNode.Level = 0;
                         i++;
                         continue;
@@ -124,18 +133,27 @@ namespace Tournaments.Standard
                                  where (teamRankings.Where(tr => tr.Team == n.Team).Single().Ranking & mask) == (teamRanking.Ranking & mask)
                                  select n).Single();
 
+                    var oldParent = parents.ContainsKey(match) ? parents[match] as ContinuationDecider : null;
                     var newParent = MakeSiblings(match, newNode);
                     nodes.Add(newNode);
                     nodes.Add(newParent);
+                    if (oldParent != null)
+                    {
+                        if (oldParent.ChildA == match)
+                        {
+                            oldParent.ChildA = newParent;
+                            parents[newParent] = oldParent;
+                        }
+                        else if (oldParent.ChildB == match)
+                        {
+                            oldParent.ChildB = newParent;
+                            parents[newParent] = oldParent;
+                        }
+                    }
+                    parents[match] = newParent.Decider;
+                    parents[newNode] = newParent.Decider;
 
                     i++;
-
-                    if (i == nextRoundAt)
-                    {
-                        nextRoundAt *= 2;
-                        roundNumber += 1;
-                        mask = (1 << roundNumber) - 1;
-                    }
                 }
 
                 // Add in byes to even out the left side of the bracket.
@@ -150,9 +168,25 @@ namespace Tournaments.Standard
                                  where (teamRankings.Where(tr => tr.Team == n.Team).Single().Ranking & mask) == (ranking & mask)
                                  select n).Single();
 
+                    var oldParent = parents.ContainsKey(match) ? parents[match] as ContinuationDecider : null;
                     var newParent = MakeSiblings(match, newNode);
                     nodes.Add(newNode);
                     nodes.Add(newParent);
+                    if (oldParent != null)
+                    {
+                        if (oldParent.ChildA == match)
+                        {
+                            oldParent.ChildA = newParent;
+                            parents[newParent] = oldParent;
+                        }
+                        else if (oldParent.ChildB == match)
+                        {
+                            oldParent.ChildB = newParent;
+                            parents[newParent] = oldParent;
+                        }
+                    }
+                    parents[match] = newParent.Decider;
+                    parents[newNode] = newParent.Decider;
                 }
             }
 
@@ -405,12 +439,12 @@ namespace Tournaments.Standard
 
         private bool ChildAMatches(ContinuationDecider decider, long teamId)
         {
-            return decider != null && decider.ChildA != null && decider.ChildA.Team != null && decider.ChildA.Team.TeamId == teamId;
+            return decider != null && decider.ChildA != null && decider.ChildA.IsDecided && decider.ChildA.Team != null && decider.ChildA.Team.TeamId == teamId;
         }
 
         private bool ChildBMatches(ContinuationDecider decider, long teamId)
         {
-            return decider != null && decider.ChildB != null && decider.ChildB.Team != null && decider.ChildB.Team.TeamId == teamId;
+            return decider != null && decider.ChildB != null && decider.ChildB.IsDecided && decider.ChildB.Team != null && decider.ChildB.Team.TeamId == teamId;
         }
 
         private EliminationNode MakeSiblings(EliminationNode nodeA, EliminationNode nodeB)
@@ -498,8 +532,8 @@ namespace Tournaments.Standard
                               let d = n.Decider as ContinuationDecider
                               where d != null
                               where n.Locked == false
-                              where d.ChildA != null && d.ChildA.Team != null
-                              where d.ChildB != null && d.ChildB.Team != null
+                              where d.ChildA != null && d.ChildA.IsDecided && d.ChildA.Team != null
+                              where d.ChildB != null && d.ChildB.IsDecided && d.ChildB.Team != null
                               orderby n.Level descending
                               select new TournamentPairing(
                                   new TournamentTeamScore(d.ChildA.Team, null),
@@ -596,7 +630,7 @@ namespace Tournaments.Standard
 
             var textHeight = GetTextHeight(graphics);
 
-            var size = this.MeasureNode(rootNode, textHeight);
+            var size = rootNode.Measure(graphics, teamNames, textHeight);
 
             return new SizeF(size.Width + 10, size.Height + 10);
         }
@@ -614,177 +648,16 @@ namespace Tournaments.Standard
 
             var textHeight = GetTextHeight(graphics);
 
-            this.RenderNode(graphics, textHeight, rootNode, 5, 5, teamNames);
+            rootNode.Render(graphics, teamNames, 5, 5, textHeight);
         }
 
-        private const float MinBracketWidth = 120;
-        private const float BracketPreIndent = 10;
-        private const float BracketPostIndent = 10;
-        private const float BracketVSpacing = 25;
-        private Pen BracketPen = new Pen(Color.Black, 1.0f);
-        private const float MinTextHeight = 20;
-        private const float TextYOffset = 3;
-        private const float TextXOffset = 3;
-        private Brush UserboxBrush = new SolidBrush(Color.FromArgb(220, 220, 220));
+        private const float TextYOffset = 3.0f;
         private Font UserboxFont = new Font(FontFamily.GenericSansSerif, 10.0f);
-        private Brush UserboxFontBrush = new SolidBrush(Color.Black);
+        private const float MinTextHeight = 20.0f;
 
         private float GetTextHeight(IGraphics g)
         {
             return Math.Max(g.MeasureString("abfgijlpqyAIJQ170,`'\"", UserboxFont).Height + TextYOffset * 2, MinTextHeight);
-        }
-
-        private void RenderNode(IGraphics g, float textHeight, EliminationNode rootNode, float x, float y, TournamentNameTable teamNames)
-        {
-            var m = this.MeasureNode(rootNode, textHeight);
-
-            var d = rootNode.Decider as ContinuationDecider;
-
-            if (d != null && d.ChildA != null && d.ChildB != null)
-            {
-                // Preline
-                g.DrawLine(
-                    BracketPen,
-                    new PointF(
-                        x + (m.Width - MinBracketWidth),
-                        y + m.CenterLine),
-                    new PointF(
-                        x + (m.Width - MinBracketWidth - BracketPreIndent),
-                        y + m.CenterLine));
-
-                var childASize = this.MeasureNode(d.ChildA, textHeight);
-                var childBSize = this.MeasureNode(d.ChildB, textHeight);
-
-                // V-Line
-                g.DrawLine(
-                    BracketPen, 
-                    new PointF(
-                        x + (m.Width - MinBracketWidth - BracketPreIndent),
-                        y + childASize.CenterLine),
-                    new PointF(
-                        x + (m.Width - MinBracketWidth - BracketPreIndent),
-                        y + childASize.Height + BracketVSpacing + childBSize.CenterLine));
-
-                // Post-Line-A
-                g.DrawLine(
-                    BracketPen,
-                    new PointF(
-                        x + (m.Width - MinBracketWidth - BracketPreIndent - BracketPostIndent),
-                        y + childASize.CenterLine),
-                    new PointF(
-                        x + (m.Width - MinBracketWidth - BracketPreIndent),
-                        y + childASize.CenterLine));
-
-                // Post-Line-B
-                g.DrawLine(
-                    BracketPen,
-                    new PointF(
-                        x + (m.Width - MinBracketWidth - BracketPreIndent - BracketPostIndent),
-                        y + childASize.Height + BracketVSpacing + childBSize.CenterLine),
-                    new PointF(
-                        x + (m.Width - MinBracketWidth - BracketPreIndent),
-                        y + childASize.Height + BracketVSpacing + childBSize.CenterLine));
-
-                this.RenderNode(g, textHeight, d.ChildA, x, y, teamNames);
-                this.RenderNode(g, textHeight, d.ChildB, x, y + childASize.Height + BracketVSpacing, teamNames);
-            }
-
-            g.FillRectangle(
-                UserboxBrush,
-                new RectangleF(
-                    new PointF(
-                        x + (m.Width - MinBracketWidth),
-                        y + m.CenterLine - (textHeight / 2)),
-                    new SizeF(
-                        MinBracketWidth,
-                        textHeight)));
-
-            
-            if (rootNode.IsDecided)
-            {
-                g.DrawString(
-                    teamNames[rootNode.Team.TeamId],
-                    UserboxFont,
-                    UserboxFontBrush,
-                    new PointF(
-                        x + (m.Width - MinBracketWidth) + TextXOffset,
-                        y + m.CenterLine - (textHeight / 2) + TextYOffset));
-            }
-
-            if (rootNode.Score != null)
-            {
-                var score = rootNode.Score.ToString();
-
-                var scoreWidth = g.MeasureString(score, UserboxFont).Width;
-
-                g.DrawString(
-                    score,
-                    UserboxFont,
-                    UserboxFontBrush,
-                    new PointF(
-                        x + m.Width - scoreWidth - TextXOffset,
-                        y + m.CenterLine - (textHeight / 2) + TextYOffset));
-            }
-        }
-
-        private NodeMeasurement MeasureNode(EliminationNode rootNode, float textHeight)
-        {
-            float width = MinBracketWidth;
-            float height = textHeight;
-            float center = textHeight / 2;
-
-            var d = rootNode.Decider as ContinuationDecider;
-
-            if (d != null && d.ChildA != null && d.ChildB != null)
-            {
-                var a = this.MeasureNode(d.ChildA, textHeight);
-                var b = this.MeasureNode(d.ChildB, textHeight);
-                height = Math.Max(a.Height + BracketVSpacing + b.Height, height);
-                width = width + Math.Max(a.Width, b.Width) + BracketPreIndent + BracketPostIndent;
-                center = (a.CenterLine + BracketVSpacing + b.CenterLine + a.Height) / 2;
-            }
-            else if (d != null && d.ChildA != null)
-            {
-                var a = this.MeasureNode(d.ChildA, textHeight);
-                width = width + a.Width + BracketPreIndent + BracketPostIndent;
-                height = Math.Max(a.Height, height);
-                center = a.CenterLine;
-            }
-            else if (d != null && d.ChildB != null)
-            {
-                var b = this.MeasureNode(d.ChildB, textHeight);
-                width = width + b.Width + BracketPreIndent + BracketPostIndent;
-                height = Math.Max(b.Height, height);
-                center = b.CenterLine;
-            }
-
-            return new NodeMeasurement
-            {
-                Height = height,
-                Width = width,
-                CenterLine = center
-            };
-        }
-
-        private class NodeMeasurement
-        {
-            public float Width
-            {
-                get;
-                set;
-            }
-
-            public float Height
-            {
-                get;
-                set;
-            }
-
-            public float CenterLine
-            {
-                get;
-                set;
-            }
         }
     }
 }
