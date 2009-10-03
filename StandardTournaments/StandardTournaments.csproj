@@ -50,11 +50,13 @@
     <Compile Include="Helpers\ByeDecider.cs" />
     <Compile Include="Helpers\ContinuationDecider.cs" />
     <Compile Include="Helpers\EliminationDecider.cs" />
+    <Compile Include="Helpers\LoserNode.cs" />
     <Compile Include="Helpers\PassThroughDecider.cs" />
     <Compile Include="Helpers\EliminationNode.cs" />
     <Compile Include="Helpers\StayDecider.cs" />
     <Compile Include="Helpers\TeamDecider.cs" />
     <Compile Include="Helpers\TeamRanking.cs" />
+    <Compile Include="Helpers\WinnerNode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RoundRobinPairingsGenerator.cs" />
     <Compile Include="SingleEliminationTournament.cs" />
