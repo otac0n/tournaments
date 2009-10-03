@@ -46,7 +46,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BoilOffPairingsGenerator.cs" />
-    <Compile Include="DoubleEliminationTournament.cs" />
     <Compile Include="Helpers\ByeDecider.cs" />
     <Compile Include="Helpers\ContinuationDecider.cs" />
     <Compile Include="Helpers\EliminationDecider.cs" />

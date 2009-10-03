@@ -104,26 +104,29 @@ namespace Tournaments.Standard
                 int nextRoundAt = 2;
                 int roundNumber = 0;
                 int mask = (1 << roundNumber) - 1;
-                foreach (var team in teamsOrder)
+                var teamRankings = teamsOrder.ToList();
+                foreach (var teamRanking in teamRankings)
                 {
-                    EliminationNode newNode = new EliminationNode(team, 0);
+                    EliminationNode newNode = new WinnerNode(new TeamDecider(teamRanking.Team));
                     newNode.Locked = true;
 
                     if (nodes.Count == 0)
                     {
                         nodes.Add(newNode);
+                        newNode.Level = 0;
                         i++;
                         continue;
                     }
 
                     var match = (from n in nodes
-                                 where n.Team != null
-                                 where (n.Team.Ranking & mask) == (team.Ranking & mask)
+                                 let d = n.Decider as TeamDecider
+                                 where d != null
+                                 where (teamRankings.Where(tr => tr.Team == n.Team).Single().Ranking & mask) == (teamRanking.Ranking & mask)
                                  select n).Single();
 
-                    match.MakeSiblingB(newNode);
+                    var newParent = MakeSiblings(match, newNode);
                     nodes.Add(newNode);
-                    nodes.Add(match.Parent);
+                    nodes.Add(newParent);
 
                     i++;
 
@@ -135,16 +138,21 @@ namespace Tournaments.Standard
                     }
                 }
 
-                // Move all byes even with the left side of the bracket.
-                var maxLevel = nodes.Max(n => n.Level);
-                var byeNodes = (from n in nodes
-                                where n.Team != null
-                                where n.Level != maxLevel
-                                select n).ToList();
-                foreach (var node in byeNodes)
+                // Add in byes to even out the left side of the bracket.
+                for (ranking = teamRankings.Count; ranking < nextRoundAt; ranking++)
                 {
-                    node.MakeSiblingB(null);
-                    nodes.Add(node.Parent);
+                    EliminationNode newNode = new WinnerNode(new ByeDecider());
+                    newNode.Locked = true;
+
+                    var match = (from n in nodes
+                                 let d = n.Decider as TeamDecider
+                                 where d != null
+                                 where (teamRankings.Where(tr => tr.Team == n.Team).Single().Ranking & mask) == (ranking & mask)
+                                 select n).Single();
+
+                    var newParent = MakeSiblings(match, newNode);
+                    nodes.Add(newNode);
+                    nodes.Add(newParent);
                 }
             }
 
@@ -172,22 +180,24 @@ namespace Tournaments.Standard
                         var team = pairing.TeamScores[0].Team;
 
                         var byes = from n in nodes
-                                   where n.ChildA != null
-                                   where n.ChildB == null
-                                   select n;
+                                   let d = n.Decider as ContinuationDecider
+                                   where d != null
+                                   where d.ChildA.Team != null
+                                   where d.ChildB.Team == null
+                                   select new { Node = n, Decider = d };
 
                         var avail = from b in byes
-                                    where b.Locked == false
+                                    where b.Node.Locked == false
                                     select b;
 
                         var matched = from a in avail
-                                      where a.ChildAMatches(team.TeamId)
+                                      where ChildAMatches(a.Decider, team.TeamId)
                                       select a;
 
                         if (matched.Count() == 1)
                         {
                             var node = matched.Single();
-                            node.Locked = true;
+                            node.Node.Locked = true;
                         }
                         else
                         {
@@ -201,36 +211,40 @@ namespace Tournaments.Standard
 
                             // Find our team in an unlocked node
                             var foundA = from n in nodes
+                                         let d = n.Decider as ContinuationDecider
+                                         where d != null
                                          where n.Locked == false
-                                         where n.ChildAMatches(team.TeamId)
-                                         select n;
+                                         where ChildAMatches(d, team.TeamId)
+                                         select new { Node = n, Decider = d };
 
                             var foundB = from n in nodes
+                                         let d = n.Decider as ContinuationDecider
+                                         where d != null
                                          where n.Locked == false
-                                         where n.ChildBMatches(team.TeamId)
-                                         select n;
+                                         where ChildBMatches(d, team.TeamId)
+                                         select new { Node = n, Decider = d };
 
                             // swap out the found node for our bye node.
                             if (foundA.Count() == 1)
                             {
                                 var swapNode = foundA.Single();
-                                var a = swapNode.ChildA;
-                                swapNode.ChildA = byeNode.ChildA;
-                                byeNode.ChildA = a;
+                                var a = swapNode.Decider.ChildA;
+                                swapNode.Decider.ChildA = byeNode.Decider.ChildA;
+                                byeNode.Decider.ChildA = a;
                             }
                             else if (foundB.Count() == 1)
                             {
                                 var swapNode = foundB.Single();
-                                var b = swapNode.ChildB;
-                                swapNode.ChildB = byeNode.ChildA;
-                                byeNode.ChildA = b;
+                                var b = swapNode.Decider.ChildB;
+                                swapNode.Decider.ChildB = byeNode.Decider.ChildA;
+                                byeNode.Decider.ChildA = b;
                             }
                             else
                             {
                                 throw new InvalidTournamentStateException("A bye was listed for a team that was ineligible for a bye.");
                             }
 
-                            byeNode.Locked = true;
+                            byeNode.Node.Locked = true;
                         }
                     }
                     else
@@ -248,39 +262,45 @@ namespace Tournaments.Standard
                         }
 
                         var pairs = from n in nodes
-                                    where n.ChildA != null
-                                    where n.ChildB != null
-                                    select n;
+                                    let d = n.Decider as ContinuationDecider
+                                    where d != null
+                                    where d.ChildA != null
+                                    where d.ChildB != null
+                                    select new { Node = n, Decider = d };
 
                         var avail = from p in pairs
-                                    where p.Locked == false
+                                    where p.Node.Locked == false
                                     select p;
 
                         var matched = from a in avail
-                                      where a.ChildAMatches(teamA.TeamId)
-                                      where a.ChildBMatches(teamB.TeamId)
+                                      where ChildAMatches(a.Decider, teamA.TeamId)
+                                      where ChildBMatches(a.Decider, teamB.TeamId)
                                       select a;
 
                         if (matched.Count() == 1)
                         {
                             var node = matched.Single();
-                            node.ChildA.Score = scoreA;
-                            node.ChildB.Score = scoreB;
-                            node.Locked = true;
+                            node.Decider.ChildA.Score = scoreA;
+                            node.Decider.ChildB.Score = scoreB;
+                            node.Node.Locked = true;
                         }
                         else
                         {
                             // We did not find a matching pair, so we need to create one by swapping.
 
                             var teamANodes = from n in nodes
+                                             let d = n.Decider as ContinuationDecider
+                                             where d != null
                                              where n.Locked == false
-                                             where n.ChildAMatches(teamA.TeamId) || n.ChildBMatches(teamA.TeamId)
-                                             select n;
+                                             where ChildAMatches(d, teamA.TeamId) || ChildBMatches(d, teamA.TeamId)
+                                             select new { Node = n, Decider = d };
 
                             var teamBNodes = from n in nodes
+                                             let d = n.Decider as ContinuationDecider
+                                             where d != null
                                              where n.Locked == false
-                                             where n.ChildAMatches(teamB.TeamId) || n.ChildBMatches(teamB.TeamId)
-                                             select n;
+                                             where ChildAMatches(d, teamB.TeamId) || ChildBMatches(d, teamB.TeamId)
+                                             select new { Node = n, Decider = d };
 
                             if (teamANodes.Count() != 1 || teamBNodes.Count() != 1)
                             {
@@ -290,17 +310,17 @@ namespace Tournaments.Standard
                             var teamANode = teamANodes.Single();
                             var teamBNode = teamBNodes.Single();
 
-                            if (teamANode == teamBNode)
+                            if (teamANode.Node == teamBNode.Node)
                             {
                                 // If the order was merely swapped, swap it back.
-                                teamANode.SwapChildren();
-                                teamANode.ChildA.Score = scoreA;
-                                teamANode.ChildB.Score = scoreB;
-                                teamANode.Locked = true;
+                                teamANode.Decider.SwapChildren();
+                                teamANode.Decider.ChildA.Score = scoreA;
+                                teamANode.Decider.ChildB.Score = scoreB;
+                                teamANode.Node.Locked = true;
                             }
                             else
                             {
-                                if (teamANode.Level != teamBNode.Level)
+                                if (teamANode.Node.Level != teamBNode.Node.Level)
                                 {
                                     if (byePaired == false)
                                     {
@@ -313,11 +333,13 @@ namespace Tournaments.Standard
 
                                 // find the first available node in this level.
                                 var available = from n in nodes
+                                                let d = n.Decider as ContinuationDecider
+                                                where d != null
                                                 where n.Locked == false
-                                                where n.Level == teamANode.Level
-                                                where n.ChildA != null
-                                                where n.ChildB != null
-                                                select n;
+                                                where n.Level == teamANode.Node.Level
+                                                where d.ChildA != null
+                                                where d.ChildB != null
+                                                select new { Node = n, Decider = d };
 
                                 if (available.Count() == 0)
                                 {
@@ -332,15 +354,15 @@ namespace Tournaments.Standard
 
                                 var destination = available.First();
 
-                                if (teamANode.ChildA != null && teamANode.ChildA.Team != null && teamANode.ChildA.Team.Team.TeamId == teamA.TeamId)
+                                if (teamANode.Decider.ChildA != null && teamANode.Decider.ChildA.Team != null && teamANode.Decider.ChildA.Team.TeamId == teamA.TeamId)
                                 {
                                     // swap destination A with teamANode A
-                                    SwapChildrenAA(destination, teamANode);
+                                    SwapChildrenAA(destination.Decider, teamANode.Decider);
                                 }
-                                else if (teamANode.ChildB != null && teamANode.ChildB.Team != null && teamANode.ChildB.Team.Team.TeamId == teamA.TeamId)
+                                else if (teamANode.Decider.ChildB != null && teamANode.Decider.ChildB.Team != null && teamANode.Decider.ChildB.Team.TeamId == teamA.TeamId)
                                 {
                                     // swap destination A with teamANode B
-                                    SwapChildrenAB(destination, teamANode);
+                                    SwapChildrenAB(destination.Decider, teamANode.Decider);
                                 }
                                 else
                                 {
@@ -350,24 +372,24 @@ namespace Tournaments.Standard
                                 // since destination could've matched teamBNode and we may have swapped it out, we need to refetch teamBNode
                                 teamBNode = teamBNodes.Single();
 
-                                if (teamBNode.ChildA != null && teamBNode.ChildA.Team != null && teamBNode.ChildA.Team.Team.TeamId == teamB.TeamId)
+                                if (teamBNode.Decider.ChildA != null && teamBNode.Decider.ChildA.Team != null && teamBNode.Decider.ChildA.Team.TeamId == teamB.TeamId)
                                 {
                                     // swap destination B with teamBNode A
-                                    SwapChildrenBA(destination, teamBNode);
+                                    SwapChildrenBA(destination.Decider, teamBNode.Decider);
                                 }
-                                else if (teamBNode.ChildB != null && teamBNode.ChildB.Team != null && teamBNode.ChildB.Team.Team.TeamId == teamB.TeamId)
+                                else if (teamBNode.Decider.ChildB != null && teamBNode.Decider.ChildB.Team != null && teamBNode.Decider.ChildB.Team.TeamId == teamB.TeamId)
                                 {
                                     // swap destination B with teamBNode B
-                                    SwapChildrenBB(destination, teamBNode);
+                                    SwapChildrenBB(destination.Decider, teamBNode.Decider);
                                 }
                                 else
                                 {
                                     throw new InvalidOperationException();
                                 }
 
-                                destination.ChildA.Score = scoreA;
-                                destination.ChildB.Score = scoreB;
-                                destination.Locked = true;
+                                destination.Decider.ChildA.Score = scoreA;
+                                destination.Decider.ChildB.Score = scoreB;
+                                destination.Node.Locked = true;
                             }
                         }
                     }
@@ -381,7 +403,26 @@ namespace Tournaments.Standard
             this.state = PairingsGeneratorState.Initialized;
         }
 
-        private static void SwapChildrenAA(EliminationNode node1, EliminationNode node2)
+        private bool ChildAMatches(ContinuationDecider decider, long teamId)
+        {
+            return decider != null && decider.ChildA != null && decider.ChildA.Team != null && decider.ChildA.Team.TeamId == teamId;
+        }
+
+        private bool ChildBMatches(ContinuationDecider decider, long teamId)
+        {
+            return decider != null && decider.ChildB != null && decider.ChildB.Team != null && decider.ChildB.Team.TeamId == teamId;
+        }
+
+        private EliminationNode MakeSiblings(EliminationNode nodeA, EliminationNode nodeB)
+        {
+            var maxLevel = Math.Max(nodeA.Level, nodeB.Level);
+            var newNode = new WinnerNode(new ContinuationDecider(nodeA, nodeB));
+            newNode.Level = maxLevel;
+            nodeA.Level = nodeB.Level = maxLevel + 1;
+            return newNode;
+        }
+
+        private static void SwapChildrenAA(ContinuationDecider node1, ContinuationDecider node2)
         {
             var temp1 = node1.ChildA;
             node1.ChildA = null;
@@ -392,7 +433,7 @@ namespace Tournaments.Standard
             node2.ChildA = temp1;
         }
 
-        private static void SwapChildrenAB(EliminationNode node1, EliminationNode node2)
+        private static void SwapChildrenAB(ContinuationDecider node1, ContinuationDecider node2)
         {
             var temp1 = node1.ChildA;
             node1.ChildA = null;
@@ -403,7 +444,7 @@ namespace Tournaments.Standard
             node2.ChildB = temp1;
         }
 
-        private static void SwapChildrenBA(EliminationNode node1, EliminationNode node2)
+        private static void SwapChildrenBA(ContinuationDecider node1, ContinuationDecider node2)
         {
             var temp1 = node1.ChildB;
             node1.ChildB = null;
@@ -414,7 +455,7 @@ namespace Tournaments.Standard
             node2.ChildA = temp1;
         }
 
-        private static void SwapChildrenBB(EliminationNode node1, EliminationNode node2)
+        private static void SwapChildrenBB(ContinuationDecider node1, ContinuationDecider node2)
         {
             var temp1 = node1.ChildB;
             node1.ChildB = null;
@@ -428,14 +469,16 @@ namespace Tournaments.Standard
         private static void LockByes(List<EliminationNode> nodes)
         {
             var unlockedByes = from n in nodes
+                               let d = n.Decider as ContinuationDecider
+                               where d != null
                                where n.Locked == false
-                               where n.ChildA != null
-                               where n.ChildB == null
-                               select n;
+                               where d.ChildA != null
+                               where d.ChildB == null
+                               select new { Node = n, Decider = d };
 
             foreach (var u in unlockedByes)
             {
-                u.Locked = true;
+                u.Node.Locked = true;
             }
         }
 
@@ -452,13 +495,15 @@ namespace Tournaments.Standard
             }
 
             var readyToPlay = from n in this.loadedNodes
+                              let d = n.Decider as ContinuationDecider
+                              where d != null
                               where n.Locked == false
-                              where n.ChildA != null && n.ChildA.Team != null
-                              where n.ChildB != null && n.ChildB.Team != null
+                              where d.ChildA != null && d.ChildA.Team != null
+                              where d.ChildB != null && d.ChildB.Team != null
                               orderby n.Level descending
                               select new TournamentPairing(
-                                  new TournamentTeamScore(n.ChildA.Team.Team, null),
-                                  new TournamentTeamScore(n.ChildB.Team.Team, null));
+                                  new TournamentTeamScore(d.ChildA.Team, null),
+                                  new TournamentTeamScore(d.ChildB.Team, null));
 
             if (readyToPlay.Count() == 0)
             {
@@ -466,10 +511,12 @@ namespace Tournaments.Standard
                 // otherwise, return an error because there is either a tie or an unfinished round.
 
                 var ties = from n in this.loadedNodes
+                           let d = n.Decider as ContinuationDecider
+                           where d != null
                            where n.Locked == true
-                           where n.ChildA != null && n.ChildB != null
-                           where n.ChildA.Score != null && n.ChildB.Score != null
-                           where n.ChildA.Score == n.ChildB.Score
+                           where d.ChildA != null && d.ChildB != null
+                           where d.ChildA.Score != null && d.ChildB.Score != null
+                           where d.ChildA.Score == d.ChildB.Score
                            select n;
 
                 if (ties.Count() > 0)
@@ -478,9 +525,11 @@ namespace Tournaments.Standard
                 }
 
                 var unfinished = from n in this.loadedNodes
+                                 let d = n.Decider as ContinuationDecider
+                                 where d != null
                                  where n.Locked == true
-                                 where n.ChildA != null && n.ChildB != null
-                                 where n.ChildA.Score == null || n.ChildB.Score == null
+                                 where d.ChildA != null && d.ChildB != null
+                                 where d.ChildA.Score == null || d.ChildB.Score == null
                                  select n;
 
                 if (unfinished.Count() > 0)
@@ -509,8 +558,8 @@ namespace Tournaments.Standard
 
                 var ranks = from t in this.loadedTeams
                             let node = FindTeamsHighestNode(t.TeamId)
-                            let finished = node.Locked && node.HasWinner
-                            let winner = node.Team != null && node.Team.Team.TeamId == t.TeamId
+                            let finished = node.Locked && node.IsDecided
+                            let winner = node.IsDecided && node.Team != null && node.Team.TeamId == t.TeamId
                             let round = maxLevel - node.Level
                             let rank = node.Level + (winner ? 1 : 2)
                             orderby rank
@@ -527,7 +576,9 @@ namespace Tournaments.Standard
         private EliminationNode FindTeamsHighestNode(long teamId)
         {
             return (from n in this.loadedNodes
-                    where n.ChildAMatches(teamId) || n.ChildBMatches(teamId)
+                    let d = n.Decider as ContinuationDecider
+                    where d != null
+                    where ChildAMatches(d, teamId) || ChildBMatches(d, teamId)
                     orderby n.Level
                     select n).FirstOrDefault();
         }
@@ -535,7 +586,7 @@ namespace Tournaments.Standard
         public SizeF Measure(IGraphics graphics, TournamentNameTable teamNames)
         {
             var rootNode = (from n in this.loadedNodes
-                            where n.Parent == null
+                            where n.Level == 0
                             select n).SingleOrDefault();
 
             if (rootNode == null)
@@ -553,7 +604,7 @@ namespace Tournaments.Standard
         public void Render(IGraphics graphics, TournamentNameTable teamNames)
         {
             var rootNode = (from n in this.loadedNodes
-                            where n.Parent == null
+                            where n.Level == 0
                             select n).SingleOrDefault();
 
             if (rootNode == null)
@@ -587,7 +638,9 @@ namespace Tournaments.Standard
         {
             var m = this.MeasureNode(rootNode, textHeight);
 
-            if (rootNode.ChildA != null && rootNode.ChildB != null)
+            var d = rootNode.Decider as ContinuationDecider;
+
+            if (d != null && d.ChildA != null && d.ChildB != null)
             {
                 // Preline
                 g.DrawLine(
@@ -599,8 +652,8 @@ namespace Tournaments.Standard
                         x + (m.Width - MinBracketWidth - BracketPreIndent),
                         y + m.CenterLine));
 
-                var childASize = this.MeasureNode(rootNode.ChildA, textHeight);
-                var childBSize = this.MeasureNode(rootNode.ChildB, textHeight);
+                var childASize = this.MeasureNode(d.ChildA, textHeight);
+                var childBSize = this.MeasureNode(d.ChildB, textHeight);
 
                 // V-Line
                 g.DrawLine(
@@ -632,8 +685,8 @@ namespace Tournaments.Standard
                         x + (m.Width - MinBracketWidth - BracketPreIndent),
                         y + childASize.Height + BracketVSpacing + childBSize.CenterLine));
 
-                this.RenderNode(g, textHeight, rootNode.ChildA, x, y, teamNames);
-                this.RenderNode(g, textHeight, rootNode.ChildB, x, y + childASize.Height + BracketVSpacing, teamNames);
+                this.RenderNode(g, textHeight, d.ChildA, x, y, teamNames);
+                this.RenderNode(g, textHeight, d.ChildB, x, y + childASize.Height + BracketVSpacing, teamNames);
             }
 
             g.FillRectangle(
@@ -647,10 +700,10 @@ namespace Tournaments.Standard
                         textHeight)));
 
             
-            if (rootNode.Team != null)
+            if (rootNode.IsDecided)
             {
                 g.DrawString(
-                    teamNames[rootNode.Team.Team.TeamId],
+                    teamNames[rootNode.Team.TeamId],
                     UserboxFont,
                     UserboxFontBrush,
                     new PointF(
@@ -680,24 +733,26 @@ namespace Tournaments.Standard
             float height = textHeight;
             float center = textHeight / 2;
 
-            if (rootNode.ChildA != null && rootNode.ChildB != null)
+            var d = rootNode.Decider as ContinuationDecider;
+
+            if (d != null && d.ChildA != null && d.ChildB != null)
             {
-                var a = this.MeasureNode(rootNode.ChildA, textHeight);
-                var b = this.MeasureNode(rootNode.ChildB, textHeight);
+                var a = this.MeasureNode(d.ChildA, textHeight);
+                var b = this.MeasureNode(d.ChildB, textHeight);
                 height = Math.Max(a.Height + BracketVSpacing + b.Height, height);
                 width = width + Math.Max(a.Width, b.Width) + BracketPreIndent + BracketPostIndent;
                 center = (a.CenterLine + BracketVSpacing + b.CenterLine + a.Height) / 2;
             }
-            else if (rootNode.ChildA != null)
+            else if (d != null && d.ChildA != null)
             {
-                var a = this.MeasureNode(rootNode.ChildA, textHeight);
+                var a = this.MeasureNode(d.ChildA, textHeight);
                 width = width + a.Width + BracketPreIndent + BracketPostIndent;
                 height = Math.Max(a.Height, height);
                 center = a.CenterLine;
             }
-            else if (rootNode.ChildB != null)
+            else if (d != null && d.ChildB != null)
             {
-                var b = this.MeasureNode(rootNode.ChildB, textHeight);
+                var b = this.MeasureNode(d.ChildB, textHeight);
                 width = width + b.Width + BracketPreIndent + BracketPostIndent;
                 height = Math.Max(b.Height, height);
                 center = b.CenterLine;
