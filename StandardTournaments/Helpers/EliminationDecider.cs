@@ -88,6 +88,7 @@ namespace Tournaments.Standard
         public abstract TournamentTeam GetLoser();
         public abstract bool ApplyPairing(TournamentPairing pairing);
         public abstract IEnumerable<TournamentPairing> FindUndecided();
+
         public abstract NodeMeasurement MeasureWinner(IGraphics g, TournamentNameTable names, float textHeight, Score score);
         public abstract NodeMeasurement MeasureLoser(IGraphics g, TournamentNameTable names, float textHeight, Score score);
         public abstract void RenderWinner(IGraphics g, TournamentNameTable names, float x, float y, float textHeight, Score score);
