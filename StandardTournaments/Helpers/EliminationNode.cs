@@ -36,9 +36,11 @@ using System.Diagnostics;
 
 namespace Tournaments.Standard
 {
-    [DebuggerDisplay("[{this}: {this.Decider}]")]
     public abstract class EliminationNode
     {
+        private EliminationDecider primaryParent = null;
+        protected List<EliminationDecider> secondaryParents = new List<EliminationDecider>();
+
         protected EliminationDecider decider = null;
         private bool locked = false;
         
@@ -60,6 +62,49 @@ namespace Tournaments.Standard
             }
         }
 
+        public EliminationDecider PrimaryParent
+        {
+            get
+            {
+                return this.primaryParent;
+            }
+
+            set
+            {
+                this.primaryParent = value;
+            }
+        }
+
+        public int Level
+        {
+            get
+            {
+                if (this.primaryParent == null)
+                {
+                    return 0;
+                }
+                else
+                {
+                    return this.primaryParent.Level + 1;
+                }
+            }
+        }
+
+        public EliminationNode CommonAncestor
+        {
+            get
+            {
+                if (this.primaryParent == null)
+                {
+                    return this;
+                }
+                else
+                {
+                    return this.primaryParent.CommonAncestor;
+                }
+            }
+        }
+
         public abstract TournamentTeam Team { get; }
 
         public EliminationDecider Decider { get { return this.decider; } }
@@ -71,5 +116,6 @@ namespace Tournaments.Standard
         public abstract void Render(IGraphics g, TournamentNameTable names, float x, float y, float textHeight);
 
         public abstract bool ApplyPairing(TournamentPairing pairing);
+        public abstract IEnumerable<TournamentPairing> FindUndecided();
     }
 }

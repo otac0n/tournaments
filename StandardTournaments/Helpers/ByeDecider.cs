@@ -81,5 +81,10 @@ namespace Tournaments.Standard
 
             return false;
         }
+
+        public override IEnumerable<TournamentPairing> FindUndecided()
+        {
+            yield break;
+        }
     }
 }

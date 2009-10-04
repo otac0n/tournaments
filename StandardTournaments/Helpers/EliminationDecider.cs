@@ -37,9 +37,57 @@ namespace Tournaments.Standard
 {
     public abstract class EliminationDecider
     {
+        private EliminationNode primaryParent = null;
+        protected List<EliminationNode> secondaryParents = new List<EliminationNode>();
+
+        public EliminationNode PrimaryParent
+        {
+            get
+            {
+                return this.primaryParent;
+            }
+
+            set
+            {
+                this.primaryParent = value;
+            }
+        }
+
+        public int Level
+        {
+            get
+            {
+                if (this.primaryParent == null)
+                {
+                    throw new InvalidOperationException("An elimination decider must have a parent EliminationNode.");
+                }
+                else
+                {
+                    return this.primaryParent.Level;
+                }
+            }
+        }
+
+        public EliminationNode CommonAncestor
+        {
+            get
+            {
+                if (this.primaryParent == null)
+                {
+                    throw new InvalidOperationException("An elimination decider must have a parent EliminationNode.");
+                }
+                else
+                {
+                    return this.primaryParent.CommonAncestor;
+                }
+            }
+        }
+
         public abstract bool IsDecided { get; }
         public abstract TournamentTeam GetWinner();
         public abstract TournamentTeam GetLoser();
+        public abstract bool ApplyPairing(TournamentPairing pairing);
+        public abstract IEnumerable<TournamentPairing> FindUndecided();
         public abstract NodeMeasurement MeasureWinner(IGraphics g, TournamentNameTable names, float textHeight, Score score);
         public abstract NodeMeasurement MeasureLoser(IGraphics g, TournamentNameTable names, float textHeight, Score score);
         public abstract void RenderWinner(IGraphics g, TournamentNameTable names, float x, float y, float textHeight, Score score);
@@ -201,7 +249,5 @@ namespace Tournaments.Standard
                 nodeB.Render(g, names, x, y, textHeight);
             }
         }
-
-        public abstract bool ApplyPairing(TournamentPairing pairing);
     }
 }

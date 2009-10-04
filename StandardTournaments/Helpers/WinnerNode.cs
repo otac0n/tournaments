@@ -30,9 +30,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Diagnostics;
 
 namespace Tournaments.Standard
 {
+    [DebuggerDisplay("[WinnerNode: Level = {this.Level}, Decider = {this.Decider}]")]
     public class WinnerNode : EliminationNode
     {
         public WinnerNode(EliminationDecider decider)
@@ -69,6 +71,21 @@ namespace Tournaments.Standard
             else
             {
                 return this.decider.ApplyPairing(pairing);
+            }
+        }
+
+        public override IEnumerable<TournamentPairing> FindUndecided()
+        {
+            if (this.IsDecided)
+            {
+                yield break;
+            }
+            else
+            {
+                foreach(var undecided in this.Decider.FindUndecided())
+                {
+                    yield return undecided;
+                }
             }
         }
     }

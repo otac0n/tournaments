@@ -176,5 +176,42 @@ namespace Tournaments.Standard
 
             throw new NotImplementedException();
         }
+
+        public override IEnumerable<TournamentPairing> FindUndecided()
+        {
+            if (this.IsDecided)
+            {
+                yield break;
+            }
+            else if (this.nodeA.IsDecided && this.nodeB.IsDecided && (this.nodeA.Score != null || this.nodeB.Score != null))
+            {
+                // TODO: This could be an issue if the pairing has already been built, but came in with null scores.
+                yield break;
+            }
+            else if (this.nodeA.IsDecided && this.nodeB.IsDecided)
+            {
+                yield return new TournamentPairing(
+                        new TournamentTeamScore(this.nodeA.Team, null),
+                        new TournamentTeamScore(this.nodeB.Team, null));
+            }
+            else
+            {
+                if (!this.nodeA.IsDecided)
+                {
+                    foreach (var undecided in this.nodeA.FindUndecided())
+                    {
+                        yield return undecided;
+                    }
+                }
+
+                if (!this.nodeB.IsDecided)
+                {
+                    foreach (var undecided in this.nodeA.FindUndecided())
+                    {
+                        yield return undecided;
+                    }
+                }
+            }
+        }
     }
 }
