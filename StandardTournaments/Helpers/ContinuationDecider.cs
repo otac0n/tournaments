@@ -297,7 +297,7 @@ namespace Tournaments.Standard
 
                 if (!this.nodeB.IsDecided)
                 {
-                    foreach (var undecided in this.nodeA.FindUndecided())
+                    foreach (var undecided in this.nodeB.FindUndecided())
                     {
                         yield return undecided;
                     }
