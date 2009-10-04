@@ -54,5 +54,22 @@ namespace Tournaments.Standard
         {
             this.decider.RenderWinner(g, names, x, y, textHeight, this.Score);
         }
+
+        public override bool ApplyPairing(TournamentPairing pairing)
+        {
+            if (pairing == null)
+            {
+                throw new ArgumentNullException("pairing");
+            }
+
+            if (this.IsDecided)
+            {
+                return false;
+            }
+            else
+            {
+                return this.decider.ApplyPairing(pairing);
+            }
+        }
     }
 }

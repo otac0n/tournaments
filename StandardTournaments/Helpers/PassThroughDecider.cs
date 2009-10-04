@@ -47,7 +47,7 @@ namespace Tournaments.Standard
             this.node = node;
         }
 
-        public override bool IsDecidable
+        public override bool IsDecided
         {
             get { return this.node.IsDecided; }
         }
@@ -82,7 +82,7 @@ namespace Tournaments.Standard
             var m = this.MeasureWinner(g, names, textHeight, score);
 
             string teamName = "";
-            if (this.IsDecidable)
+            if (this.IsDecided)
             {
                 teamName = names[this.GetWinner().TeamId];
             }
@@ -93,6 +93,16 @@ namespace Tournaments.Standard
         public override void RenderLoser(IGraphics g, TournamentNameTable names, float x, float y, float textHeight, Score score)
         {
             throw new InvalidOperationException("Cannot determine a loser from a pass through.");
+        }
+
+        public override bool ApplyPairing(TournamentPairing pairing)
+        {
+            if (pairing == null)
+            {
+                throw new ArgumentNullException("pairing");
+            }
+
+            return false;
         }
     }
 }

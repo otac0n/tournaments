@@ -44,7 +44,21 @@ namespace Tournaments
         /// Initializes a new instance of the TournamentRound class.
         /// </summary>
         /// <param name="pairings">The list of pairings in the round.</param>
-        public TournamentRound(IList<TournamentPairing> pairings)
+        public TournamentRound(IEnumerable<TournamentPairing> pairings)
+        {
+            if (pairings == null)
+            {
+                throw new ArgumentNullException("pairings");
+            }
+
+            this.pairings = new List<TournamentPairing>(pairings);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the TournamentRound class.
+        /// </summary>
+        /// <param name="pairings">The parameter array of pairings in the round.</param>
+        public TournamentRound(params TournamentPairing[] pairings)
         {
             if (pairings == null)
             {

@@ -56,7 +56,7 @@ namespace Tournaments.Standard
         {
             get
             {
-                return this.decider.IsDecidable;
+                return this.decider.IsDecided;
             }
         }
 
@@ -66,12 +66,10 @@ namespace Tournaments.Standard
 
         public Score Score { get; set; }
 
-        public bool Locked { get; set; }
-
-        public int Level { get; set; }
-
         public abstract NodeMeasurement Measure(IGraphics g, TournamentNameTable names, float textHeight);
 
         public abstract void Render(IGraphics g, TournamentNameTable names, float x, float y, float textHeight);
+
+        public abstract bool ApplyPairing(TournamentPairing pairing);
     }
 }

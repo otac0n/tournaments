@@ -80,7 +80,7 @@ namespace Tournaments.Standard
             }
         }
 
-        public override bool IsDecidable
+        public override bool IsDecided
         {
             get { return this.nodeA.IsDecided && nodeB.IsDecided && ((nodeA.Team == null || nodeB.Team == null) || (nodeA.Score != null && nodeB.Score != null && nodeA.Score != nodeB.Score)); }
         }
@@ -191,7 +191,7 @@ namespace Tournaments.Standard
             var m = this.MeasureWinner(g, names, textHeight, score);
 
             string teamName = "";
-            if (this.IsDecidable)
+            if (this.IsDecided)
             {
                 teamName = names[this.GetWinner().TeamId];
             }
@@ -207,12 +207,51 @@ namespace Tournaments.Standard
             var m = this.MeasureLoser(g, names, textHeight, score);
 
             string teamName = "";
-            if (this.IsDecidable)
+            if (this.IsDecided)
             {
                 teamName = names[this.GetLoser().TeamId];
             }
 
             this.RenderTextBox(g, m, x, y, textHeight, teamName, score);
+        }
+
+        public override bool ApplyPairing(TournamentPairing pairing)
+        {
+            if (pairing == null)
+            {
+                throw new ArgumentNullException("pairing");
+            }
+
+            if (pairing.TeamScores.Count != 2 || pairing.TeamScores[0] == null || pairing.TeamScores[1] == null || pairing.TeamScores[0].Team == null || pairing.TeamScores[1].Team == null)
+            {
+                // If the pairing did not contain exactly two teams, or if either of the teams passed was null.
+                throw new ArgumentException("A bye was passed as a pairing.", "pairing");
+            }
+
+            if (this.IsDecided)
+            {
+                // If we (and, all of our decentants) are decided, return false, indicating that no node below us is in a state that needs a score.
+                return false;
+            }
+            if (this.nodeA.IsDecided && this.nodeB.IsDecided && !(this.nodeA.Score != null || this.nodeB.Score != null) )
+            {
+                // If our component nodes have played out, but we haven't
+                var teamA = pairing.TeamScores[0].Team;
+                var scoreA = pairing.TeamScores[0].Score;
+                var teamB = pairing.TeamScores[1].Team;
+                var scoreB = pairing.TeamScores[1].Score;
+
+                if (this.nodeA.Team.TeamId == teamA.TeamId && this.nodeB.Team.TeamId == teamB.TeamId)
+                {
+                    // If we are a perfect match, assign the scores.
+                    this.nodeA.Score = scoreA;
+                    this.nodeB.Score = scoreB;
+                    return true;
+                }
+                if (this.nodeA.Team.TeamId == teamB.TeamId && this.nodeB.Team.TeamId == teamA.TeamId)
+                {
+                }
+            }
         }
     }
 }

@@ -55,7 +55,7 @@ namespace Tournaments.Standard
             this.nodeB = nodeB;
         }
 
-        public override bool IsDecidable
+        public override bool IsDecided
         {
             get { return this.nodeA.IsDecided && nodeB.IsDecided && ((this.nodeA.Team.TeamId == this.nodeB.Team.TeamId) || (nodeA.Score != null && nodeB.Score != null && nodeA.Score != nodeB.Score)); }
         }
@@ -151,7 +151,7 @@ namespace Tournaments.Standard
             var m = this.MeasureWinner(g, names, textHeight, score);
 
             string teamName = "";
-            if (this.IsDecidable)
+            if (this.IsDecided)
             {
                 teamName = names[this.GetWinner().TeamId];
             }
@@ -165,6 +165,16 @@ namespace Tournaments.Standard
         public override void RenderLoser(IGraphics g, TournamentNameTable names, float x, float y, float textHeight, Score score)
         {
             throw new InvalidOperationException("Rendering the loser node of a stay decider is invalid.");
+        }
+
+        public override bool ApplyPairing(TournamentPairing pairing)
+        {
+            if (pairing == null)
+            {
+                throw new ArgumentNullException("pairing");
+            }
+
+            throw new NotImplementedException();
         }
     }
 }

@@ -37,7 +37,7 @@ namespace Tournaments.Standard
 {
     public abstract class EliminationDecider
     {
-        public abstract bool IsDecidable { get; }
+        public abstract bool IsDecided { get; }
         public abstract TournamentTeam GetWinner();
         public abstract TournamentTeam GetLoser();
         public abstract NodeMeasurement MeasureWinner(IGraphics g, TournamentNameTable names, float textHeight, Score score);
@@ -201,5 +201,7 @@ namespace Tournaments.Standard
                 nodeB.Render(g, names, x, y, textHeight);
             }
         }
+
+        public abstract bool ApplyPairing(TournamentPairing pairing);
     }
 }

@@ -35,7 +35,7 @@ namespace Tournaments.Standard
 
     public class ByeDecider : EliminationDecider
     {
-        public override bool IsDecidable
+        public override bool IsDecided
         {
             get { return true; }
         }
@@ -70,6 +70,16 @@ namespace Tournaments.Standard
         public override void RenderLoser(Tournaments.Graphics.IGraphics g, TournamentNameTable names, float x, float y, float textHeight, Score score)
         {
             throw new InvalidOperationException("Cannot determine a loser from a bye entry.");
+        }
+
+        public override bool ApplyPairing(TournamentPairing pairing)
+        {
+            if (pairing == null)
+            {
+                throw new ArgumentNullException("pairing");
+            }
+
+            return false;
         }
     }
 }

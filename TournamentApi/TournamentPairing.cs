@@ -51,20 +51,10 @@ namespace Tournaments
         /// <summary>
         /// Initializes a new instance of the TournamentPairing class.
         /// </summary>
-        /// <param name="teamScore">The single team in this pairing.</param>
-        public TournamentPairing(TournamentTeamScore teamScore)
+        /// <param name="teamScores">The parameter aray of teams in this pairing.</param>
+        public TournamentPairing(params TournamentTeamScore[] teamScores)
         {
-            this.teamScores = new List<TournamentTeamScore>(new TournamentTeamScore[] { teamScore });
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the TournamentPairing class.
-        /// </summary>
-        /// <param name="teamScoreA">The first team in this pairing.</param>
-        /// <param name="teamScoreB">The second team in this pairing.</param>
-        public TournamentPairing(TournamentTeamScore teamScoreA, TournamentTeamScore teamScoreB)
-        {
-            this.teamScores = new List<TournamentTeamScore>(new TournamentTeamScore[] { teamScoreA, teamScoreB });
+            this.teamScores = new List<TournamentTeamScore>(teamScores);
         }
 
         /// <summary>

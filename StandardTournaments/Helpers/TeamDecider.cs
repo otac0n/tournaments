@@ -49,7 +49,7 @@ namespace Tournaments.Standard
             this.team = team;
         }
 
-        public override bool IsDecidable
+        public override bool IsDecided
         {
             get { return true; }
         }
@@ -84,6 +84,16 @@ namespace Tournaments.Standard
         public override void RenderLoser(IGraphics g, TournamentNameTable names, float x, float y, float textHeight, Score score)
         {
             throw new InvalidOperationException("Cannot determine a loser from an individual team entry.");
+        }
+
+        public override bool ApplyPairing(TournamentPairing pairing)
+        {
+            if (pairing == null)
+            {
+                throw new ArgumentNullException("pairing");
+            }
+
+            return false;
         }
     }
 }

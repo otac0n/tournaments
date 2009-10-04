@@ -27,9 +27,12 @@
 
 namespace Tournaments
 {
+    using System.Diagnostics;
+
     /// <summary>
     /// Describes a team that may participate in a tournament.
     /// </summary>
+    [DebuggerDisplay("[Team {this.TeamId} @ {this.Rating}]")]
     public sealed class TournamentTeam
     {
         /// <summary>

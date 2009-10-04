@@ -41,7 +41,7 @@ namespace Tournaments.Standard
     public class SingleEliminationTournament : IPairingsGenerator, ITournamentVisualizer
     {
         private List<TournamentTeam> loadedTeams;
-        private List<EliminationNode> loadedNodes;
+        private EliminationNode loadedRootNode;
         private PairingsGeneratorState state = PairingsGeneratorState.NotInitialized;
 
         public string Name
@@ -71,7 +71,7 @@ namespace Tournaments.Standard
         public void Reset()
         {
             this.loadedTeams = null;
-            this.loadedNodes = null;
+            this.loadedRootNode = null;
             this.state = PairingsGeneratorState.NotInitialized;
         }
 
@@ -87,354 +87,134 @@ namespace Tournaments.Standard
                 throw new ArgumentNullException("rounds");
             }
 
-            List<EliminationNode> nodes = new List<EliminationNode>();
-            Dictionary<EliminationNode, EliminationDecider> parents = new Dictionary<EliminationNode, EliminationDecider>();
-
-            if (teams.Count() >= 2)
+            if (rounds.Where(r => r.Pairings.Where(p => p.TeamScores.Count > 2).Any()).Any())
             {
-                int ranking = 0;
-                var teamsOrder = from team in teams
-                                 orderby team.Rating.HasValue ? team.Rating : 0 descending
-                                 select new TeamRanking
-                                 {
-                                     Team = team,
-                                     Ranking = ranking++,
-                                 };
-
-                int i = 0;
-                int nextRoundAt = 2;
-                int roundNumber = 0;
-                int mask = (1 << roundNumber) - 1;
-                var teamRankings = teamsOrder.ToList();
-                foreach (var teamRanking in teamRankings)
-                {
-                    if (i == nextRoundAt)
-                    {
-                        nextRoundAt *= 2;
-                        roundNumber += 1;
-                        mask = (1 << roundNumber) - 1;
-                    }
-
-                    EliminationNode newNode = new WinnerNode(new TeamDecider(teamRanking.Team));
-                    newNode.Locked = true;
-
-                    if (nodes.Count == 0)
-                    {
-                        nodes.Add(newNode);
-                        parents.Add(newNode, null);
-                        newNode.Level = 0;
-                        i++;
-                        continue;
-                    }
-
-                    var match = (from n in nodes
-                                 let d = n.Decider as TeamDecider
-                                 where d != null
-                                 where (teamRankings.Where(tr => tr.Team == n.Team).Single().Ranking & mask) == (teamRanking.Ranking & mask)
-                                 select n).Single();
-
-                    var oldParent = parents.ContainsKey(match) ? parents[match] as ContinuationDecider : null;
-                    var newParent = MakeSiblings(match, newNode);
-                    nodes.Add(newNode);
-                    nodes.Add(newParent);
-                    if (oldParent != null)
-                    {
-                        if (oldParent.ChildA == match)
-                        {
-                            oldParent.ChildA = newParent;
-                            parents[newParent] = oldParent;
-                        }
-                        else if (oldParent.ChildB == match)
-                        {
-                            oldParent.ChildB = newParent;
-                            parents[newParent] = oldParent;
-                        }
-                    }
-                    parents[match] = newParent.Decider;
-                    parents[newNode] = newParent.Decider;
-
-                    i++;
-                }
-
-                // Add in byes to even out the left side of the bracket.
-                for (ranking = teamRankings.Count; ranking < nextRoundAt; ranking++)
-                {
-                    EliminationNode newNode = new WinnerNode(new ByeDecider());
-                    newNode.Locked = true;
-
-                    var match = (from n in nodes
-                                 let d = n.Decider as TeamDecider
-                                 where d != null
-                                 where (teamRankings.Where(tr => tr.Team == n.Team).Single().Ranking & mask) == (ranking & mask)
-                                 select n).Single();
-
-                    var oldParent = parents.ContainsKey(match) ? parents[match] as ContinuationDecider : null;
-                    var newParent = MakeSiblings(match, newNode);
-                    nodes.Add(newNode);
-                    nodes.Add(newParent);
-                    if (oldParent != null)
-                    {
-                        if (oldParent.ChildA == match)
-                        {
-                            oldParent.ChildA = newParent;
-                            parents[newParent] = oldParent;
-                        }
-                        else if (oldParent.ChildB == match)
-                        {
-                            oldParent.ChildB = newParent;
-                            parents[newParent] = oldParent;
-                        }
-                    }
-                    parents[match] = newParent.Decider;
-                    parents[newNode] = newParent.Decider;
-                }
+                throw new InvalidTournamentStateException("At least one pairing had more than two teams competing.  This is invalid in a single elimination tournament.");
             }
 
-            bool byePaired = false;
-            bool byesLocked = false;
+            var rootNode = BuildTree(teams);
 
             foreach (var round in rounds)
             {
                 foreach (var pairing in round.Pairings)
                 {
-                    if (pairing.TeamScores.Count > 2)
-                    {
-                        throw new InvalidTournamentStateException("At least one pairing had more than two teams competing.  This is invalid in a single elimination tournament.");
-                    }
-
                     if (pairing.TeamScores.Count == 0)
                     {
                         continue;
                     }
 
-                    if (pairing.TeamScores.Count == 1)
+                    bool success = rootNode.ApplyPairing(pairing);
+
+                    if (!success)
                     {
-                        byePaired = true;
-
-                        var team = pairing.TeamScores[0].Team;
-
-                        var byes = from n in nodes
-                                   let d = n.Decider as ContinuationDecider
-                                   where d != null
-                                   where d.ChildA.Team != null
-                                   where d.ChildB.Team == null
-                                   select new { Node = n, Decider = d };
-
-                        var avail = from b in byes
-                                    where b.Node.Locked == false
-                                    select b;
-
-                        var matched = from a in avail
-                                      where ChildAMatches(a.Decider, team.TeamId)
-                                      select a;
-
-                        if (matched.Count() == 1)
-                        {
-                            var node = matched.Single();
-                            node.Node.Locked = true;
-                        }
-                        else
-                        {
-                            // We did not find a matching bye, so we have to create one by swapping.
-                            if (avail.Count() == 0)
-                            {
-                                throw new InvalidTournamentStateException("A bye was listed but no valid bye could be created.");
-                            }
-
-                            var byeNode = avail.First();
-
-                            // Find our team in an unlocked node
-                            var foundA = from n in nodes
-                                         let d = n.Decider as ContinuationDecider
-                                         where d != null
-                                         where n.Locked == false
-                                         where ChildAMatches(d, team.TeamId)
-                                         select new { Node = n, Decider = d };
-
-                            var foundB = from n in nodes
-                                         let d = n.Decider as ContinuationDecider
-                                         where d != null
-                                         where n.Locked == false
-                                         where ChildBMatches(d, team.TeamId)
-                                         select new { Node = n, Decider = d };
-
-                            // swap out the found node for our bye node.
-                            if (foundA.Count() == 1)
-                            {
-                                var swapNode = foundA.Single();
-                                var a = swapNode.Decider.ChildA;
-                                swapNode.Decider.ChildA = byeNode.Decider.ChildA;
-                                byeNode.Decider.ChildA = a;
-                            }
-                            else if (foundB.Count() == 1)
-                            {
-                                var swapNode = foundB.Single();
-                                var b = swapNode.Decider.ChildB;
-                                swapNode.Decider.ChildB = byeNode.Decider.ChildA;
-                                byeNode.Decider.ChildA = b;
-                            }
-                            else
-                            {
-                                throw new InvalidTournamentStateException("A bye was listed for a team that was ineligible for a bye.");
-                            }
-
-                            byeNode.Node.Locked = true;
-                        }
-                    }
-                    else
-                    {
-                        var scoreA = pairing.TeamScores[0].Score;
-                        var teamA = pairing.TeamScores[0].Team;
-                        var scoreB = pairing.TeamScores[1].Score;
-                        var teamB = pairing.TeamScores[1].Team;
-
-                    tryagainwithbyespaired:
-                        if (byePaired && !byesLocked)
-                        {
-                            LockByes(nodes);
-                            byesLocked = true;
-                        }
-
-                        var pairs = from n in nodes
-                                    let d = n.Decider as ContinuationDecider
-                                    where d != null
-                                    where d.ChildA != null
-                                    where d.ChildB != null
-                                    select new { Node = n, Decider = d };
-
-                        var avail = from p in pairs
-                                    where p.Node.Locked == false
-                                    select p;
-
-                        var matched = from a in avail
-                                      where ChildAMatches(a.Decider, teamA.TeamId)
-                                      where ChildBMatches(a.Decider, teamB.TeamId)
-                                      select a;
-
-                        if (matched.Count() == 1)
-                        {
-                            var node = matched.Single();
-                            node.Decider.ChildA.Score = scoreA;
-                            node.Decider.ChildB.Score = scoreB;
-                            node.Node.Locked = true;
-                        }
-                        else
-                        {
-                            // We did not find a matching pair, so we need to create one by swapping.
-
-                            var teamANodes = from n in nodes
-                                             let d = n.Decider as ContinuationDecider
-                                             where d != null
-                                             where n.Locked == false
-                                             where ChildAMatches(d, teamA.TeamId) || ChildBMatches(d, teamA.TeamId)
-                                             select new { Node = n, Decider = d };
-
-                            var teamBNodes = from n in nodes
-                                             let d = n.Decider as ContinuationDecider
-                                             where d != null
-                                             where n.Locked == false
-                                             where ChildAMatches(d, teamB.TeamId) || ChildBMatches(d, teamB.TeamId)
-                                             select new { Node = n, Decider = d };
-
-                            if (teamANodes.Count() != 1 || teamBNodes.Count() != 1)
-                            {
-                                throw new InvalidTournamentStateException("At least one pairing involved a team that was not eligible to play.");
-                            }
-
-                            var teamANode = teamANodes.Single();
-                            var teamBNode = teamBNodes.Single();
-
-                            if (teamANode.Node == teamBNode.Node)
-                            {
-                                // If the order was merely swapped, swap it back.
-                                teamANode.Decider.SwapChildren();
-                                teamANode.Decider.ChildA.Score = scoreA;
-                                teamANode.Decider.ChildB.Score = scoreB;
-                                teamANode.Node.Locked = true;
-                            }
-                            else
-                            {
-                                if (teamANode.Node.Level != teamBNode.Node.Level)
-                                {
-                                    if (byePaired == false)
-                                    {
-                                        byePaired = true;
-                                        goto tryagainwithbyespaired;
-                                    }
-
-                                    throw new InvalidTournamentStateException("At least one pairing involved two teams that were not eligible to play against each other.");
-                                }
-
-                                // find the first available node in this level.
-                                var available = from n in nodes
-                                                let d = n.Decider as ContinuationDecider
-                                                where d != null
-                                                where n.Locked == false
-                                                where n.Level == teamANode.Node.Level
-                                                where d.ChildA != null
-                                                where d.ChildB != null
-                                                select new { Node = n, Decider = d };
-
-                                if (available.Count() == 0)
-                                {
-                                    if (byePaired == false)
-                                    {
-                                        byePaired = true;
-                                        goto tryagainwithbyespaired;
-                                    }
-
-                                    throw new InvalidTournamentStateException("At least one pairing contained two teams when the tournament was unable to support a pairing with two teams.");
-                                }
-
-                                var destination = available.First();
-
-                                if (teamANode.Decider.ChildA != null && teamANode.Decider.ChildA.Team != null && teamANode.Decider.ChildA.Team.TeamId == teamA.TeamId)
-                                {
-                                    // swap destination A with teamANode A
-                                    SwapChildrenAA(destination.Decider, teamANode.Decider);
-                                }
-                                else if (teamANode.Decider.ChildB != null && teamANode.Decider.ChildB.Team != null && teamANode.Decider.ChildB.Team.TeamId == teamA.TeamId)
-                                {
-                                    // swap destination A with teamANode B
-                                    SwapChildrenAB(destination.Decider, teamANode.Decider);
-                                }
-                                else
-                                {
-                                    throw new InvalidOperationException();
-                                }
-
-                                // since destination could've matched teamBNode and we may have swapped it out, we need to refetch teamBNode
-                                teamBNode = teamBNodes.Single();
-
-                                if (teamBNode.Decider.ChildA != null && teamBNode.Decider.ChildA.Team != null && teamBNode.Decider.ChildA.Team.TeamId == teamB.TeamId)
-                                {
-                                    // swap destination B with teamBNode A
-                                    SwapChildrenBA(destination.Decider, teamBNode.Decider);
-                                }
-                                else if (teamBNode.Decider.ChildB != null && teamBNode.Decider.ChildB.Team != null && teamBNode.Decider.ChildB.Team.TeamId == teamB.TeamId)
-                                {
-                                    // swap destination B with teamBNode B
-                                    SwapChildrenBB(destination.Decider, teamBNode.Decider);
-                                }
-                                else
-                                {
-                                    throw new InvalidOperationException();
-                                }
-
-                                destination.Decider.ChildA.Score = scoreA;
-                                destination.Decider.ChildB.Score = scoreB;
-                                destination.Node.Locked = true;
-                            }
-                        }
+                        throw new NotImplementedException();
                     }
                 }
             }
 
-            LockByes(nodes);
-
-            this.loadedNodes = nodes;
+            this.loadedRootNode = rootNode;
             this.loadedTeams = new List<TournamentTeam>(teams);
             this.state = PairingsGeneratorState.Initialized;
+        }
+
+        private EliminationNode BuildTree(IEnumerable<TournamentTeam> teams)
+        {
+            List<EliminationNode> nodes = new List<EliminationNode>();
+            Dictionary<EliminationNode, EliminationDecider> parents = new Dictionary<EliminationNode, EliminationDecider>();
+
+            int ranking = 0;
+            var teamsOrder = from team in teams
+                             orderby team.Rating.HasValue ? team.Rating : 0 descending
+                             select new TeamRanking
+                             {
+                                 Team = team,
+                                 Ranking = ranking++,
+                             };
+
+            int i = 0;
+            int nextRoundAt = 2;
+            int roundNumber = 0;
+            int mask = (1 << roundNumber) - 1;
+            var teamRankings = teamsOrder.ToList();
+            foreach (var teamRanking in teamRankings)
+            {
+                if (i == nextRoundAt)
+                {
+                    nextRoundAt *= 2;
+                    roundNumber += 1;
+                    mask = (1 << roundNumber) - 1;
+                }
+
+                EliminationNode newNode = new WinnerNode(new TeamDecider(teamRanking.Team));
+
+                if (nodes.Count == 0)
+                {
+                    nodes.Add(newNode);
+                    parents.Add(newNode, null);
+                    i++;
+                    continue;
+                }
+
+                var match = (from n in nodes
+                             let d = n.Decider as TeamDecider
+                             where d != null
+                             where (teamRankings.Where(tr => tr.Team == n.Team).Single().Ranking & mask) == (teamRanking.Ranking & mask)
+                             select n).Single();
+
+                var oldParent = parents.ContainsKey(match) ? parents[match] as ContinuationDecider : null;
+                var newParent = MakeSiblings(match, newNode);
+                nodes.Add(newNode);
+                nodes.Add(newParent);
+                if (oldParent != null)
+                {
+                    if (oldParent.ChildA == match)
+                    {
+                        oldParent.ChildA = newParent;
+                        parents[newParent] = oldParent;
+                    }
+                    else if (oldParent.ChildB == match)
+                    {
+                        oldParent.ChildB = newParent;
+                        parents[newParent] = oldParent;
+                    }
+                }
+                parents[match] = newParent.Decider;
+                parents[newNode] = newParent.Decider;
+
+                i++;
+            }
+
+            // Add in byes to even out the left side of the bracket.
+            for (ranking = teamRankings.Count; ranking < nextRoundAt; ranking++)
+            {
+                EliminationNode newNode = new WinnerNode(new ByeDecider());
+
+                var match = (from n in nodes
+                             let d = n.Decider as TeamDecider
+                             where d != null
+                             where (teamRankings.Where(tr => tr.Team == n.Team).Single().Ranking & mask) == (ranking & mask)
+                             select n).Single();
+
+                var oldParent = parents.ContainsKey(match) ? parents[match] as ContinuationDecider : null;
+                var newParent = MakeSiblings(match, newNode);
+                nodes.Add(newNode);
+                nodes.Add(newParent);
+                if (oldParent != null)
+                {
+                    if (oldParent.ChildA == match)
+                    {
+                        oldParent.ChildA = newParent;
+                        parents[newParent] = oldParent;
+                    }
+                    else if (oldParent.ChildB == match)
+                    {
+                        oldParent.ChildB = newParent;
+                        parents[newParent] = oldParent;
+                    }
+                }
+                parents[match] = newParent.Decider;
+                parents[newNode] = newParent.Decider;
+            }
         }
 
         private bool ChildAMatches(ContinuationDecider decider, long teamId)
