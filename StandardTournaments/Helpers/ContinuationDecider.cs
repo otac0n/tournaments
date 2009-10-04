@@ -255,6 +255,7 @@ namespace Tournaments.Standard
                     // If we are a match, assign the scores.
                     this.nodeA.Score = scoreA;
                     this.nodeB.Score = scoreB;
+                    this.Lock();
                     return true;
                 }
                 else

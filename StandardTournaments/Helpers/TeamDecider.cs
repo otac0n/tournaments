@@ -37,6 +37,11 @@ namespace Tournaments.Standard
 {
     public class TeamDecider : EliminationDecider
     {
+        public TeamDecider()
+        {
+            this.Lock();
+        }
+
         private TournamentTeam team = null;
                 
         public TeamDecider(TournamentTeam team)

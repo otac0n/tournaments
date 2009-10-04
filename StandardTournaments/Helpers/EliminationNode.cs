@@ -42,7 +42,6 @@ namespace Tournaments.Standard
         protected List<EliminationDecider> secondaryParents = new List<EliminationDecider>();
 
         protected EliminationDecider decider = null;
-        private bool locked = false;
         
         public EliminationNode(EliminationDecider decider)
         {
@@ -102,6 +101,14 @@ namespace Tournaments.Standard
                 {
                     return this.primaryParent.CommonAncestor;
                 }
+            }
+        }
+
+        public bool Locked
+        {
+            get
+            {
+                return this.primaryParent != null && this.primaryParent.Locked;
             }
         }
 

@@ -35,6 +35,11 @@ namespace Tournaments.Standard
 
     public class ByeDecider : EliminationDecider
     {
+        public ByeDecider()
+        {
+            this.Lock();
+        }
+
         public override bool IsDecided
         {
             get { return true; }

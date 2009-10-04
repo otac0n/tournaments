@@ -83,6 +83,28 @@ namespace Tournaments.Standard
             }
         }
 
+        private bool locked = false;
+
+        public bool Locked
+        {
+            get
+            {
+                if (this.primaryParent == null)
+                {
+                    throw new InvalidOperationException("An elimination decider must have a parent EliminationNode.");
+                }
+                else
+                {
+                    return this.locked || this.primaryParent.Locked;
+                }
+            }
+        }
+
+        protected void Lock()
+        {
+            this.locked = true;
+        }
+
         public abstract bool IsDecided { get; }
         public abstract TournamentTeam GetWinner();
         public abstract TournamentTeam GetLoser();
