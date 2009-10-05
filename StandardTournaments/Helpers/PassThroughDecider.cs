@@ -49,7 +49,10 @@ namespace Tournaments.Standard
 
         public override bool IsDecided
         {
-            get { return this.node.IsDecided; }
+            get
+            {
+                return this.node.IsDecided;
+            }
         }
 
         public override TournamentTeam GetWinner()

@@ -42,7 +42,10 @@ namespace Tournaments.Standard
 
         public override TournamentTeam Team
         {
-            get { return this.decider.GetLoser(); }
+            get
+            {
+                return this.decider.GetLoser();
+            }
         }
 
         public override NodeMeasurement Measure(Tournaments.Graphics.IGraphics g, TournamentNameTable names, float textHeight)

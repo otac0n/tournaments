@@ -42,7 +42,10 @@ namespace Tournaments.Standard
 
         public override bool IsDecided
         {
-            get { return true; }
+            get
+            {
+                return true;
+            }
         }
 
         public override TournamentTeam GetWinner()

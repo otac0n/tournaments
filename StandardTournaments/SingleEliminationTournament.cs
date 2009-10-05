@@ -220,7 +220,7 @@ namespace Tournaments.Standard
                     oldParent.ChildB = newNode;
                 }
             }
-            
+
             return newNode;
         }
 

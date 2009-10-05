@@ -105,7 +105,10 @@ namespace Tournaments.Standard
             this.locked = true;
         }
 
-        public abstract bool IsDecided { get; }
+        public abstract bool IsDecided
+        {
+            get;
+        }
         public abstract TournamentTeam GetWinner();
         public abstract TournamentTeam GetLoser();
         public abstract bool ApplyPairing(TournamentPairing pairing);

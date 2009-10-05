@@ -43,7 +43,7 @@ namespace Tournaments.Standard
         }
 
         private TournamentTeam team = null;
-                
+
         public TeamDecider(TournamentTeam team)
         {
             if (team == null)
@@ -56,7 +56,10 @@ namespace Tournaments.Standard
 
         public override bool IsDecided
         {
-            get { return true; }
+            get
+            {
+                return true;
+            }
         }
 
         public override TournamentTeam GetWinner()

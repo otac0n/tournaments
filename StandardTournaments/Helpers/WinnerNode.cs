@@ -44,7 +44,10 @@ namespace Tournaments.Standard
 
         public override TournamentTeam Team
         {
-            get { return this.decider.GetWinner(); }
+            get
+            {
+                return this.decider.GetWinner();
+            }
         }
 
         public override NodeMeasurement Measure(Tournaments.Graphics.IGraphics g, TournamentNameTable names, float textHeight)
@@ -82,7 +85,7 @@ namespace Tournaments.Standard
             }
             else
             {
-                foreach(var undecided in this.Decider.FindUndecided())
+                foreach (var undecided in this.Decider.FindUndecided())
                 {
                     yield return undecided;
                 }

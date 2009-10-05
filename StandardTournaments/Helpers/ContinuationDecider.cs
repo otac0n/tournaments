@@ -82,7 +82,10 @@ namespace Tournaments.Standard
 
         public override bool IsDecided
         {
-            get { return this.nodeA.IsDecided && nodeB.IsDecided && ((nodeA.Team == null || nodeB.Team == null) || (nodeA.Score != null && nodeB.Score != null && nodeA.Score != nodeB.Score)); }
+            get
+            {
+                return this.nodeA.IsDecided && nodeB.IsDecided && ((nodeA.Team == null || nodeB.Team == null) || (nodeA.Score != null && nodeB.Score != null && nodeA.Score != nodeB.Score));
+            }
         }
 
         public override TournamentTeam GetWinner()

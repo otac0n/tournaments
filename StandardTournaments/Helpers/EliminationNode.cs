@@ -42,7 +42,7 @@ namespace Tournaments.Standard
         protected List<EliminationDecider> secondaryParents = new List<EliminationDecider>();
 
         protected EliminationDecider decider = null;
-        
+
         public EliminationNode(EliminationDecider decider)
         {
             if (decider == null)
@@ -112,11 +112,24 @@ namespace Tournaments.Standard
             }
         }
 
-        public abstract TournamentTeam Team { get; }
+        public abstract TournamentTeam Team
+        {
+            get;
+        }
 
-        public EliminationDecider Decider { get { return this.decider; } }
+        public EliminationDecider Decider
+        {
+            get
+            {
+                return this.decider;
+            }
+        }
 
-        public Score Score { get; set; }
+        public Score Score
+        {
+            get;
+            set;
+        }
 
         public abstract NodeMeasurement Measure(IGraphics g, TournamentNameTable names, float textHeight);
 
