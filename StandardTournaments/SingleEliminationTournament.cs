@@ -98,6 +98,8 @@ namespace Tournaments.Standard
             {
                 foreach (var pairing in round.Pairings)
                 {
+                    // TODO: We must sort the byes to the top.
+
                     if (pairing.TeamScores.Count == 0)
                     {
                         continue;

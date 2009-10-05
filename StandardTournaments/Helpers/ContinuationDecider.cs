@@ -225,16 +225,16 @@ namespace Tournaments.Standard
                 throw new ArgumentNullException("pairing");
             }
 
+            if (this.Locked)
+            {
+                // If we (and, all of our decentants) are decided, return false, indicating that no node below us is in a state that needs a score.
+                return false;
+            }
+
             if (pairing.TeamScores.Count != 2 || pairing.TeamScores[0] == null || pairing.TeamScores[1] == null || pairing.TeamScores[0].Team == null || pairing.TeamScores[1].Team == null)
             {
                 // If the pairing did not contain exactly two teams, or if either of the teams passed was null.
                 throw new ArgumentException("A bye was passed as a pairing.", "pairing");
-            }
-
-            if (this.IsDecided)
-            {
-                // If we (and, all of our decentants) are decided, return false, indicating that no node below us is in a state that needs a score.
-                return false;
             }
 
             if (this.nodeA.IsDecided && this.nodeB.IsDecided && !(this.nodeA.Score != null || this.nodeB.Score != null))
@@ -278,16 +278,18 @@ namespace Tournaments.Standard
             {
                 yield break;
             }
-            else if (this.nodeA.IsDecided && this.nodeB.IsDecided && (this.nodeA.Score != null || this.nodeB.Score != null))
-            {
-                // TODO: This could be an issue if the pairing has already been built, but came in with null scores.
-                yield break;
-            }
             else if (this.nodeA.IsDecided && this.nodeB.IsDecided)
             {
-                yield return new TournamentPairing(
-                        new TournamentTeamScore(this.nodeA.Team, null),
-                        new TournamentTeamScore(this.nodeB.Team, null));
+                if (this.Locked)
+                {
+                    yield break;
+                }
+                else
+                {
+                    yield return new TournamentPairing(
+                            new TournamentTeamScore(this.nodeA.Team, null),
+                            new TournamentTeamScore(this.nodeB.Team, null));
+                }
             }
             else
             {

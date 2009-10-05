@@ -351,45 +351,91 @@ namespace TournamentTests
         [TestMethod]
         public void SingleEliminationHandlesOutOfOrderCompetitors()
         {
-            var teamNames = new Dictionary<long, string>();
-            teamNames[0] = "A";
-            teamNames[1] = "B";
-            teamNames[2] = "C";
-            teamNames[3] = "D";
-            teamNames[4] = "E";
-            teamNames[5] = "F";
+            for (int i = 0; i < 10; i++)
+            {
+                var teamNames = new Dictionary<long, string>();
+                teamNames[0] = "A";
+                teamNames[1] = "B";
+                teamNames[2] = "C";
+                teamNames[3] = "D";
+                teamNames[4] = "E";
+                teamNames[5] = "F";
 
-            var teams = (from k in teamNames.Keys
-                         orderby k
-                         select new TournamentTeam(k, r.Next(1000))).ToList();
+                var teams = (from k in teamNames.Keys
+                             orderby k
+                             select new TournamentTeam(k, r.Next(1000))).ToList();
 
-            var round1 = new TournamentRound(
-                            new TournamentPairing(
-                                new TournamentTeamScore(teams[0], Score(1)),
-                                new TournamentTeamScore(teams[1], Score(2))),
-                            new TournamentPairing(
-                                new TournamentTeamScore(teams[2], Score(3)),
-                                new TournamentTeamScore(teams[3], Score(4))));
-            var round2 = new TournamentRound(
-                            new TournamentPairing(
-                                new TournamentTeamScore(teams[1], Score(5)),
-                                new TournamentTeamScore(teams[3], Score(6))));
-            var round3 = new TournamentRound(
-                            new TournamentPairing(
-                                new TournamentTeamScore(teams[4], Score(7)),
-                                new TournamentTeamScore(teams[5], Score(8))));
-            var round4 = new TournamentRound(
-                            new TournamentPairing(
-                                new TournamentTeamScore(teams[5], Score(5)),
-                                new TournamentTeamScore(teams[3], Score(6))));
+                var round1 = new TournamentRound(
+                                new TournamentPairing(
+                                    new TournamentTeamScore(teams[0], Score(1)),
+                                    new TournamentTeamScore(teams[1], Score(2))),
+                                new TournamentPairing(
+                                    new TournamentTeamScore(teams[2], Score(3)),
+                                    new TournamentTeamScore(teams[3], Score(4))));
+                var round2 = new TournamentRound(
+                                new TournamentPairing(
+                                    new TournamentTeamScore(teams[1], Score(5)),
+                                    new TournamentTeamScore(teams[3], Score(6))));
+                var round3 = new TournamentRound(
+                                new TournamentPairing(
+                                    new TournamentTeamScore(teams[4], Score(7)),
+                                    new TournamentTeamScore(teams[5], Score(8))));
+                var round4 = new TournamentRound(
+                                new TournamentPairing(
+                                    new TournamentTeamScore(teams[5], Score(9)),
+                                    new TournamentTeamScore(teams[3], Score(10))));
 
-            var rounds = (new [] { round1, round2, round3, round4 }).ToList();
+                var rounds = (new[] { round1, round2, round3, round4 }).ToList();
 
-            IPairingsGenerator pg = new SingleEliminationTournament();
+                IPairingsGenerator pg = new SingleEliminationTournament();
 
-            pg.LoadState(teams, rounds);
-            Assert.IsNull(pg.CreateNextRound(null));
-            DisplayTournamentRankings(pg.GenerateRankings());
+                pg.LoadState(teams, rounds);
+                Assert.IsNull(pg.CreateNextRound(null));
+                DisplayTournamentRankings(pg.GenerateRankings());
+            }
+
+            for (int i = 0; i < 10; i++)
+            {
+                var teamNames = new Dictionary<long, string>();
+                teamNames[0] = "A";
+                teamNames[1] = "B";
+                teamNames[2] = "C";
+                teamNames[3] = "D";
+                teamNames[4] = "E";
+                teamNames[5] = "F";
+
+                var teams = (from k in teamNames.Keys
+                             orderby k
+                             select new TournamentTeam(k, r.Next(1000))).ToList();
+
+                var round1 = new TournamentRound(
+                                new TournamentPairing(
+                                    new TournamentTeamScore(teams[0], Score(1)),
+                                    new TournamentTeamScore(teams[1], Score(2))),
+                                new TournamentPairing(
+                                    new TournamentTeamScore(teams[2], Score(3)),
+                                    new TournamentTeamScore(teams[3], Score(4))));
+                var round2 = new TournamentRound(
+                                new TournamentPairing(
+                                    new TournamentTeamScore(teams[1], Score(5)),
+                                    new TournamentTeamScore(teams[4], Score(6))));
+                var round3 = new TournamentRound(
+                                new TournamentPairing(
+                                    new TournamentTeamScore(teams[3], Score(7)),
+                                    new TournamentTeamScore(teams[5], Score(8))));
+                var round4 = new TournamentRound(
+                                new TournamentPairing(
+                                    new TournamentTeamScore(teams[4], Score(9)),
+                                    new TournamentTeamScore(teams[5], Score(10))));
+
+                var rounds = (new[] { round1, round2, round3, round4 }).ToList();
+
+                IPairingsGenerator pg = new SingleEliminationTournament();
+
+                pg.LoadState(teams, rounds);
+                Assert.IsNull(pg.CreateNextRound(null));
+                DisplayTournamentRankings(pg.GenerateRankings());
+            }
         }
 
         private Score Score(double score)
