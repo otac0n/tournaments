@@ -253,13 +253,15 @@ namespace Tournaments.Standard
                 // Add in byes to even out the left side of the bracket.
                 for (ranking = teamRankings.Count; ranking < nextRoundAt; ranking++)
                 {
-                    EliminationNode newNode = new WinnerNode(new ByeDecider());
-
                     var match = (from n in nodes
                                  let d = n.Decider as TeamDecider
                                  where d != null
                                  where (teamRankings.Where(tr => tr.Team == n.Team).Single().Ranking & mask) == (ranking & mask)
                                  select n).Single();
+                    
+                    var newDecider = new ByeDecider();
+                    var newNode = new WinnerNode(newDecider);
+                    newDecider.PrimaryParent = newNode;
 
                     var newParent = MakeSiblings(match, newNode);
                     nodes.Add(newNode);
