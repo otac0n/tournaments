@@ -72,5 +72,18 @@ namespace Tournaments.Standard
         {
             yield break;
         }
+
+        public override IEnumerable<EliminationNode> FindNodes(Func<EliminationNode, bool> filter)
+        {
+            if (filter.Invoke(this))
+            {
+                yield return this;
+            }
+        }
+
+        public override IEnumerable<EliminationDecider> FindDeciders(Func<EliminationDecider, bool> filter)
+        {
+            yield break;
+        }
     }
 }

@@ -91,5 +91,26 @@ namespace Tournaments.Standard
                 }
             }
         }
+
+        public override IEnumerable<EliminationNode> FindNodes(Func<EliminationNode, bool> filter)
+        {
+            if (filter.Invoke(this))
+            {
+                yield return this;
+            }
+
+            foreach (var match in this.Decider.FindNodes(filter))
+            {
+                yield return match;
+            }
+        }
+
+        public override IEnumerable<EliminationDecider> FindDeciders(Func<EliminationDecider, bool> filter)
+        {
+            foreach (var match in this.Decider.FindDeciders(filter))
+            {
+                yield return match;
+            }
+        }
     }
 }

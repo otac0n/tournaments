@@ -113,6 +113,8 @@ namespace Tournaments.Standard
         public abstract TournamentTeam GetLoser();
         public abstract bool ApplyPairing(TournamentPairing pairing);
         public abstract IEnumerable<TournamentPairing> FindUndecided();
+        public abstract IEnumerable<EliminationNode> FindNodes(Func<EliminationNode, bool> filter);
+        public abstract IEnumerable<EliminationDecider> FindDeciders(Func<EliminationDecider, bool> filter);
 
         public abstract NodeMeasurement MeasureWinner(IGraphics g, TournamentNameTable names, float textHeight, Score score);
         public abstract NodeMeasurement MeasureLoser(IGraphics g, TournamentNameTable names, float textHeight, Score score);

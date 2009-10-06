@@ -109,7 +109,78 @@ namespace Tournaments.Standard
 
                     if (!success)
                     {
-                        throw new NotImplementedException();
+                        var teamScoreA = pairing.TeamScores[0];
+                        var teamScoreB = pairing.TeamScores.Count > 1 ?  pairing.TeamScores[1] : null;
+
+                        if (teamScoreA == null)
+                        {
+                            teamScoreA = teamScoreB;
+                            teamScoreB = null;
+                        }
+
+                        if (teamScoreA == null)
+                            continue;
+
+                        var teamA = teamScoreA != null ? teamScoreA.Team : null;
+                        var teamB = teamScoreB != null ? teamScoreB.Team : null;
+                        var scoreA = teamScoreA != null ? teamScoreA.Score : null;
+                        var scoreB = teamScoreB != null ? teamScoreB.Score : null;
+
+                        var nodesA = teamA == null ? null : rootNode.FindDeciders(d => d.IsDecided && !d.Locked && d.GetWinner().TeamId == teamA.TeamId);
+                        var nodesB = teamB == null ? null : rootNode.FindDeciders(d => d.IsDecided && !d.Locked && d.GetWinner().TeamId == teamB.TeamId);
+
+                        if (nodesA == null || nodesA.Count() == 0 || nodesB == null || nodesB.Count() == 0)
+                        {
+                            throw new InvalidTournamentStateException("There was at least one pairing that could not be matched: The requested team was not available to play.");
+                        }
+
+                        if (nodesA.Count() > 1 || nodesB.Count() > 1)
+                        {
+                            throw new InvalidTournamentStateException("There was at least one pairing that could not be matched: The requested team was not able to be decided unambiguously.");
+                        }
+
+                        var deciderA = nodesA.Single();
+                        var deciderB = nodesB.Single();
+
+                        var parentDecider = deciderA.PrimaryParent.PrimaryParent as ContinuationDecider;
+                        if (parentDecider == null)
+                        {
+                            parentDecider = deciderB.PrimaryParent.PrimaryParent as ContinuationDecider;
+                            if (parentDecider == null)
+                            {
+                                throw new InvalidTournamentStateException("There was at least one pairing that could not be matched: The requested pairing was not compatible with the state of the tournament.");
+                            }
+                        }
+
+                        if (parentDecider.ChildA.Decider == deciderA || parentDecider.ChildA.Decider == deciderB)
+                        {
+                            if (parentDecider.ChildA.Decider == deciderA)
+                            {
+                                SwapDeciders(parentDecider.ChildB.Decider, deciderB);
+                            }
+                            else
+                            {
+                                SwapDeciders(parentDecider.ChildB.Decider, deciderA);
+                            }
+                        }
+                        else
+                        {
+                            if (parentDecider.ChildB.Decider == deciderA)
+                            {
+                                SwapDeciders(parentDecider.ChildA.Decider, deciderB);
+                            }
+                            else
+                            {
+                                SwapDeciders(parentDecider.ChildA.Decider, deciderA);
+                            }
+                        }
+
+                        success = rootNode.ApplyPairing(pairing);
+
+                        if (!success)
+                        {
+                            throw new InvalidTournamentStateException("A swap was performed to match the tournament to the actual state, but applying the pairing failed.");
+                        }
                     }
                 }
             }
@@ -117,6 +188,17 @@ namespace Tournaments.Standard
             this.loadedRootNode = rootNode;
             this.loadedTeams = new List<TournamentTeam>(teams);
             this.state = PairingsGeneratorState.Initialized;
+        }
+
+        private void SwapDeciders(EliminationDecider deciderA, EliminationDecider deciderB)
+        {
+            deciderA.PrimaryParent.Decider = deciderB;
+            deciderB.PrimaryParent.Decider = deciderA;
+            var swap = deciderA.PrimaryParent;
+            deciderA.PrimaryParent = deciderB.PrimaryParent;
+            deciderB.PrimaryParent = swap;
+
+            // TODO: Swap Secondary Parents.
         }
 
         private EliminationNode BuildTree(IEnumerable<TournamentTeam> teams)

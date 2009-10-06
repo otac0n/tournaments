@@ -63,6 +63,11 @@ namespace Tournaments.Standard
 
             set
             {
+                if (value == null)
+                {
+                    throw new ArgumentNullException("value");
+                }
+
                 this.nodeA = value;
             }
         }
@@ -76,6 +81,11 @@ namespace Tournaments.Standard
 
             set
             {
+                if (value == null)
+                {
+                    throw new ArgumentNullException("value");
+                }
+
                 this.nodeB = value;
             }
         }
@@ -164,6 +174,16 @@ namespace Tournaments.Standard
             }
 
             return this.nodeA.Score > this.nodeB.Score ? this.nodeB.Team : this.nodeA.Team;
+        }
+
+        public bool HasTeam(TournamentTeam team)
+        {
+            return this.HasTeam(team.TeamId);
+        }
+
+        public bool HasTeam(long teamId)
+        {
+            return (this.ChildA != null && this.ChildA.IsDecided && this.ChildA.Team.TeamId == teamId) || (this.ChildB != null && this.ChildB.IsDecided && this.ChildB.Team.TeamId == teamId);
         }
 
         public void SwapChildren()
@@ -307,6 +327,49 @@ namespace Tournaments.Standard
                     {
                         yield return undecided;
                     }
+                }
+            }
+        }
+
+        public override IEnumerable<EliminationNode> FindNodes(Func<EliminationNode, bool> filter)
+        {
+            if (this.nodeA != null)
+            {
+                foreach (var match in this.nodeA.FindNodes(filter))
+                {
+                    yield return match;
+                }
+            }
+
+            if (this.nodeB != null)
+            {
+                foreach (var match in this.nodeB.FindNodes(filter))
+                {
+                    yield return match;
+                }
+            }
+        }
+
+        public override IEnumerable<EliminationDecider> FindDeciders(Func<EliminationDecider, bool> filter)
+        {
+            if (filter.Invoke(this))
+            {
+                yield return this;
+            }
+
+            if (this.nodeA != null)
+            {
+                foreach (var match in this.nodeA.FindDeciders(filter))
+                {
+                    yield return match;
+                }
+            }
+
+            if (this.nodeB != null)
+            {
+                foreach (var match in this.nodeB.FindDeciders(filter))
+                {
+                    yield return match;
                 }
             }
         }

@@ -216,5 +216,32 @@ namespace Tournaments.Standard
                 }
             }
         }
+
+        public override IEnumerable<EliminationNode> FindNodes(Func<EliminationNode, bool> filter)
+        {
+            if (this.nodeA != null)
+            {
+                foreach(var match in this.nodeA.FindNodes(filter))
+                {
+                    yield return match;
+                }
+            }
+        }
+
+        public override IEnumerable<EliminationDecider> FindDeciders(Func<EliminationDecider, bool> filter)
+        {
+            if (filter.Invoke(this))
+            {
+                yield return this;
+            }
+
+            if (this.nodeA != null)
+            {
+                foreach (var match in this.nodeA.FindDeciders(filter))
+                {
+                    yield return match;
+                }
+            }
+        }
     }
 }

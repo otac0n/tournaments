@@ -123,6 +123,15 @@ namespace Tournaments.Standard
             {
                 return this.decider;
             }
+            set
+            {
+                if (value == null)
+                {
+                    throw new ArgumentNullException("value");
+                }
+
+                this.decider = value;
+            }
         }
 
         public Score Score
@@ -137,5 +146,7 @@ namespace Tournaments.Standard
 
         public abstract bool ApplyPairing(TournamentPairing pairing);
         public abstract IEnumerable<TournamentPairing> FindUndecided();
+        public abstract IEnumerable<EliminationNode> FindNodes(Func<EliminationNode, bool> filter);
+        public abstract IEnumerable<EliminationDecider> FindDeciders(Func<EliminationDecider, bool> filter);
     }
 }
