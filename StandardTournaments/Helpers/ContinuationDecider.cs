@@ -216,7 +216,15 @@ namespace Tournaments.Standard
             string teamName = "";
             if (this.IsDecided)
             {
-                teamName = names[this.GetWinner().TeamId];
+                var winner = this.GetWinner();
+                if (winner != null)
+                {
+                    teamName = names[winner.TeamId];
+                }
+                else
+                {
+                    teamName = "bye";
+                }
             }
 
             this.RenderTextBox(g, m, x, y, textHeight, teamName, score);
@@ -232,7 +240,15 @@ namespace Tournaments.Standard
             string teamName = "";
             if (this.IsDecided)
             {
-                teamName = names[this.GetLoser().TeamId];
+                var loser = this.GetLoser();
+                if (loser != null)
+                {
+                    teamName = names[loser.TeamId];
+                }
+                else
+                {
+                    teamName = "bye";
+                }
             }
 
             this.RenderTextBox(g, m, x, y, textHeight, teamName, score);

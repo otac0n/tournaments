@@ -254,8 +254,7 @@ namespace Tournaments.Standard
                                      where (teamRankings.Where(tr => tr.Team == n.Team).Single().Ranking & mask) == (teamRanking.Ranking & mask)
                                      select n).Single();
 
-                        var newParent = MakeSiblings(match, newNode);
-                        nodes.Add(newParent);
+                        nodes.Add(MakeSiblings(match, newNode));
                     }
 
                     nodes.Add(newNode);
@@ -275,16 +274,121 @@ namespace Tournaments.Standard
                     var newNode = new WinnerNode(newDecider);
                     newDecider.PrimaryParent = newNode;
 
-                    var newParent = MakeSiblings(match, newNode);
                     nodes.Add(newNode);
-                    nodes.Add(newParent);
+                    nodes.Add(MakeSiblings(match, newNode));
                 }
 
             }
 
-            return (from n in nodes
-                    where n.Level == 0
-                    select n).SingleOrDefault();
+            var rootNode = (from n in nodes
+                            where n.Level == 0
+                            select n).SingleOrDefault();
+            
+            if(eliminations == 1 || rootNode == null)
+            {
+                return rootNode;
+            }
+
+            var maxLevel = nodes.Max(n => n.Level) - 1;
+
+            var deciders = rootNode.FindDeciders(d => d.Level == maxLevel);
+            var loserNodes = BuildLoserNodes(deciders);
+
+            while (true)
+            {
+                maxLevel--;
+                deciders = rootNode.FindDeciders(d => d.Level == maxLevel);
+
+                if (deciders.Count() == 0)
+                {
+                    break;
+                }
+
+                var newLosers = BuildLoserNodes(deciders);
+
+                while (loserNodes.Count() > newLosers.Count())
+                {
+                    loserNodes = SimplifyNodes(loserNodes);
+                }
+
+                loserNodes = InterleaveNodes(newLosers, loserNodes);
+            }
+
+            while (loserNodes.Count > 1)
+            {
+                loserNodes = SimplifyNodes(loserNodes);
+            }
+
+            var loserRoot = loserNodes[0];
+
+            var winnersDecider = new ContinuationDecider(rootNode, loserRoot);
+            var winnersWinner = new WinnerNode(winnersDecider);
+            winnersDecider.PrimaryParent = winnersWinner;
+
+            var passthrough = new PassThroughDecider(rootNode);
+            var replay = new WinnerNode(passthrough);
+            passthrough.PrimaryParent = replay;
+
+            var stayDecider = new StayDecider(winnersWinner, replay);
+            var finalWinner = new WinnerNode(stayDecider);
+            stayDecider.PrimaryParent = finalWinner;
+
+            return finalWinner; 
+        }
+
+        private List<EliminationNode> InterleaveNodes(List<EliminationNode> nodeListA, List<EliminationNode> nodeListB)
+        {
+            if (nodeListA.Count != nodeListB.Count)
+            {
+                throw new InvalidOperationException("An attempt was made to interleave two lists of nodes that han an unequal number of elements.  This is invalid.");
+            }
+
+            var nodes = new List<EliminationNode>();
+
+            for (int i = 0; i < nodeListA.Count; i++)
+            {
+                nodes.Add(nodeListA[i]);
+                nodes.Add(nodeListB[i]);
+            }
+
+            return nodes;
+        }
+
+        private List<EliminationNode> BuildLoserNodes(IEnumerable<EliminationDecider> deciders)
+        {
+            var nodes = new List<EliminationNode>();
+
+            foreach (var d in deciders)
+            {
+                var l = new LoserNode(d);
+                d.AddSecondaryParent(l);
+
+                nodes.Add(l);
+            }
+
+            return nodes;
+        }
+
+        private List<EliminationNode> SimplifyNodes(IList<EliminationNode> loserNodes)
+        {
+            var count = loserNodes.Count();
+
+            if (count % 2 != 0)
+            {
+                throw new InvalidOperationException("An attempt was made to simplify a list of nodes where there was an odd number of elements.  This is invalid.");
+            }
+
+            var nodes = new List<EliminationNode>();
+
+            for (int i = 0; i < count; i += 2)
+            {
+                var nodeA = loserNodes[i];
+                var nodeB = loserNodes[i+1];
+
+                nodes.Add(MakeSiblings(nodeA, nodeB));
+            }
+
+            return nodes;
         }
 
         private bool ChildAMatches(ContinuationDecider decider, long teamId)

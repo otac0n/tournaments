@@ -177,7 +177,55 @@ namespace Tournaments.Standard
                 throw new ArgumentNullException("pairing");
             }
 
-            throw new NotImplementedException();
+            if (this.Locked)
+            {
+                // If we (and, all of our decentants) are decided, return false, indicating that no node below us is in a state that needs a score.
+                return false;
+            }
+
+            if (pairing.TeamScores.Count != 2 || pairing.TeamScores[0] == null || pairing.TeamScores[1] == null || pairing.TeamScores[0].Team == null || pairing.TeamScores[1].Team == null)
+            {
+                // If the pairing did not contain exactly two teams, or if either of the teams passed was null.
+                throw new ArgumentException("A bye was passed as a pairing.", "pairing");
+            }
+
+            if (this.nodeA.IsDecided && this.nodeB.IsDecided && !(this.nodeA.Score != null || this.nodeB.Score != null))
+            {
+                // If our component nodes have played out, but we haven't
+                var teamA = pairing.TeamScores[0].Team;
+                var scoreA = pairing.TeamScores[0].Score;
+                var teamB = pairing.TeamScores[1].Team;
+                var scoreB = pairing.TeamScores[1].Score;
+
+                if (this.nodeA.Team.TeamId == teamB.TeamId && this.nodeB.Team.TeamId == teamA.TeamId)
+                {
+                    // If the order of the pairing is reversed, we will normalize the pairing to us.
+                    var teamSwap = teamA;
+                    teamB = teamA;
+                    teamA = teamSwap;
+
+                    var scoreSwap = scoreA;
+                    scoreB = scoreA;
+                    scoreA = scoreSwap;
+                }
+
+                if (this.nodeA.Team.TeamId == teamA.TeamId && this.nodeB.Team.TeamId == teamB.TeamId)
+                {
+                    // If we are a match, assign the scores.
+                    this.nodeA.Score = scoreA;
+                    this.nodeB.Score = scoreB;
+                    this.Lock();
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                return (!this.nodeA.IsDecided && this.nodeA.ApplyPairing(pairing)) || (!this.nodeB.IsDecided && this.nodeB.ApplyPairing(pairing));
+            }
         }
 
         public override IEnumerable<TournamentPairing> FindUndecided()
@@ -186,16 +234,18 @@ namespace Tournaments.Standard
             {
                 yield break;
             }
-            else if (this.nodeA.IsDecided && this.nodeB.IsDecided && (this.nodeA.Score != null || this.nodeB.Score != null))
-            {
-                // TODO: This could be an issue if the pairing has already been built, but came in with null scores.
-                yield break;
-            }
             else if (this.nodeA.IsDecided && this.nodeB.IsDecided)
             {
-                yield return new TournamentPairing(
-                        new TournamentTeamScore(this.nodeA.Team, null),
-                        new TournamentTeamScore(this.nodeB.Team, null));
+                if (this.Locked)
+                {
+                    yield break;
+                }
+                else
+                {
+                    yield return new TournamentPairing(
+                            new TournamentTeamScore(this.nodeA.Team, null),
+                            new TournamentTeamScore(this.nodeB.Team, null));
+                }
             }
             else
             {
@@ -209,7 +259,7 @@ namespace Tournaments.Standard
 
                 if (!this.nodeB.IsDecided)
                 {
-                    foreach (var undecided in this.nodeA.FindUndecided())
+                    foreach (var undecided in this.nodeB.FindUndecided())
                     {
                         yield return undecided;
                     }

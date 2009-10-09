@@ -40,6 +40,14 @@ namespace Tournaments.Standard
         private EliminationNode primaryParent = null;
         protected List<EliminationNode> secondaryParents = new List<EliminationNode>();
 
+        public void AddSecondaryParent(EliminationNode secondaryParent)
+        {
+            if(secondaryParent != null && !this.secondaryParents.Contains(secondaryParent))
+            {
+                this.secondaryParents.Add(secondaryParent);
+            }
+        }
+
         public EliminationNode PrimaryParent
         {
             get
