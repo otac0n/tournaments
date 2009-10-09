@@ -33,6 +33,7 @@ namespace Tournaments.Standard
     using System.Linq;
     using System.Text;
     using System.Drawing;
+    using Tournaments.Graphics;
 
     public class ByeDecider : EliminationDecider
     {
@@ -61,7 +62,7 @@ namespace Tournaments.Standard
 
         public override NodeMeasurement MeasureWinner(Tournaments.Graphics.IGraphics g, TournamentNameTable names, float textHeight, Score score)
         {
-            return this.MeasureTextBox(textHeight);
+            return this.MeasureTextBox(g, textHeight, "bye", score);
         }
 
         public override NodeMeasurement MeasureLoser(Tournaments.Graphics.IGraphics g, TournamentNameTable names, float textHeight, Score score)
@@ -69,12 +70,12 @@ namespace Tournaments.Standard
             throw new InvalidOperationException("Cannot determine a loser from a bye entry.");
         }
 
-        public override void RenderWinner(Tournaments.Graphics.IGraphics g, TournamentNameTable names, RectangleF region, float textHeight, Score score)
+        public override void RenderWinner(IGraphics g, TournamentNameTable names, float x, float y, float textHeight, Score score)
         {
-            this.RenderTextBox(g, region, textHeight, "bye", score);
+            this.RenderTextBox(g, x, y, textHeight, "bye", score);
         }
 
-        public override void RenderLoser(Tournaments.Graphics.IGraphics g, TournamentNameTable names, RectangleF region, float textHeight, Score score)
+        public override void RenderLoser(IGraphics g, TournamentNameTable names, float x, float y, float textHeight, Score score)
         {
             throw new InvalidOperationException("Cannot determine a loser from a bye entry.");
         }

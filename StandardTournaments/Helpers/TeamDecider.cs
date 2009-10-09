@@ -74,7 +74,7 @@ namespace Tournaments.Standard
 
         public override NodeMeasurement MeasureWinner(IGraphics g, TournamentNameTable names, float textHeight, Score score)
         {
-            return this.MeasureTextBox(textHeight);
+            return this.MeasureTextBox(g, textHeight, names[this.team.TeamId], score);
         }
 
         public override NodeMeasurement MeasureLoser(IGraphics g, TournamentNameTable names, float textHeight, Score score)
@@ -82,12 +82,12 @@ namespace Tournaments.Standard
             throw new InvalidOperationException("Cannot determine a loser from an individual team entry.");
         }
 
-        public override void RenderWinner(IGraphics g, TournamentNameTable names, RectangleF region, float textHeight, Score score)
+        public override void RenderWinner(IGraphics g, TournamentNameTable names, float x, float y, float textHeight, Score score)
         {
-            this.RenderTextBox(g, region, textHeight, names[this.team.TeamId], score);
+            this.RenderTextBox(g, x, y, textHeight, names[this.team.TeamId], score);
         }
 
-        public override void RenderLoser(IGraphics g, TournamentNameTable names, RectangleF region, float textHeight, Score score)
+        public override void RenderLoser(IGraphics g, TournamentNameTable names, float x, float y, float textHeight, Score score)
         {
             throw new InvalidOperationException("Cannot determine a loser from an individual team entry.");
         }

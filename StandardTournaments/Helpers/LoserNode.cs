@@ -54,9 +54,9 @@ namespace Tournaments.Standard
             return this.decider.MeasureLoser(g, names, textHeight, this.Score);
         }
 
-        public override void Render(Tournaments.Graphics.IGraphics g, TournamentNameTable names, RectangleF region, float textHeight)
+        public override void Render(Tournaments.Graphics.IGraphics g, TournamentNameTable names, float x, float y, float textHeight)
         {
-            this.decider.RenderLoser(g, names, region, textHeight, this.Score);
+            this.decider.RenderLoser(g, names, x, y, textHeight, this.Score);
         }
 
         public override bool ApplyPairing(TournamentPairing pairing)

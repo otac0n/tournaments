@@ -126,7 +126,21 @@ namespace Tournaments.Standard
                     this.previousWinnerNode,
                     this.stayNode);
 
-                var t = this.MeasureTextBox(textHeight);
+                string teamName = "";
+                if (this.IsDecided)
+                {
+                    var winner = this.GetWinner();
+                    if (winner != null)
+                    {
+                        teamName = names[winner.TeamId];
+                    }
+                    else
+                    {
+                        teamName = "bye";
+                    }
+                }
+
+                var t = this.MeasureTextBox(g, textHeight, teamName, score);
 
                 return new NodeMeasurement(m.Width + t.Width, m.Height, m.CenterLine);
             }
@@ -137,16 +151,15 @@ namespace Tournaments.Standard
             throw new InvalidOperationException("Rendering the loser node of a stay decider is invalid.");
         }
 
-        public override void RenderWinner(IGraphics g, TournamentNameTable names, RectangleF region, float textHeight, Score score)
+        public override void RenderWinner(IGraphics g, TournamentNameTable names, float x, float y, float textHeight, Score score)
         {
             if (!(this.previousWinnerNode.IsDecided && this.stayNode.IsDecided) || (this.stayNode.Team == null || this.previousWinnerNode.Team == null) || this.previousWinnerNode.Team.TeamId == this.stayNode.Team.TeamId)
             {
-                this.previousWinnerNode.Render(g, names, region, textHeight);
+                this.previousWinnerNode.Render(g, names, x, y, textHeight);
             }
             else
             {
                 var m = this.MeasureWinner(g, names, textHeight, score);
-                var r = this.MeasureTextBox(textHeight);
 
                 string teamName = "";
                 if (this.IsDecided)
@@ -162,14 +175,16 @@ namespace Tournaments.Standard
                     }
                 }
 
-                this.RenderTextBox(g, new RectangleF(new PointF(region.X + m.Width - r.Width, region.Y + m.CenterLine - r.CenterLine), new SizeF(r.Width, r.Height)), textHeight, teamName, score);
-                this.RenderTree(g, names, new RectangleF(region.Location, new SizeF(region.Width - r.Width, region.Height)), textHeight,
+                var r = this.MeasureTextBox(g, textHeight, teamName, score);
+
+                this.RenderTextBox(g, x + m.Width - r.Width, y + m.CenterLine - r.CenterLine, textHeight, teamName, score);
+                this.RenderTree(g, names, x, y, textHeight,
                     this.previousWinnerNode,
                     this.stayNode);
             }
         }
 
-        public override void RenderLoser(IGraphics g, TournamentNameTable names, RectangleF region, float textHeight, Score score)
+        public override void RenderLoser(IGraphics g, TournamentNameTable names, float x, float y, float textHeight, Score score)
         {
             throw new InvalidOperationException("Rendering the loser node of a stay decider is invalid.");
         }

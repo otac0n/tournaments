@@ -126,10 +126,10 @@ namespace Tournaments.Standard
 
         public abstract NodeMeasurement MeasureWinner(IGraphics g, TournamentNameTable names, float textHeight, Score score);
         public abstract NodeMeasurement MeasureLoser(IGraphics g, TournamentNameTable names, float textHeight, Score score);
-        public abstract void RenderWinner(IGraphics g, TournamentNameTable names, RectangleF region, float textHeight, Score score);
-        public abstract void RenderLoser(IGraphics g, TournamentNameTable names, RectangleF region, float textHeight, Score score);
+        public abstract void RenderWinner(IGraphics g, TournamentNameTable names, float x, float y, float textHeight, Score score);
+        public abstract void RenderLoser(IGraphics g, TournamentNameTable names, float x, float y, float textHeight, Score score);
 
-        private const float MinBracketWidth = 120;
+        private const float MinBracketWidth = 100;
         private const float TextYOffset = 3;
         private const float TextXOffset = 3;
         private Brush UserboxBrush = new SolidBrush(Color.FromArgb(220, 220, 220));
@@ -137,28 +137,54 @@ namespace Tournaments.Standard
         private Brush UserboxFontBrush = new SolidBrush(Color.Black);
         private const float BracketPreIndent = 10;
         private const float BracketPostIndent = 10;
-        private const float BracketVSpacing = 25;
+        private const float BracketVSpacing = 15;
         private Pen BracketPen = new Pen(Color.Black, 1.0f);
 
-        protected NodeMeasurement MeasureTextBox(float textHeight)
+        protected NodeMeasurement MeasureTextBox(IGraphics g, float textHeight, string teamName, Score score)
         {
+            var scoreString = score == null ? "" : score.ToString();
+            return this.MeasureTextBox(g, textHeight, teamName, scoreString);
+        }
+
+        protected NodeMeasurement MeasureTextBox(IGraphics g, float textHeight, string teamName, string score)
+        {
+            float width = 0.0f;
+            if (!string.IsNullOrEmpty(teamName))
+            {
+                width += g.MeasureString(teamName, UserboxFont).Width;
+            }
+            if (!string.IsNullOrEmpty(score))
+            {
+                width += g.MeasureString(score, UserboxFont).Width;
+            }
+            if (!string.IsNullOrEmpty(teamName) && !string.IsNullOrEmpty(score))
+            {
+                width += TextXOffset;
+            }
+
+            width = Math.Max(MinBracketWidth, width + TextXOffset * 2);
+
             return new NodeMeasurement(
-                MinBracketWidth,
+                width,
                 textHeight,
                 textHeight / 2);
         }
 
-        protected void RenderTextBox(IGraphics g, RectangleF region, float textHeight, string teamName, Score score)
+        protected void RenderTextBox(IGraphics g, float x, float y, float textHeight, string teamName, Score score)
         {
+            var scoreString = score == null ? "" : score.ToString();
+            this.RenderTextBox(g, x, y, textHeight, teamName, scoreString);
+        }
+
+        protected void RenderTextBox(IGraphics g, float x, float y, float textHeight, string teamName, string score)
+        {
+            var size = this.MeasureTextBox(g, textHeight, teamName, score);
+
             g.FillRectangle(
                 UserboxBrush,
                 new RectangleF(
-                    new PointF(
-                        region.X,
-                        region.Y),
-                    new SizeF(
-                        MinBracketWidth,
-                        textHeight)));
+                    new PointF(x, y),
+                    new SizeF(size.Width, size.Height)));
 
             if (!string.IsNullOrEmpty(teamName))
             {
@@ -167,22 +193,21 @@ namespace Tournaments.Standard
                     UserboxFont,
                     UserboxFontBrush,
                     new PointF(
-                        region.X + (region.Width - MinBracketWidth) + TextXOffset,
-                        region.Y + TextYOffset));
+                        x + TextXOffset,
+                        y + TextYOffset));
             }
 
-            if (score != null)
+            if (!string.IsNullOrEmpty(score))
             {
-                var scoreString = score.ToString();
-                var scoreWidth = g.MeasureString(scoreString, UserboxFont).Width;
+                var scoreWidth = g.MeasureString(score, UserboxFont).Width;
 
                 g.DrawString(
-                    scoreString,
+                    score,
                     UserboxFont,
                     UserboxFontBrush,
                     new PointF(
-                        region.X + region.Width - scoreWidth - TextXOffset,
-                        region.Y + TextYOffset));
+                        x + size.Width - scoreWidth - TextXOffset,
+                        y + TextYOffset));
             }
         }
 
@@ -219,7 +244,7 @@ namespace Tournaments.Standard
         }
 
 
-        protected void RenderTree(IGraphics g, TournamentNameTable names, RectangleF region, float textHeight, EliminationNode nodeA, EliminationNode nodeB)
+        protected void RenderTree(IGraphics g, TournamentNameTable names, float x, float y, float textHeight, EliminationNode nodeA, EliminationNode nodeB)
         {
             var m = this.MeasureTree(g, names, textHeight, nodeA, nodeB);
             var mA = nodeA == null ? null : nodeA.Measure(g, names, textHeight);
@@ -235,54 +260,54 @@ namespace Tournaments.Standard
                 g.DrawLine(
                     BracketPen,
                     new PointF(
-                        region.X + (m.Width),
-                        region.Y + m.CenterLine),
+                        x + (m.Width - BracketPreIndent),
+                        y + m.CenterLine),
                     new PointF(
-                        region.X + (m.Width - BracketPreIndent),
-                        region.Y + m.CenterLine));
+                        x + m.Width,
+                        y + m.CenterLine));
 
                 // V-Line
                 g.DrawLine(
                     BracketPen,
                     new PointF(
-                        region.X + (m.Width - BracketPreIndent),
-                        region.Y + mA.CenterLine),
+                        x + (m.Width - BracketPreIndent),
+                        y + mA.CenterLine),
                     new PointF(
-                        region.X + (m.Width - BracketPreIndent),
-                        region.Y + mA.Height + BracketVSpacing + mB.CenterLine));
+                        x + (m.Width - BracketPreIndent),
+                        y + mA.Height + BracketVSpacing + mB.CenterLine));
 
                 // Post-Line-A
                 g.DrawLine(
                     BracketPen,
                     new PointF(
-                        region.X + (m.Width - BracketPreIndent - BracketPostIndent),
-                        region.Y + mA.CenterLine),
+                        x + (m.Width - BracketPreIndent - BracketPostIndent),
+                        y + mA.CenterLine),
                     new PointF(
-                        region.X + (m.Width - BracketPreIndent),
-                        region.Y + mA.CenterLine));
+                        x + (m.Width - BracketPreIndent),
+                        y + mA.CenterLine));
 
                 // Post-Line-B
                 g.DrawLine(
                     BracketPen,
                     new PointF(
-                        region.X + (m.Width - BracketPreIndent - BracketPostIndent),
-                        region.Y + mA.Height + BracketVSpacing + mB.CenterLine),
+                        x + (m.Width - BracketPreIndent - BracketPostIndent),
+                        y + mA.Height + BracketVSpacing + mB.CenterLine),
                     new PointF(
-                        region.X + (m.Width - BracketPreIndent),
-                        region.Y + mA.Height + BracketVSpacing + mB.CenterLine));
+                        x + (m.Width - BracketPreIndent),
+                        y + mA.Height + BracketVSpacing + mB.CenterLine));
 
-                nodeA.Render(g, names, new RectangleF(new PointF(region.X + (region.Size.Width - (mA.Width + BracketPreIndent + BracketPostIndent)), region.Y), new SizeF(mA.Width, mA.Height)), textHeight);
-                nodeB.Render(g, names, new RectangleF(new PointF(region.X + (region.Size.Width - (mB.Width + BracketPreIndent + BracketPostIndent)), region.Y + mA.Height + BracketVSpacing), new SizeF(mB.Width, mB.Height)), textHeight);
+                nodeA.Render(g, names, x + (m.Width - (mA.Width + BracketPreIndent + BracketPostIndent)), y, textHeight);
+                nodeB.Render(g, names, x + (m.Width - (mB.Width + BracketPreIndent + BracketPostIndent)), y + mA.Height + BracketVSpacing, textHeight);
             }
             else if (mA != null)
             {
                 // TODO: Render Lines?
-                nodeA.Render(g, names, region, textHeight);
+                nodeA.Render(g, names, x, y, textHeight);
             }
             else
             {
                 // TODO: Render Lines?
-                nodeB.Render(g, names, region, textHeight);
+                nodeB.Render(g, names, x, y, textHeight);
             }
         }
     }

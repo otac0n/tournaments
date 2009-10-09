@@ -142,7 +142,7 @@ namespace Tournaments.Standard
 
         public abstract NodeMeasurement Measure(IGraphics g, TournamentNameTable names, float textHeight);
 
-        public abstract void Render(IGraphics g, TournamentNameTable names, RectangleF region, float textHeight);
+        public abstract void Render(IGraphics g, TournamentNameTable names, float x, float y, float textHeight);
 
         public abstract bool ApplyPairing(TournamentPairing pairing);
         public abstract IEnumerable<TournamentPairing> FindUndecided();

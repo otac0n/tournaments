@@ -218,21 +218,48 @@ namespace Tournaments.Standard
                     this.nodeA,
                     this.nodeB);
 
-                var t = this.MeasureTextBox(textHeight);
+                string teamName = "";
+                if (this.IsDecided)
+                {
+                    var winner = this.GetWinner();
+                    if (winner != null)
+                    {
+                        teamName = names[winner.TeamId];
+                    }
+                    else
+                    {
+                        teamName = "bye";
+                    }
+                }
+
+                var t = this.MeasureTextBox(g, textHeight, teamName, score);
 
                 return new NodeMeasurement(m.Width + t.Width, m.Height, m.CenterLine);
             }
         }
 
-        public override NodeMeasurement MeasureLoser(Tournaments.Graphics.IGraphics g, TournamentNameTable names, float textHeight, Score score)
+        public override NodeMeasurement MeasureLoser(IGraphics g, TournamentNameTable names, float textHeight, Score score)
         {
-            return this.MeasureTextBox(textHeight);
+            string teamName = "";
+            if (this.IsDecided)
+            {
+                var winner = this.GetLoser();
+                if (winner != null)
+                {
+                    teamName = names[winner.TeamId];
+                }
+                else
+                {
+                    teamName = "bye";
+                }
+            }
+
+            return this.MeasureTextBox(g, textHeight, teamName, score);
         }
 
-        public override void RenderWinner(IGraphics g, TournamentNameTable names, RectangleF region, float textHeight, Score score)
+        public override void RenderWinner(IGraphics g, TournamentNameTable names, float x, float y, float textHeight, Score score)
         {
             var m = this.MeasureWinner(g, names, textHeight, score);
-            var r = this.MeasureTextBox(textHeight);
 
             string teamName = "";
             if (this.IsDecided)
@@ -248,13 +275,15 @@ namespace Tournaments.Standard
                 }
             }
 
-            this.RenderTextBox(g, new RectangleF(new PointF(region.X + m.Width - r.Width, region.Y + m.CenterLine - r.CenterLine), new SizeF(r.Width, r.Height)), textHeight, teamName, score);
-            this.RenderTree(g, names, new RectangleF(region.Location, new SizeF(region.Width - r.Width, region.Height)), textHeight,
+            var r = this.MeasureTextBox(g, textHeight, teamName, score);
+
+            this.RenderTextBox(g, x + m.Width - r.Width, y + m.CenterLine - r.CenterLine, textHeight, teamName, score);
+            this.RenderTree(g, names, x, y, textHeight,
                 this.nodeA,
                 this.nodeB);
         }
 
-        public override void RenderLoser(IGraphics g, TournamentNameTable names, RectangleF region, float textHeight, Score score)
+        public override void RenderLoser(IGraphics g, TournamentNameTable names, float x, float y, float textHeight, Score score)
         {
             string teamName = "";
             if (this.IsDecided)
@@ -270,7 +299,7 @@ namespace Tournaments.Standard
                 }
             }
 
-            this.RenderTextBox(g, region, textHeight, teamName, score);
+            this.RenderTextBox(g, x, y, textHeight, teamName, score);
         }
 
         public override bool ApplyPairing(TournamentPairing pairing)

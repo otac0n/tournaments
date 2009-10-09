@@ -73,7 +73,21 @@ namespace Tournaments.Standard
 
         public override NodeMeasurement MeasureWinner(IGraphics g, TournamentNameTable names, float textHeight, Score score)
         {
-            return this.MeasureTextBox(textHeight);
+            string teamName = "";
+            if (this.IsDecided)
+            {
+                var winner = this.GetWinner();
+                if (winner != null)
+                {
+                    teamName = names[winner.TeamId];
+                }
+                else
+                {
+                    teamName = "bye";
+                }
+            }
+
+            return this.MeasureTextBox(g, textHeight, teamName, score);
         }
 
         public override NodeMeasurement MeasureLoser(IGraphics g, TournamentNameTable names, float textHeight, Score score)
@@ -81,18 +95,26 @@ namespace Tournaments.Standard
             throw new InvalidOperationException("Cannot determine a loser from a pass through.");
         }
 
-        public override void RenderWinner(IGraphics g, TournamentNameTable names, RectangleF region, float textHeight, Score score)
+        public override void RenderWinner(IGraphics g, TournamentNameTable names, float x, float y, float textHeight, Score score)
         {
             string teamName = "";
             if (this.IsDecided)
             {
-                teamName = names[this.GetWinner().TeamId];
+                var winner = this.GetWinner();
+                if (winner != null)
+                {
+                    teamName = names[winner.TeamId];
+                }
+                else
+                {
+                    teamName = "bye";
+                }
             }
 
-            this.RenderTextBox(g, region, textHeight, teamName, score);
+            this.RenderTextBox(g, x, y, textHeight, teamName, score);
         }
 
-        public override void RenderLoser(IGraphics g, TournamentNameTable names, RectangleF region, float textHeight, Score score)
+        public override void RenderLoser(IGraphics g, TournamentNameTable names, float x, float y, float textHeight, Score score)
         {
             throw new InvalidOperationException("Cannot determine a loser from a pass through.");
         }
