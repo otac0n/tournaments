@@ -31,6 +31,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Diagnostics;
+using System.Drawing;
 
 namespace Tournaments.Standard
 {
@@ -55,9 +56,9 @@ namespace Tournaments.Standard
             return this.decider.MeasureWinner(g, names, textHeight, this.Score);
         }
 
-        public override void Render(Tournaments.Graphics.IGraphics g, TournamentNameTable names, float x, float y, float textHeight)
+        public override void Render(Tournaments.Graphics.IGraphics g, TournamentNameTable names, RectangleF region, float textHeight)
         {
-            this.decider.RenderWinner(g, names, x, y, textHeight, this.Score);
+            this.decider.RenderWinner(g, names, region, textHeight, this.Score);
         }
 
         public override bool ApplyPairing(TournamentPairing pairing)

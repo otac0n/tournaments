@@ -584,8 +584,9 @@ namespace Tournaments.Standard
             }
 
             var textHeight = GetTextHeight(graphics);
+            var size = this.Measure(graphics, teamNames);
 
-            this.loadedRootNode.Render(graphics, teamNames, 5, 5, textHeight);
+            this.loadedRootNode.Render(graphics, teamNames, new RectangleF(new PointF(0, 0), size), textHeight);
         }
 
         private const float TextYOffset = 3.0f;

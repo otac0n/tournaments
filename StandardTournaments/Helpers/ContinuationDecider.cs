@@ -30,6 +30,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Drawing;
+using Tournaments.Graphics;
 
 namespace Tournaments.Standard
 {
@@ -195,13 +197,31 @@ namespace Tournaments.Standard
 
         public override NodeMeasurement MeasureWinner(Tournaments.Graphics.IGraphics g, TournamentNameTable names, float textHeight, Score score)
         {
-            var m = this.MeasureTree(g, names, textHeight,
-                this.nodeA,
-                this.nodeB);
+            var mA = this.nodeA.Measure(g, names, textHeight);
+            var mB = this.nodeB.Measure(g, names, textHeight);
 
-            var t = this.MeasureTextBox(textHeight);
+            if (mA == null && mB == null)
+            {
+                return null;
+            }
+            else if (mB == null)
+            {
+                return mA;
+            }
+            else if (mA == null)
+            {
+                return mB;
+            }
+            else
+            {
+                var m = this.MeasureTree(g, names, textHeight,
+                    this.nodeA,
+                    this.nodeB);
 
-            return new NodeMeasurement(m.Width + t.Width, m.Height, m.CenterLine);
+                var t = this.MeasureTextBox(textHeight);
+
+                return new NodeMeasurement(m.Width + t.Width, m.Height, m.CenterLine);
+            }
         }
 
         public override NodeMeasurement MeasureLoser(Tournaments.Graphics.IGraphics g, TournamentNameTable names, float textHeight, Score score)
@@ -209,9 +229,10 @@ namespace Tournaments.Standard
             return this.MeasureTextBox(textHeight);
         }
 
-        public override void RenderWinner(Tournaments.Graphics.IGraphics g, TournamentNameTable names, float x, float y, float textHeight, Score score)
+        public override void RenderWinner(IGraphics g, TournamentNameTable names, RectangleF region, float textHeight, Score score)
         {
             var m = this.MeasureWinner(g, names, textHeight, score);
+            var r = this.MeasureTextBox(textHeight);
 
             string teamName = "";
             if (this.IsDecided)
@@ -227,16 +248,14 @@ namespace Tournaments.Standard
                 }
             }
 
-            this.RenderTextBox(g, m, x, y, textHeight, teamName, score);
-            this.RenderTree(g, names, x, y, textHeight,
+            this.RenderTextBox(g, new RectangleF(new PointF(region.X + m.Width - r.Width, region.Y + m.CenterLine - r.CenterLine), new SizeF(r.Width, r.Height)), textHeight, teamName, score);
+            this.RenderTree(g, names, new RectangleF(region.Location, new SizeF(region.Width - r.Width, region.Height)), textHeight,
                 this.nodeA,
                 this.nodeB);
         }
 
-        public override void RenderLoser(Tournaments.Graphics.IGraphics g, TournamentNameTable names, float x, float y, float textHeight, Score score)
+        public override void RenderLoser(IGraphics g, TournamentNameTable names, RectangleF region, float textHeight, Score score)
         {
-            var m = this.MeasureLoser(g, names, textHeight, score);
-
             string teamName = "";
             if (this.IsDecided)
             {
@@ -251,7 +270,7 @@ namespace Tournaments.Standard
                 }
             }
 
-            this.RenderTextBox(g, m, x, y, textHeight, teamName, score);
+            this.RenderTextBox(g, region, textHeight, teamName, score);
         }
 
         public override bool ApplyPairing(TournamentPairing pairing)

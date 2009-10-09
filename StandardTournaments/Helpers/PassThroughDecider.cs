@@ -31,6 +31,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Tournaments.Graphics;
+using System.Drawing;
 
 namespace Tournaments.Standard
 {
@@ -80,20 +81,18 @@ namespace Tournaments.Standard
             throw new InvalidOperationException("Cannot determine a loser from a pass through.");
         }
 
-        public override void RenderWinner(IGraphics g, TournamentNameTable names, float x, float y, float textHeight, Score score)
+        public override void RenderWinner(IGraphics g, TournamentNameTable names, RectangleF region, float textHeight, Score score)
         {
-            var m = this.MeasureWinner(g, names, textHeight, score);
-
             string teamName = "";
             if (this.IsDecided)
             {
                 teamName = names[this.GetWinner().TeamId];
             }
 
-            this.RenderTextBox(g, m, x, y, textHeight, teamName, score);
+            this.RenderTextBox(g, region, textHeight, teamName, score);
         }
 
-        public override void RenderLoser(IGraphics g, TournamentNameTable names, float x, float y, float textHeight, Score score)
+        public override void RenderLoser(IGraphics g, TournamentNameTable names, RectangleF region, float textHeight, Score score)
         {
             throw new InvalidOperationException("Cannot determine a loser from a pass through.");
         }
