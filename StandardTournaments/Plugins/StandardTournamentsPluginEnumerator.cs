@@ -30,6 +30,7 @@ namespace Tournaments.Standard
     using System;
     using System.Collections.Generic;
     using Tournaments.Plugins;
+    using Tournaments.Standard.Plugins;
 
     /// <summary>
     /// Enumerates the plugins available in this assembly.
@@ -46,8 +47,9 @@ namespace Tournaments.Standard
 
             yield return new PairingsGeneratorFactory<BoilOffPairingsGenerator>();
 
-            yield return new PairingsGeneratorFactory<SingleEliminationTournament>();
-            yield return new TournamentVisualizerFactory<SingleEliminationTournament>();
+            yield return new EliminationTournamentFactory(1);
+
+            yield return new EliminationTournamentFactory(2);
 
             yield break;
         }

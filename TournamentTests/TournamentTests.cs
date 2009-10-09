@@ -248,7 +248,7 @@ namespace TournamentTests
         [TestMethod]
         public void SingleEliminationThrowsExceptionOnNullParameters()
         {
-            IPairingsGenerator pg = new SingleEliminationTournament();
+            IPairingsGenerator pg = new EliminationTournament(1);
 
             try
             {
@@ -263,7 +263,7 @@ namespace TournamentTests
         [TestMethod]
         public void SingleEliminationLastPersonNeverGetsABye()
         {
-            IPairingsGenerator pg = new SingleEliminationTournament();
+            IPairingsGenerator pg = new EliminationTournament(1);
 
             for (int i = 2; i <= 33; i++)
             {
@@ -294,7 +294,7 @@ namespace TournamentTests
         [TestMethod]
         public void SingleEliminationTieDisallowed()
         {
-            IPairingsGenerator pg = new SingleEliminationTournament();
+            IPairingsGenerator pg = new EliminationTournament(1);
 
             List<TournamentTeam> teams = new List<TournamentTeam>(CreateTeams(2));
             List<TournamentRound> rounds = new List<TournamentRound>();
@@ -319,7 +319,7 @@ namespace TournamentTests
         [TestMethod]
         public void SingleEliminationHandlesManyCompetitorsWell()
         {
-            IPairingsGenerator pg = new SingleEliminationTournament();
+            IPairingsGenerator pg = new EliminationTournament(1);
 
             for (int i = 30; i <= 40; i++)
             {
@@ -387,7 +387,7 @@ namespace TournamentTests
 
                 var rounds = (new[] { round1, round2, round3, round4 }).ToList();
 
-                IPairingsGenerator pg = new SingleEliminationTournament();
+                IPairingsGenerator pg = new EliminationTournament(1);
 
                 pg.LoadState(teams, rounds);
                 Assert.IsNull(pg.CreateNextRound(null));
@@ -430,7 +430,7 @@ namespace TournamentTests
 
                 var rounds = (new[] { round1, round2, round3, round4 }).ToList();
 
-                IPairingsGenerator pg = new SingleEliminationTournament();
+                IPairingsGenerator pg = new EliminationTournament(1);
 
                 pg.LoadState(teams, rounds);
                 Assert.IsNull(pg.CreateNextRound(null));

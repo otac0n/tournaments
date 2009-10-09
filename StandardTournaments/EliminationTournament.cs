@@ -38,17 +38,29 @@ namespace Tournaments.Standard
     /// <summary>
     /// Implements a Singe Elmination Tournament
     /// </summary>
-    public class SingleEliminationTournament : IPairingsGenerator, ITournamentVisualizer
+    public class EliminationTournament : IPairingsGenerator, ITournamentVisualizer
     {
         private List<TournamentTeam> loadedTeams;
         private EliminationNode loadedRootNode;
         private PairingsGeneratorState state = PairingsGeneratorState.NotInitialized;
 
+        int eliminations;
+
+        public EliminationTournament(int eliminations)
+        {
+            if (eliminations <= 0)
+            {
+                throw new ArgumentOutOfRangeException("eliminations");
+            }
+
+            this.eliminations = eliminations;
+        }
+
         public string Name
         {
             get
             {
-                return "Single-elimination";
+                return GetTupleName(this.eliminations) + "-elimination";
             }
         }
 
@@ -479,6 +491,26 @@ namespace Tournaments.Standard
         private float GetTextHeight(IGraphics g)
         {
             return Math.Max(g.MeasureString("abfgijlpqyAIJQ170,`'\"", UserboxFont).Height + TextYOffset * 2, MinTextHeight);
+        }
+
+        internal static string GetTupleName(int eliminations)
+        {
+            if (eliminations == 1)
+            {
+                return "Single";
+            }
+            else if (eliminations == 2)
+            {
+                return "Double";
+            }
+            else if (eliminations == 3)
+            {
+                return "Triple";
+            }
+            else
+            {
+                return eliminations.ToString();
+            }
         }
     }
 }

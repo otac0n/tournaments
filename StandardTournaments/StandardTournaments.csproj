@@ -57,9 +57,10 @@
     <Compile Include="Helpers\TeamDecider.cs" />
     <Compile Include="Helpers\TeamRanking.cs" />
     <Compile Include="Helpers\WinnerNode.cs" />
+    <Compile Include="Plugins\EliminationTournamentFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RoundRobinPairingsGenerator.cs" />
-    <Compile Include="SingleEliminationTournament.cs" />
+    <Compile Include="EliminationTournament.cs" />
     <Compile Include="Plugins\StandardTournamentsPluginEnumerator.cs" />
     <Compile Include="SystemGraphics.cs" />
   </ItemGroup>
