@@ -243,14 +243,14 @@ namespace Tournaments.Standard
             string teamName = "";
             if (this.IsDecided)
             {
-                var winner = this.GetLoser();
-                if (winner != null)
+                var loser = this.GetLoser();
+                if (loser != null)
                 {
-                    teamName = names[winner.TeamId];
+                    teamName = names[loser.TeamId];
                 }
                 else
                 {
-                    teamName = "bye";
+                    return null;
                 }
             }
 
@@ -306,7 +306,7 @@ namespace Tournaments.Standard
                 }
                 else
                 {
-                    teamName = "bye";
+                    return;
                 }
             }
 
