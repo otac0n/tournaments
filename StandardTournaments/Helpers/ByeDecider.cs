@@ -62,7 +62,8 @@ namespace Tournaments.Standard
 
         public override NodeMeasurement MeasureWinner(Tournaments.Graphics.IGraphics g, TournamentNameTable names, float textHeight, Score score)
         {
-            return this.MeasureTextBox(g, textHeight, "bye", score);
+            //return this.MeasureTextBox(g, textHeight, "bye", score);
+            return null;
         }
 
         public override NodeMeasurement MeasureLoser(Tournaments.Graphics.IGraphics g, TournamentNameTable names, float textHeight, Score score)
@@ -72,7 +73,8 @@ namespace Tournaments.Standard
 
         public override void RenderWinner(IGraphics g, TournamentNameTable names, float x, float y, float textHeight, Score score)
         {
-            this.RenderTextBox(g, x, y, textHeight, "bye", score);
+            //this.RenderTextBox(g, x, y, textHeight, "bye", score);
+            return;
         }
 
         public override void RenderLoser(IGraphics g, TournamentNameTable names, float x, float y, float textHeight, Score score)

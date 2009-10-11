@@ -391,16 +391,6 @@ namespace Tournaments.Standard
             return nodes;
         }
 
-        private bool ChildAMatches(ContinuationDecider decider, long teamId)
-        {
-            return decider != null && decider.ChildA != null && decider.ChildA.IsDecided && decider.ChildA.Team != null && decider.ChildA.Team.TeamId == teamId;
-        }
-
-        private bool ChildBMatches(ContinuationDecider decider, long teamId)
-        {
-            return decider != null && decider.ChildB != null && decider.ChildB.IsDecided && decider.ChildB.Team != null && decider.ChildB.Team.TeamId == teamId;
-        }
-
         private EliminationNode MakeSiblings(EliminationNode nodeA, EliminationNode nodeB)
         {
             var oldParent = nodeA.PrimaryParent as ContinuationDecider;
@@ -424,50 +414,6 @@ namespace Tournaments.Standard
             }
 
             return newNode;
-        }
-
-        private static void SwapChildrenAA(ContinuationDecider node1, ContinuationDecider node2)
-        {
-            var temp1 = node1.ChildA;
-            node1.ChildA = null;
-            var temp2 = node2.ChildA;
-            node2.ChildA = null;
-
-            node1.ChildA = temp2;
-            node2.ChildA = temp1;
-        }
-
-        private static void SwapChildrenAB(ContinuationDecider node1, ContinuationDecider node2)
-        {
-            var temp1 = node1.ChildA;
-            node1.ChildA = null;
-            var temp2 = node2.ChildB;
-            node2.ChildB = null;
-
-            node1.ChildA = temp2;
-            node2.ChildB = temp1;
-        }
-
-        private static void SwapChildrenBA(ContinuationDecider node1, ContinuationDecider node2)
-        {
-            var temp1 = node1.ChildB;
-            node1.ChildB = null;
-            var temp2 = node2.ChildA;
-            node2.ChildA = null;
-
-            node1.ChildB = temp2;
-            node2.ChildA = temp1;
-        }
-
-        private static void SwapChildrenBB(ContinuationDecider node1, ContinuationDecider node2)
-        {
-            var temp1 = node1.ChildB;
-            node1.ChildB = null;
-            var temp2 = node2.ChildB;
-            node2.ChildB = null;
-
-            node1.ChildB = temp2;
-            node2.ChildB = temp1;
         }
 
         private static void LockByes(List<EliminationNode> nodes)
@@ -590,8 +536,8 @@ namespace Tournaments.Standard
         }
 
         private const float TextYOffset = 3.0f;
-        private Font UserboxFont = new Font(FontFamily.GenericSansSerif, 10.0f);
-        private const float MinTextHeight = 20.0f;
+        private Font UserboxFont = new Font(FontFamily.GenericSansSerif, 8.0f);
+        private const float MinTextHeight = 15.0f;
 
         private float GetTextHeight(IGraphics g)
         {

@@ -129,11 +129,11 @@ namespace Tournaments.Standard
         public abstract void RenderWinner(IGraphics g, TournamentNameTable names, float x, float y, float textHeight, Score score);
         public abstract void RenderLoser(IGraphics g, TournamentNameTable names, float x, float y, float textHeight, Score score);
 
-        private const float MinBracketWidth = 100;
+        private const float MinBracketWidth = 120;
         private const float TextYOffset = 3;
         private const float TextXOffset = 3;
         private Brush UserboxBrush = new SolidBrush(Color.FromArgb(220, 220, 220));
-        private Font UserboxFont = new Font(FontFamily.GenericSansSerif, 10.0f);
+        private Font UserboxFont = new Font(FontFamily.GenericSansSerif, 8.0f);
         private Brush UserboxFontBrush = new SolidBrush(Color.Black);
         private const float BracketPreIndent = 10;
         private const float BracketPostIndent = 10;
@@ -148,21 +148,26 @@ namespace Tournaments.Standard
 
         protected NodeMeasurement MeasureTextBox(IGraphics g, float textHeight, string teamName, string score)
         {
-            float width = 0.0f;
-            if (!string.IsNullOrEmpty(teamName))
-            {
-                width += g.MeasureString(teamName, UserboxFont).Width;
-            }
+            float minWidth = TextXOffset * 2;
             if (!string.IsNullOrEmpty(score))
             {
-                width += g.MeasureString(score, UserboxFont).Width;
-            }
-            if (!string.IsNullOrEmpty(teamName) && !string.IsNullOrEmpty(score))
-            {
-                width += TextXOffset;
+                minWidth += g.MeasureString(score, UserboxFont).Width + TextXOffset;
             }
 
-            width = Math.Max(MinBracketWidth, width + TextXOffset * 2);
+            int nameLength = teamName.Length;
+            string shortName = teamName;
+            if (!string.IsNullOrEmpty(teamName))
+            {
+                while(nameLength > 1 && g.MeasureString(shortName, UserboxFont).Width + minWidth > MinBracketWidth)
+                {
+                    nameLength--;
+                    shortName = teamName.Substring(0, nameLength) + "...";
+                }
+
+                minWidth += g.MeasureString(shortName, UserboxFont).Width;
+            }
+
+            float width = Math.Max(MinBracketWidth, minWidth);
 
             return new NodeMeasurement(
                 width,
@@ -188,8 +193,27 @@ namespace Tournaments.Standard
 
             if (!string.IsNullOrEmpty(teamName))
             {
+                float minWidth = TextXOffset * 2;
+                if (!string.IsNullOrEmpty(score))
+                {
+                    minWidth += g.MeasureString(score, UserboxFont).Width + TextXOffset;
+                }
+
+                int nameLength = teamName.Length;
+                string shortName = teamName;
+                if (!string.IsNullOrEmpty(teamName))
+                {
+                    while (nameLength > 1 && g.MeasureString(shortName, UserboxFont).Width + minWidth > MinBracketWidth)
+                    {
+                        nameLength--;
+                        shortName = teamName.Substring(0, nameLength) + "...";
+                    }
+
+                    minWidth += g.MeasureString(shortName, UserboxFont).Width;
+                }
+
                 g.DrawString(
-                    teamName,
+                    shortName,
                     UserboxFont,
                     UserboxFontBrush,
                     new PointF(

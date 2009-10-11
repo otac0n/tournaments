@@ -197,6 +197,22 @@ namespace Tournaments.Standard
 
         public override NodeMeasurement MeasureWinner(Tournaments.Graphics.IGraphics g, TournamentNameTable names, float textHeight, Score score)
         {
+            string teamName = "";
+            if (this.IsDecided)
+            {
+                var winner = this.GetWinner();
+                if (winner != null)
+                {
+                    teamName = names[winner.TeamId];
+                }
+                else
+                {
+                    teamName = "bye";
+                }
+            }
+
+            var t = this.MeasureTextBox(g, textHeight, teamName, score);
+
             var mA = this.nodeA.Measure(g, names, textHeight);
             var mB = this.nodeB.Measure(g, names, textHeight);
 
@@ -206,33 +222,17 @@ namespace Tournaments.Standard
             }
             else if (mB == null)
             {
-                return mA;
+                return t;
             }
             else if (mA == null)
             {
-                return mB;
+                return t;
             }
             else
             {
                 var m = this.MeasureTree(g, names, textHeight,
                     this.nodeA,
                     this.nodeB);
-
-                string teamName = "";
-                if (this.IsDecided)
-                {
-                    var winner = this.GetWinner();
-                    if (winner != null)
-                    {
-                        teamName = names[winner.TeamId];
-                    }
-                    else
-                    {
-                        teamName = "bye";
-                    }
-                }
-
-                var t = this.MeasureTextBox(g, textHeight, teamName, score);
 
                 return new NodeMeasurement(m.Width + t.Width, m.Height, m.CenterLine);
             }
@@ -275,12 +275,23 @@ namespace Tournaments.Standard
                 }
             }
 
-            var r = this.MeasureTextBox(g, textHeight, teamName, score);
+            var t = this.MeasureTextBox(g, textHeight, teamName, score);
 
-            this.RenderTextBox(g, x + m.Width - r.Width, y + m.CenterLine - r.CenterLine, textHeight, teamName, score);
-            this.RenderTree(g, names, x, y, textHeight,
-                this.nodeA,
-                this.nodeB);
+            this.RenderTextBox(g, x + m.Width - t.Width, y + m.CenterLine - t.CenterLine, textHeight, teamName, score);
+
+            var mA = this.nodeA.Measure(g, names, textHeight);
+            var mB = this.nodeB.Measure(g, names, textHeight);
+
+            if (mA == null || mB == null)
+            {
+                return;
+            }
+            else
+            {
+                this.RenderTree(g, names, x, y, textHeight,
+                    this.nodeA,
+                    this.nodeB);
+            }
         }
 
         public override void RenderLoser(IGraphics g, TournamentNameTable names, float x, float y, float textHeight, Score score)
