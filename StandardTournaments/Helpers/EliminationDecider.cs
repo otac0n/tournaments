@@ -97,18 +97,11 @@ namespace Tournaments.Standard
         {
             get
             {
-                if (this.primaryParent == null)
-                {
-                    throw new InvalidOperationException("An elimination decider must have a parent EliminationNode.");
-                }
-                else
-                {
-                    return this.locked || this.primaryParent.Locked;
-                }
+                return this.locked;
             }
         }
 
-        protected void Lock()
+        public void Lock()
         {
             this.locked = true;
         }

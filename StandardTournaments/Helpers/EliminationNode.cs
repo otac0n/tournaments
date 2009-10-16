@@ -108,7 +108,7 @@ namespace Tournaments.Standard
         {
             get
             {
-                return this.primaryParent != null && this.primaryParent.Locked;
+                return this.decider.Locked || (this.primaryParent != null && this.primaryParent.Locked);
             }
         }
 

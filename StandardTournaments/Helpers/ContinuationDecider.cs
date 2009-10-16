@@ -326,31 +326,37 @@ namespace Tournaments.Standard
                 return false;
             }
 
-            if (pairing.TeamScores.Count != 2 || pairing.TeamScores[0] == null || pairing.TeamScores[1] == null || pairing.TeamScores[0].Team == null || pairing.TeamScores[1].Team == null)
+            if (!this.nodeA.IsDecided || !this.nodeA.Locked || !this.nodeB.IsDecided || !this.nodeB.Locked)
             {
-                // If the pairing did not contain exactly two teams, or if either of the teams passed was null.
-                throw new ArgumentException("A bye was passed as a pairing.", "pairing");
+                return (!this.nodeA.IsDecided && this.nodeA.ApplyPairing(pairing)) || (!this.nodeB.IsDecided && this.nodeB.ApplyPairing(pairing));
             }
-
-            if (this.nodeA.IsDecided && this.nodeB.IsDecided && !(this.nodeA.Score != null || this.nodeB.Score != null))
+            else
             {
-                // If our component nodes have played out, but we haven't
                 var teamA = pairing.TeamScores[0].Team;
                 var scoreA = pairing.TeamScores[0].Score;
                 var teamB = pairing.TeamScores[1].Team;
                 var scoreB = pairing.TeamScores[1].Score;
 
-                if (this.nodeA.Team.TeamId == teamB.TeamId && this.nodeB.Team.TeamId == teamA.TeamId)
+                if (teamA == null)
                 {
-                    // If the order of the pairing is reversed, we will normalize ourself to the pairing.
-                    var swap = this.nodeA;
-                    this.nodeA = this.nodeB;
-                    this.nodeB = swap;
+                    teamA = teamB;
+                    scoreA = scoreB;
+                    teamB = null;
+                    scoreB = null;
                 }
 
-                if (this.nodeA.Team.TeamId == teamA.TeamId && this.nodeB.Team.TeamId == teamB.TeamId)
+                if(!TeamsMatch(teamA, this.nodeA.Team) || !TeamsMatch(teamB, this.nodeB.Team))
                 {
-                    // If we are a match, assign the scores.
+                    var teamSwap = teamA;
+                    var scoreSwap = scoreA;
+                    teamA = teamB;
+                    scoreA = scoreB;
+                    teamB = teamSwap;
+                    scoreB = scoreSwap;
+                }
+
+                if (TeamsMatch(teamA, this.nodeA.Team) && TeamsMatch(teamB, this.nodeB.Team))
+                {
                     this.nodeA.Score = scoreA;
                     this.nodeB.Score = scoreB;
                     this.Lock();
@@ -361,9 +367,21 @@ namespace Tournaments.Standard
                     return false;
                 }
             }
+        }
+
+        private bool TeamsMatch(TournamentTeam teamA, TournamentTeam teamB)
+        {
+            if (object.ReferenceEquals(teamA, teamB))
+            {
+                return true;
+            }
+            else if (teamA == null || teamB == null)
+            {
+                return false;
+            }
             else
             {
-                return (!this.nodeA.IsDecided && this.nodeA.ApplyPairing(pairing)) || (!this.nodeB.IsDecided && this.nodeB.ApplyPairing(pairing));
+                return (teamA.TeamId == teamB.TeamId);
             }
         }
 

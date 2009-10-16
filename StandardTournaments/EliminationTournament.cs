@@ -105,6 +105,7 @@ namespace Tournaments.Standard
             }
 
             var rootNode = BuildTree(teams);
+            bool byesLocked = false;
 
             foreach (var round in rounds)
             {
@@ -116,7 +117,7 @@ namespace Tournaments.Standard
                     {
                         continue;
                     }
-
+                tryagainwithbyeslocked:
                     bool success = rootNode.ApplyPairing(pairing);
 
                     if (!success)
@@ -143,11 +144,23 @@ namespace Tournaments.Standard
 
                         if (nodesA == null || nodesA.Count() == 0 || nodesB == null || nodesB.Count() == 0)
                         {
+                            if (!byesLocked)
+                            {
+                                byesLocked = true;
+                                LockByes(rootNode);
+                                goto tryagainwithbyeslocked;
+                            }
                             throw new InvalidTournamentStateException("There was at least one pairing that could not be matched: The requested team was not available to play.");
                         }
 
                         if (nodesA.Count() > 1 || nodesB.Count() > 1)
                         {
+                            if (!byesLocked)
+                            {
+                                byesLocked = true;
+                                LockByes(rootNode);
+                                goto tryagainwithbyeslocked;
+                            }
                             throw new InvalidTournamentStateException("There was at least one pairing that could not be matched: The requested team was not able to be decided unambiguously.");
                         }
 
@@ -160,6 +173,12 @@ namespace Tournaments.Standard
                             parentDecider = deciderB.PrimaryParent.PrimaryParent as ContinuationDecider;
                             if (parentDecider == null)
                             {
+                                if (!byesLocked)
+                                {
+                                    byesLocked = true;
+                                    LockByes(rootNode);
+                                    goto tryagainwithbyeslocked;
+                                }
                                 throw new InvalidTournamentStateException("There was at least one pairing that could not be matched: The requested pairing was not compatible with the state of the tournament.");
                             }
                         }
@@ -191,6 +210,12 @@ namespace Tournaments.Standard
 
                         if (!success)
                         {
+                            if (!byesLocked)
+                            {
+                                byesLocked = true;
+                                LockByes(rootNode);
+                                goto tryagainwithbyeslocked;
+                            }
                             throw new InvalidTournamentStateException("A swap was performed to match the tournament to the actual state, but applying the pairing failed.");
                         }
                     }
@@ -277,7 +302,6 @@ namespace Tournaments.Standard
                     nodes.Add(newNode);
                     nodes.Add(MakeSiblings(match, newNode));
                 }
-
             }
 
             var rootNode = (from n in nodes
@@ -416,18 +440,13 @@ namespace Tournaments.Standard
             return newNode;
         }
 
-        private static void LockByes(List<EliminationNode> nodes)
+        private static void LockByes(EliminationNode rootNode)
         {
-            var unlockedByes = from n in nodes
-                               let d = n.Decider as ContinuationDecider
-                               where d != null
-                               //where n.Locked == false
-                               where d.ChildB.Decider is ByeDecider || d.ChildA.Decider is ByeDecider
-                               select n;
+            var deciders = rootNode.FindDeciders(d => d.IsDecided && !d.Locked).ToList();
 
-            foreach (var u in unlockedByes)
+            foreach (var d in deciders)
             {
-                //u.Locked = true;
+                d.Lock();
             }
         }
 
