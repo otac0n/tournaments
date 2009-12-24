@@ -139,8 +139,8 @@ namespace Tournaments.Standard
                         var scoreA = teamScoreA != null ? teamScoreA.Score : null;
                         var scoreB = teamScoreB != null ? teamScoreB.Score : null;
 
-                        var nodesA = teamA == null ? null : rootNode.FindDeciders(d => d.IsDecided && !d.Locked && d.GetWinner().TeamId == teamA.TeamId);
-                        var nodesB = teamB == null ? null : rootNode.FindDeciders(d => d.IsDecided && !d.Locked && d.GetWinner().TeamId == teamB.TeamId);
+                        var nodesA = teamA == null ? null : rootNode.FindDeciders(d => d.IsDecided && !d.Locked && d.GetWinner() != null && d.GetWinner().TeamId == teamA.TeamId);
+                        var nodesB = teamB == null ? null : rootNode.FindDeciders(d => d.IsDecided && !d.Locked && d.GetWinner() != null && d.GetWinner().TeamId == teamB.TeamId);
 
                         if (nodesA == null || nodesA.Count() == 0 || nodesB == null || nodesB.Count() == 0)
                         {
