@@ -41,15 +41,31 @@ namespace Tournaments.Standard
 
         private class RRWinRecord : IComparable
         {
-            public int Wins { get; set; }
-            public int Losses { get; set; }
-            public int Draws { get; set; }
-            public Score OverallScore { get; set; }
+            public int Wins
+            {
+                get;
+                set;
+            }
+            public int Losses
+            {
+                get;
+                set;
+            }
+            public int Draws
+            {
+                get;
+                set;
+            }
+            public Score OverallScore
+            {
+                get;
+                set;
+            }
             public double WinRecord
             {
                 get
                 {
-                    return this.Wins * 1.0 + this.Draws * 0.5 + this.Losses * 0.0;
+                    return (this.Wins * 1.0) + (this.Draws * 0.5) + (this.Losses * 0.0);
                 }
             }
 

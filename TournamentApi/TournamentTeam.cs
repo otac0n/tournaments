@@ -38,12 +38,7 @@ namespace Tournaments
         /// <summary>
         /// Holds the unique, application-specific identifier of the team.
         /// </summary>
-        private long teamId;
-
-        /// <summary>
-        /// Holds the team's current rating pertaining to a specific tournament.
-        /// </summary>
-        private int? rating;
+        private readonly long teamId;
 
         /// <summary>
         /// Initializes a new instance of the TournamentTeam class.
@@ -53,7 +48,7 @@ namespace Tournaments
         public TournamentTeam(long teamId, int? rating)
         {
             this.teamId = teamId;
-            this.rating = rating;
+            this.Rating = rating;
         }
 
         /// <summary>
@@ -72,15 +67,8 @@ namespace Tournaments
         /// </summary>
         public int? Rating
         {
-            get
-            {
-                return this.rating;
-            }
-
-            set
-            {
-                this.rating = value;
-            }
+            get;
+            set;
         }
     }
 }

@@ -26,22 +26,18 @@
 // <author>John Gietzen</author>
 //-----------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Drawing;
-using Tournaments.Graphics;
-using System.Diagnostics;
-
 namespace Tournaments.Standard
 {
+    using System;
+    using System.Collections.Generic;
+    using Tournaments.Graphics;
+
     public abstract class EliminationNode
     {
-        private EliminationDecider primaryParent = null;
+        private EliminationDecider primaryParent;
         protected List<EliminationDecider> secondaryParents = new List<EliminationDecider>();
 
-        protected EliminationDecider decider = null;
+        protected EliminationDecider decider;
 
         public EliminationNode(EliminationDecider decider)
         {

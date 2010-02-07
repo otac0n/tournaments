@@ -37,12 +37,7 @@ namespace Tournaments
         /// <summary>
         /// Holds the team being scored.
         /// </summary>
-        private TournamentTeam team = null;
-
-        /// <summary>
-        /// Holds the score that the team obtained.
-        /// </summary>
-        private Score score = null;
+        private readonly TournamentTeam team;
 
         /// <summary>
         /// Initializes a new instance of the TournamentTeamScore class.
@@ -57,7 +52,7 @@ namespace Tournaments
             }
 
             this.team = team;
-            this.score = score;
+            this.Score = score;
         }
 
         /// <summary>
@@ -76,15 +71,8 @@ namespace Tournaments
         /// </summary>
         public Score Score
         {
-            get
-            {
-                return this.score;
-            }
-
-            set
-            {
-                this.score = value;
-            }
+            get;
+            set;
         }
     }
 }

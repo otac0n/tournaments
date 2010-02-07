@@ -28,9 +28,6 @@
 namespace Tournaments
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
 
     /// <summary>
     /// Provides an abstraction of a score in a tournament.
@@ -49,14 +46,13 @@ namespace Tournaments
             {
                 return score1.Add(score2);
             }
-            else if (score2 != null)
+
+            if (score2 != null)
             {
                 return score2.Add(score1);
             }
-            else
-            {
-                return null;
-            }
+
+            return null;
         }
 
         /// <summary>
@@ -71,14 +67,13 @@ namespace Tournaments
             {
                 return true;
             }
-            else if ((object)score1 == null || (object)score2 == null)
+
+            if ((object)score1 == null || (object)score2 == null)
             {
                 return false;
             }
-            else
-            {
-                return score1.CompareTo(score2) == 0;
-            }
+
+            return score1.CompareTo(score2) == 0;
         }
 
         /// <summary>
@@ -93,14 +88,13 @@ namespace Tournaments
             {
                 return false;
             }
-            else if ((object)score1 == null || (object)score2 == null)
+
+            if ((object)score1 == null || (object)score2 == null)
             {
                 return true;
             }
-            else
-            {
-                return score1.CompareTo(score2) != 0;
-            }
+
+            return score1.CompareTo(score2) != 0;
         }
 
         /// <summary>
@@ -115,18 +109,18 @@ namespace Tournaments
             {
                 return false;
             }
-            else if ((object)score1 != null && (object)score2 == null)
+
+            if ((object)score1 != null && (object)score2 == null)
             {
                 return true;
             }
-            else if ((object)score1 == null && (object)score2 != null)
+
+            if ((object)score1 == null && (object)score2 != null)
             {
                 return false;
             }
-            else
-            {
-                return score1.CompareTo(score2) > 0;
-            }
+
+            return score1.CompareTo(score2) > 0;
         }
 
         /// <summary>
@@ -141,18 +135,18 @@ namespace Tournaments
             {
                 return false;
             }
-            else if ((object)score1 != null && (object)score2 == null)
+
+            if ((object)score1 != null && (object)score2 == null)
             {
                 return false;
             }
-            else if ((object)score1 == null && (object)score2 != null)
+
+            if ((object)score1 == null && (object)score2 != null)
             {
                 return true;
             }
-            else
-            {
-                return score1.CompareTo(score2) < 0;
-            }
+
+            return score1.CompareTo(score2) < 0;
         }
 
         /// <summary>
@@ -167,18 +161,18 @@ namespace Tournaments
             {
                 return true;
             }
-            else if ((object)score1 != null && (object)score2 == null)
+
+            if ((object)score1 != null && (object)score2 == null)
             {
                 return true;
             }
-            else if ((object)score1 == null && (object)score2 != null)
+
+            if ((object)score1 == null && (object)score2 != null)
             {
                 return false;
             }
-            else
-            {
-                return score1.CompareTo(score2) >= 0;
-            }
+
+            return score1.CompareTo(score2) >= 0;
         }
 
         /// <summary>
@@ -193,18 +187,18 @@ namespace Tournaments
             {
                 return true;
             }
-            else if ((object)score1 != null && (object)score2 == null)
+
+            if ((object)score1 != null && (object)score2 == null)
             {
                 return false;
             }
-            else if ((object)score1 == null && (object)score2 != null)
+
+            if ((object)score1 == null && (object)score2 != null)
             {
                 return true;
             }
-            else
-            {
-                return score1.CompareTo(score2) <= 0;
-            }
+
+            return score1.CompareTo(score2) <= 0;
         }
 
         /// <summary>

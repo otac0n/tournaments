@@ -35,10 +35,26 @@ namespace Tournaments.Standard
     {
         private class BORank
         {
-            public TournamentTeam Team { get; set; }
-            public int Rank { get; set; }
-            public int RoundNumber { get; set; }
-            public Score Score { get; set; }
+            public TournamentTeam Team
+            {
+                get;
+                set;
+            }
+            public int Rank
+            {
+                get;
+                set;
+            }
+            public int RoundNumber
+            {
+                get;
+                set;
+            }
+            public Score Score
+            {
+                get;
+                set;
+            }
         }
 
         PairingsGeneratorState state = PairingsGeneratorState.NotInitialized;
@@ -230,7 +246,7 @@ namespace Tournaments.Standard
             {
                 int newCount = previousCount * 2;
 
-                if(newCount >= teamCount)
+                if (newCount >= teamCount)
                 {
                     return round;
                 }
@@ -266,7 +282,13 @@ namespace Tournaments.Standard
 
             var ranks = from team in pairing.TeamScores
                         orderby team.Score descending
-                        select new BORank() { Team = team.Team, Rank = r++, Score = team.Score, RoundNumber = roundNumber };
+                        select new BORank()
+                        {
+                            Team = team.Team,
+                            Rank = r++,
+                            Score = team.Score,
+                            RoundNumber = roundNumber
+                        };
 
             foreach (var rank in ranks)
             {

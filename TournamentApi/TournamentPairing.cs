@@ -37,13 +37,13 @@ namespace Tournaments
         /// <summary>
         /// Holds the list of team scores in the pairing.
         /// </summary>
-        private List<TournamentTeamScore> teamScores;
+        private readonly List<TournamentTeamScore> teamScores;
 
         /// <summary>
         /// Initializes a new instance of the TournamentPairing class.
         /// </summary>
         /// <param name="teamScores">The list of teams in this pairing.</param>
-        public TournamentPairing(IList<TournamentTeamScore> teamScores)
+        public TournamentPairing(IEnumerable<TournamentTeamScore> teamScores)
         {
             this.teamScores = new List<TournamentTeamScore>(teamScores);
         }

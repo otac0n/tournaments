@@ -92,11 +92,6 @@ namespace Tournaments
         /// </returns>
         public override int CompareTo(Score other)
         {
-            if (other == null)
-            {
-                return 1;
-            }
-
             var o = other as LowestTimeScore;
 
             if (o == null)

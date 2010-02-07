@@ -38,14 +38,14 @@ namespace Tournaments.Plugins
         /// <summary>
         /// Holds the name of the IPairingsGenerator managed my this class.
         /// </summary>
-        private string name;
+        private readonly string name;
 
         /// <summary>
         /// Initializes a new instance of the PairingsGeneratorFactory class.
         /// </summary>
         public PairingsGeneratorFactory()
         {
-            T temp = new T();
+            var temp = new T();
             this.name = temp.Name;
         }
 
@@ -70,12 +70,10 @@ namespace Tournaments.Plugins
 
             if (t == null)
             {
-                throw new InvalidOperationException("Unable to create a pairings generator of type " + typeof(T).ToString() + ".");
+                throw new InvalidOperationException(string.Format("Unable to create a pairings generator of type {0}.", typeof(T)));
             }
-            else
-            {
-                return t;
-            }
+
+            return t;
         }
     }
 }

@@ -38,7 +38,7 @@ namespace Tournaments
         /// <summary>
         /// Holds the list of pairings in the round.
         /// </summary>
-        private List<TournamentPairing> pairings;
+        private readonly List<TournamentPairing> pairings;
 
         /// <summary>
         /// Initializes a new instance of the TournamentRound class.

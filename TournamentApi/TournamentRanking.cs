@@ -35,17 +35,17 @@ namespace Tournaments
         /// <summary>
         /// Holds the team being ranked.
         /// </summary>
-        private TournamentTeam team;
+        private readonly TournamentTeam team;
 
         /// <summary>
         /// Holds the rank number of the ranking.
         /// </summary>
-        private double rank;
+        private readonly double rank;
 
         /// <summary>
         /// Holds the score description or justification of the ranking.
         /// </summary>
-        private string scoreDescription;
+        private readonly string scoreDescription;
 
         /// <summary>
         /// Initializes a new instance of the TournamentRanking class.

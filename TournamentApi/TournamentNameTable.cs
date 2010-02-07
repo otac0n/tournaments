@@ -29,8 +29,6 @@ namespace Tournaments
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
 
     /// <summary>
     /// Encapsulates a list of the names of tournament teams.
@@ -40,7 +38,7 @@ namespace Tournaments
         /// <summary>
         /// Holds the mappings of team ids to team names.
         /// </summary>
-        private Dictionary<long, string> names;
+        private readonly Dictionary<long, string> names;
 
         /// <summary>
         /// Initializes a new instance of the TournamentNameTable class, initialized with the supplied names.

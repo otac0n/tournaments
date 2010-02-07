@@ -31,8 +31,6 @@ namespace Tournaments.Standard
     using System.Collections.Generic;
     using System.Drawing;
     using System.Linq;
-    using System.Xml;
-    using System.Globalization;
     using Tournaments.Graphics;
 
     /// <summary>
@@ -123,7 +121,7 @@ namespace Tournaments.Standard
                     if (!success)
                     {
                         var teamScoreA = pairing.TeamScores[0];
-                        var teamScoreB = pairing.TeamScores.Count > 1 ?  pairing.TeamScores[1] : null;
+                        var teamScoreB = pairing.TeamScores.Count > 1 ? pairing.TeamScores[1] : null;
 
                         if (teamScoreA == null)
                         {
@@ -294,7 +292,7 @@ namespace Tournaments.Standard
                                  where d != null
                                  where (teamRankings.Where(tr => tr.Team == n.Team).Single().Ranking & mask) == (ranking & mask)
                                  select n).Single();
-                    
+
                     var newDecider = new ByeDecider();
                     var newNode = new WinnerNode(newDecider);
                     newDecider.PrimaryParent = newNode;
@@ -307,8 +305,8 @@ namespace Tournaments.Standard
             var rootNode = (from n in nodes
                             where n.Level == 0
                             select n).SingleOrDefault();
-            
-            if(eliminations == 1 || rootNode == null)
+
+            if (eliminations == 1 || rootNode == null)
             {
                 return rootNode;
             }
@@ -357,7 +355,7 @@ namespace Tournaments.Standard
             var finalWinner = new WinnerNode(stayDecider);
             stayDecider.PrimaryParent = finalWinner;
 
-            return finalWinner; 
+            return finalWinner;
         }
 
         private List<EliminationNode> InterleaveNodes(List<EliminationNode> nodeListA, List<EliminationNode> nodeListB)
@@ -407,7 +405,7 @@ namespace Tournaments.Standard
             for (int i = 0; i < count; i += 2)
             {
                 var nodeA = loserNodes[i];
-                var nodeB = loserNodes[i+1];
+                var nodeB = loserNodes[i + 1];
 
                 nodes.Add(MakeSiblings(nodeA, nodeB));
             }

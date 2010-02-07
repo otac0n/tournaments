@@ -27,11 +27,6 @@
 
 namespace Tournaments.Plugins
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-
     /// <summary>
     /// Describes a factory for creating a tournament visualizer.
     /// </summary>

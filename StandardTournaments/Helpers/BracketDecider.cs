@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Tournaments.Standard.Helpers
+﻿namespace Tournaments.Standard.Helpers
 {
+    using System;
+    using System.Collections.Generic;
+
     public class BracketDecider : EliminationDecider
     {
         private List<EliminationNode> bracketRootNodes = new List<EliminationNode>();

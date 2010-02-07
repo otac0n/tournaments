@@ -28,9 +28,6 @@
 namespace Tournaments.Plugins
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
 
     /// <summary>
     /// Thrown when the PluginLoader encounters an error when loading from an assembly.
