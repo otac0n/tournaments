@@ -1,10 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TournamentApi", "TournamentApi\TournamentApi.csproj", "{826AFCF0-646A-4BBF-A2AC-70DCF4AB4F52}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StandardTournaments", "StandardTournaments\StandardTournaments.csproj", "{3EAA8071-F4A9-4DAA-A964-52DB7FA0C553}"
-EndProject
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{743A4C55-B7E7-4A0A-BCB6-220D0F0AAC76}"
 	ProjectSection(SolutionItems) = preProject
 		CustomDictionary.xml = CustomDictionary.xml
@@ -13,14 +9,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Tournaments.vsmdi = Tournaments.vsmdi
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TournamentApi", "TournamentApi\TournamentApi.csproj", "{826AFCF0-646A-4BBF-A2AC-70DCF4AB4F52}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StandardTournaments", "StandardTournaments\StandardTournaments.csproj", "{3EAA8071-F4A9-4DAA-A964-52DB7FA0C553}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TournamentTests", "TournamentTests\TournamentTests.csproj", "{3F1871D3-AD43-4A40-A101-1E2F9019B17A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleTournamentRunner", "SampleTournamentRunner\SampleTournamentRunner.csproj", "{447591BE-511C-490D-8E3D-403B0820A699}"
 EndProject
 Global
-	GlobalSection(SubversionScc) = preSolution
-		Svn-Managed = True
-		Manager = AnkhSVN - Subversion Support for Visual Studio
+	GlobalSection(TestCaseManagementSettings) = postSolution
+		CategoryFile = Tournaments.vsmdi
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,7 +46,8 @@ Global
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
-	GlobalSection(TestCaseManagementSettings) = postSolution
-		CategoryFile = Tournaments.vsmdi
+	GlobalSection(SubversionScc) = preSolution
+		Svn-Managed = True
+		Manager = AnkhSVN - Subversion Support for Visual Studio
 	EndGlobalSection
 EndGlobal
