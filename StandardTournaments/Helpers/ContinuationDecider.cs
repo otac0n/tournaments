@@ -28,9 +28,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Drawing;
 using Tournaments.Graphics;
 
 namespace Tournaments.Standard
@@ -42,18 +39,8 @@ namespace Tournaments.Standard
 
         public ContinuationDecider(EliminationNode nodeA, EliminationNode nodeB)
         {
-            if (nodeA == null)
-            {
-                throw new ArgumentNullException("nodeA");
-            }
-
-            if (nodeB == null)
-            {
-                throw new ArgumentNullException("nodeB");
-            }
-
-            this.nodeA = nodeA;
-            this.nodeB = nodeB;
+            this.nodeA = nodeA ?? throw new ArgumentNullException(nameof(nodeA));
+            this.nodeB = nodeB ?? throw new ArgumentNullException(nameof(nodeB));
         }
 
         public EliminationNode ChildA
@@ -65,12 +52,7 @@ namespace Tournaments.Standard
 
             set
             {
-                if (value == null)
-                {
-                    throw new ArgumentNullException("value");
-                }
-
-                this.nodeA = value;
+                this.nodeA = value ?? throw new ArgumentNullException(nameof(value));
             }
         }
 
@@ -83,15 +65,11 @@ namespace Tournaments.Standard
 
             set
             {
-                if (value == null)
-                {
-                    throw new ArgumentNullException("value");
-                }
-
-                this.nodeB = value;
+                this.nodeB = value ?? throw new ArgumentNullException(nameof(value));
             }
         }
 
+        /// <inheritdoc />
         public override bool IsDecided
         {
             get
@@ -100,6 +78,7 @@ namespace Tournaments.Standard
             }
         }
 
+        /// <inheritdoc />
         public override TournamentTeam GetWinner()
         {
             if (!this.nodeA.IsDecided)
@@ -139,6 +118,7 @@ namespace Tournaments.Standard
             return this.nodeA.Score > this.nodeB.Score ? this.nodeA.Team : this.nodeB.Team;
         }
 
+        /// <inheritdoc />
         public override TournamentTeam GetLoser()
         {
             if (!this.nodeA.IsDecided)
@@ -195,6 +175,7 @@ namespace Tournaments.Standard
             this.nodeB = tempNode;
         }
 
+        /// <inheritdoc />
         public override NodeMeasurement MeasureWinner(Tournaments.Graphics.IGraphics g, TournamentNameTable names, float textHeight, Score score)
         {
             string teamName = "";
@@ -238,6 +219,7 @@ namespace Tournaments.Standard
             }
         }
 
+        /// <inheritdoc />
         public override NodeMeasurement MeasureLoser(IGraphics g, TournamentNameTable names, float textHeight, Score score)
         {
             string teamName = "";
@@ -257,6 +239,7 @@ namespace Tournaments.Standard
             return this.MeasureTextBox(g, textHeight, teamName, score);
         }
 
+        /// <inheritdoc />
         public override void RenderWinner(IGraphics g, TournamentNameTable names, float x, float y, float textHeight, Score score)
         {
             var m = this.MeasureWinner(g, names, textHeight, score);
@@ -294,6 +277,7 @@ namespace Tournaments.Standard
             }
         }
 
+        /// <inheritdoc />
         public override void RenderLoser(IGraphics g, TournamentNameTable names, float x, float y, float textHeight, Score score)
         {
             string teamName = "";
@@ -313,11 +297,12 @@ namespace Tournaments.Standard
             this.RenderTextBox(g, x, y, textHeight, teamName, score);
         }
 
+        /// <inheritdoc />
         public override bool ApplyPairing(TournamentPairing pairing)
         {
             if (pairing == null)
             {
-                throw new ArgumentNullException("pairing");
+                throw new ArgumentNullException(nameof(pairing));
             }
 
             if (this.Locked)
@@ -385,6 +370,7 @@ namespace Tournaments.Standard
             }
         }
 
+        /// <inheritdoc />
         public override IEnumerable<TournamentPairing> FindUndecided()
         {
             if (this.IsDecided)
@@ -424,6 +410,7 @@ namespace Tournaments.Standard
             }
         }
 
+        /// <inheritdoc />
         public override IEnumerable<EliminationNode> FindNodes(Func<EliminationNode, bool> filter)
         {
             if (this.nodeA != null)
@@ -443,6 +430,7 @@ namespace Tournaments.Standard
             }
         }
 
+        /// <inheritdoc />
         public override IEnumerable<EliminationDecider> FindDeciders(Func<EliminationDecider, bool> filter)
         {
             if (filter.Invoke(this))

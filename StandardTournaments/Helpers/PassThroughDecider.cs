@@ -26,51 +26,55 @@
 // <author>John Gietzen</author>
 //-----------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Tournaments.Graphics;
-using System.Drawing;
-
 namespace Tournaments.Standard
 {
+    using System;
+    using System.Collections.Generic;
+    using Tournaments.Graphics;
+
     public class PassThroughDecider : EliminationDecider
     {
-        private EliminationNode node = null;
-
-        public PassThroughDecider(EliminationNode node)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PassThroughDecider"/> class.
+        /// </summary>
+        /// <param name="passThroughNode">The node whose winner will be passed through.</param>
+        public PassThroughDecider(EliminationNode passThroughNode)
         {
-            if (node == null)
-            {
-                throw new ArgumentNullException("node");
-            }
-            this.node = node;
+            this.PassThroughNode = passThroughNode ?? throw new ArgumentNullException(nameof(passThroughNode));
         }
 
+        /// <summary>
+        /// Gets the node whose winner will be passed through.
+        /// </summary>
+        public EliminationNode PassThroughNode { get; }
+
+        /// <inheritdoc />
         public override bool IsDecided
         {
             get
             {
-                return this.node.IsDecided;
+                return this.PassThroughNode.IsDecided;
             }
         }
 
+        /// <inheritdoc />
         public override TournamentTeam GetWinner()
         {
-            if (!this.node.IsDecided)
+            if (!this.PassThroughNode.IsDecided)
             {
                 throw new InvalidOperationException("Cannot determine a winner from a node that is undecided.");
             }
 
-            return this.node.Team;
+            return this.PassThroughNode.Team;
         }
 
+        /// <inheritdoc />
         public override TournamentTeam GetLoser()
         {
-            throw new InvalidOperationException("Cannot determine a loser from a pass through.");
+            throw new InvalidOperationException("Cannot determine a loser from a pass through node.");
         }
 
+        /// <inheritdoc />
         public override NodeMeasurement MeasureWinner(IGraphics g, TournamentNameTable names, float textHeight, Score score)
         {
             string teamName = "";
@@ -90,11 +94,13 @@ namespace Tournaments.Standard
             return this.MeasureTextBox(g, textHeight, teamName, score);
         }
 
+        /// <inheritdoc />
         public override NodeMeasurement MeasureLoser(IGraphics g, TournamentNameTable names, float textHeight, Score score)
         {
-            throw new InvalidOperationException("Cannot determine a loser from a pass through.");
+            throw new InvalidOperationException("Cannot determine a loser from a pass through node.");
         }
 
+        /// <inheritdoc />
         public override void RenderWinner(IGraphics g, TournamentNameTable names, float x, float y, float textHeight, Score score)
         {
             string teamName = "";
@@ -114,37 +120,42 @@ namespace Tournaments.Standard
             this.RenderTextBox(g, x, y, textHeight, teamName, score);
         }
 
+        /// <inheritdoc />
         public override void RenderLoser(IGraphics g, TournamentNameTable names, float x, float y, float textHeight, Score score)
         {
-            throw new InvalidOperationException("Cannot determine a loser from a pass through.");
+            throw new InvalidOperationException("Cannot determine a loser from a pass through node.");
         }
 
+        /// <inheritdoc />
         public override bool ApplyPairing(TournamentPairing pairing)
         {
             if (pairing == null)
             {
-                throw new ArgumentNullException("pairing");
+                throw new ArgumentNullException(nameof(pairing));
             }
 
             return false;
         }
 
+        /// <inheritdoc />
         public override IEnumerable<TournamentPairing> FindUndecided()
         {
             yield break;
         }
 
+        /// <inheritdoc />
         public override IEnumerable<EliminationNode> FindNodes(Func<EliminationNode, bool> filter)
         {
-            if (this.node != null)
+            if (this.PassThroughNode != null)
             {
-                foreach (var match in this.node.FindNodes(filter))
+                foreach (var match in this.PassThroughNode.FindNodes(filter))
                 {
                     yield return match;
                 }
             }
         }
 
+        /// <inheritdoc />
         public override IEnumerable<EliminationDecider> FindDeciders(Func<EliminationDecider, bool> filter)
         {
             if (filter.Invoke(this))
@@ -152,9 +163,9 @@ namespace Tournaments.Standard
                 yield return this;
             }
 
-            if (this.node != null)
+            if (this.PassThroughNode != null)
             {
-                foreach (var match in this.node.FindDeciders(filter))
+                foreach (var match in this.PassThroughNode.FindDeciders(filter))
                 {
                     yield return match;
                 }

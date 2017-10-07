@@ -28,29 +28,29 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Drawing;
 using Tournaments.Graphics;
 
 namespace Tournaments.Standard
 {
     public class TeamDecider : EliminationDecider
     {
-        private TournamentTeam team = null;
-
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TeamDecider"/> class.
+        /// </summary>
+        /// <param name="team">The team that will be chosen.</param>
         public TeamDecider(TournamentTeam team)
         {
-            if (team == null)
-            {
-                throw new ArgumentNullException("team");
-            }
-
-            this.team = team;
+            this.Team = team ?? throw new ArgumentNullException(nameof(team));
 
             this.Lock();
         }
 
+        /// <summary>
+        /// Gets the team that will be chosen.
+        /// </summary>
+        public TournamentTeam Team { get; }
+
+        /// <inheritdoc />
         public override bool IsDecided
         {
             get
@@ -59,56 +59,66 @@ namespace Tournaments.Standard
             }
         }
 
+        /// <inheritdoc />
         public override TournamentTeam GetWinner()
         {
-            return this.team;
+            return this.Team;
         }
 
+        /// <inheritdoc />
         public override TournamentTeam GetLoser()
         {
             throw new InvalidOperationException("Cannot determine a loser from an individual team entry.");
         }
 
+        /// <inheritdoc />
         public override NodeMeasurement MeasureWinner(IGraphics g, TournamentNameTable names, float textHeight, Score score)
         {
-            return this.MeasureTextBox(g, textHeight, names[this.team.TeamId], score);
+            return this.MeasureTextBox(g, textHeight, names[this.Team.TeamId], score);
         }
 
+        /// <inheritdoc />
         public override NodeMeasurement MeasureLoser(IGraphics g, TournamentNameTable names, float textHeight, Score score)
         {
             throw new InvalidOperationException("Cannot determine a loser from an individual team entry.");
         }
 
+        /// <inheritdoc />
         public override void RenderWinner(IGraphics g, TournamentNameTable names, float x, float y, float textHeight, Score score)
         {
-            this.RenderTextBox(g, x, y, textHeight, names[this.team.TeamId], score);
+            this.RenderTextBox(g, x, y, textHeight, names[this.Team.TeamId], score);
         }
 
+        /// <inheritdoc />
         public override void RenderLoser(IGraphics g, TournamentNameTable names, float x, float y, float textHeight, Score score)
         {
             throw new InvalidOperationException("Cannot determine a loser from an individual team entry.");
         }
 
+        /// <inheritdoc />
         public override bool ApplyPairing(TournamentPairing pairing)
         {
             if (pairing == null)
             {
-                throw new ArgumentNullException("pairing");
+                throw new ArgumentNullException(nameof(pairing));
             }
 
             return false;
         }
 
+        /// <inheritdoc />
         public override IEnumerable<TournamentPairing> FindUndecided()
         {
             yield break;
         }
 
+        /// <inheritdoc />
         public override IEnumerable<EliminationNode> FindNodes(Func<EliminationNode, bool> filter)
         {
             yield break;
         }
 
+        /// <inheritdoc />
         public override IEnumerable<EliminationDecider> FindDeciders(Func<EliminationDecider, bool> filter)
         {
             if (filter.Invoke(this))

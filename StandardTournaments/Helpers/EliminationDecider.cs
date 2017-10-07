@@ -26,17 +26,16 @@
 // <author>John Gietzen</author>
 //-----------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Drawing;
-using Tournaments.Graphics;
-
 namespace Tournaments.Standard
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Drawing;
+    using Tournaments.Graphics;
+
     public abstract class EliminationDecider
     {
+        private bool locked = false;
         private EliminationNode primaryParent = null;
         protected List<EliminationNode> secondaryParents = new List<EliminationNode>();
 
@@ -91,30 +90,31 @@ namespace Tournaments.Standard
             }
         }
 
-        private bool locked = false;
-
-        public bool Locked
-        {
-            get
-            {
-                return this.locked;
-            }
-        }
+        public bool Locked => this.locked;
 
         public void Lock()
         {
             this.locked = true;
         }
 
+        /// <summary>
+        /// Gets a value indicating whether or not this node is decided.
+        /// </summary>
         public abstract bool IsDecided
         {
             get;
         }
+
         public abstract TournamentTeam GetWinner();
+
         public abstract TournamentTeam GetLoser();
+
         public abstract bool ApplyPairing(TournamentPairing pairing);
+
         public abstract IEnumerable<TournamentPairing> FindUndecided();
+
         public abstract IEnumerable<EliminationNode> FindNodes(Func<EliminationNode, bool> filter);
+
         public abstract IEnumerable<EliminationDecider> FindDeciders(Func<EliminationDecider, bool> filter);
 
         public abstract NodeMeasurement MeasureWinner(IGraphics g, TournamentNameTable names, float textHeight, Score score);
@@ -230,8 +230,8 @@ namespace Tournaments.Standard
 
         protected NodeMeasurement MeasureTree(IGraphics g, TournamentNameTable names, float textHeight, EliminationNode nodeA, EliminationNode nodeB)
         {
-            var mA = nodeA == null ? null : nodeA.Measure(g, names, textHeight);
-            var mB = nodeB == null ? null : nodeB.Measure(g, names, textHeight);
+            var mA = nodeA?.Measure(g, names, textHeight);
+            var mB = nodeB?.Measure(g, names, textHeight);
 
             if (mA == null && mB == null)
             {
@@ -264,8 +264,8 @@ namespace Tournaments.Standard
         protected void RenderTree(IGraphics g, TournamentNameTable names, float x, float y, float textHeight, EliminationNode nodeA, EliminationNode nodeB)
         {
             var m = this.MeasureTree(g, names, textHeight, nodeA, nodeB);
-            var mA = nodeA == null ? null : nodeA.Measure(g, names, textHeight);
-            var mB = nodeB == null ? null : nodeB.Measure(g, names, textHeight);
+            var mA = nodeA?.Measure(g, names, textHeight);
+            var mB = nodeB?.Measure(g, names, textHeight);
 
             if (mA == null && mB == null)
             {

@@ -30,78 +30,83 @@ namespace Tournaments.Standard
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Drawing;
     using Tournaments.Graphics;
 
     public class ByeDecider : EliminationDecider
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ByeDecider"/> class.
+        /// </summary>
         public ByeDecider()
         {
             this.Lock();
         }
 
-        public override bool IsDecided
-        {
-            get
-            {
-                return true;
-            }
-        }
+        /// <inheritdoc />
+        public override bool IsDecided => true;
 
+        /// <inheritdoc />
         public override TournamentTeam GetWinner()
         {
             return null;
         }
 
+        /// <inheritdoc />
         public override TournamentTeam GetLoser()
         {
             throw new InvalidOperationException("Cannot determine a loser from a bye entry.");
         }
 
+        /// <inheritdoc />
         public override NodeMeasurement MeasureWinner(Tournaments.Graphics.IGraphics g, TournamentNameTable names, float textHeight, Score score)
         {
             //return this.MeasureTextBox(g, textHeight, "bye", score);
             return null;
         }
 
+        /// <inheritdoc />
         public override NodeMeasurement MeasureLoser(Tournaments.Graphics.IGraphics g, TournamentNameTable names, float textHeight, Score score)
         {
             throw new InvalidOperationException("Cannot determine a loser from a bye entry.");
         }
 
+        /// <inheritdoc />
         public override void RenderWinner(IGraphics g, TournamentNameTable names, float x, float y, float textHeight, Score score)
         {
             //this.RenderTextBox(g, x, y, textHeight, "bye", score);
             return;
         }
 
+        /// <inheritdoc />
         public override void RenderLoser(IGraphics g, TournamentNameTable names, float x, float y, float textHeight, Score score)
         {
             throw new InvalidOperationException("Cannot determine a loser from a bye entry.");
         }
 
+        /// <inheritdoc />
         public override bool ApplyPairing(TournamentPairing pairing)
         {
             if (pairing == null)
             {
-                throw new ArgumentNullException("pairing");
+                throw new ArgumentNullException(nameof(pairing));
             }
 
             return false;
         }
 
+        /// <inheritdoc />
         public override IEnumerable<TournamentPairing> FindUndecided()
         {
             yield break;
         }
 
+        /// <inheritdoc />
         public override IEnumerable<EliminationNode> FindNodes(Func<EliminationNode, bool> filter)
         {
             yield break;
         }
 
+        /// <inheritdoc />
         public override IEnumerable<EliminationDecider> FindDeciders(Func<EliminationDecider, bool> filter)
         {
             if (filter.Invoke(this))

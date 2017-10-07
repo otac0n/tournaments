@@ -103,12 +103,12 @@ namespace Tournaments.Standard
         {
             if (teams == null)
             {
-                throw new ArgumentNullException("teams");
+                throw new ArgumentNullException(nameof(teams));
             }
 
             if (rounds == null)
             {
-                throw new ArgumentNullException("rounds");
+                throw new ArgumentNullException(nameof(rounds));
             }
 
             if (!(teams.Count() < 1073741824))
@@ -318,7 +318,7 @@ namespace Tournaments.Standard
             {
                 var continuing = from t in this.loadedTeams
                                  let ranking = lastRoundRankings.Where(r => r.Team == t).SingleOrDefault()
-                                 orderby ranking == null ? null : ranking.Score descending
+                                 orderby ranking?.Score descending
                                  select t;
 
                 int i = 1;

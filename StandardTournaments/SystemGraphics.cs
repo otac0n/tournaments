@@ -13,12 +13,7 @@
 
         public SystemGraphics(System.Drawing.Graphics baseGraphics)
         {
-            if (baseGraphics == null)
-            {
-                throw new ArgumentNullException("baseGraphics");
-            }
-
-            this.baseGraphics = baseGraphics;
+            this.baseGraphics = baseGraphics ?? throw new ArgumentNullException(nameof(baseGraphics));
         }
 
         public SystemGraphics(System.Drawing.Image targetImage)

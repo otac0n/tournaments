@@ -89,20 +89,20 @@ namespace Tournaments.Standard
         {
             if (teams == null)
             {
-                throw new ArgumentNullException("teams");
+                throw new ArgumentNullException(nameof(teams));
             }
 
             if (rounds == null)
             {
-                throw new ArgumentNullException("rounds");
+                throw new ArgumentNullException(nameof(rounds));
             }
 
             if (rounds.Where(r => r.Pairings.Where(p => p.TeamScores.Count > 2).Any()).Any())
             {
-                throw new InvalidTournamentStateException("At least one pairing had more than two teams competing.  This is invalid in a single elimination tournament.");
+                throw new InvalidTournamentStateException("At least one pairing had more than two teams competing.  This is invalid in an elimination tournament.");
             }
 
-            var rootNode = BuildTree(teams);
+            var rootNode = BuildTree(teams.ToList());
             bool byesLocked = false;
 
             foreach (var round in rounds)
@@ -130,17 +130,19 @@ namespace Tournaments.Standard
                         }
 
                         if (teamScoreA == null)
+                        {
                             continue;
+                        }
 
-                        var teamA = teamScoreA != null ? teamScoreA.Team : null;
-                        var teamB = teamScoreB != null ? teamScoreB.Team : null;
-                        var scoreA = teamScoreA != null ? teamScoreA.Score : null;
-                        var scoreB = teamScoreB != null ? teamScoreB.Score : null;
+                        var teamA = teamScoreA?.Team;
+                        var teamB = teamScoreB?.Team;
+                        var scoreA = teamScoreA?.Score;
+                        var scoreB = teamScoreB?.Score;
 
-                        var nodesA = teamA == null ? null : rootNode.FindDeciders(d => d.IsDecided && !d.Locked && d.GetWinner() != null && d.GetWinner().TeamId == teamA.TeamId);
-                        var nodesB = teamB == null ? null : rootNode.FindDeciders(d => d.IsDecided && !d.Locked && d.GetWinner() != null && d.GetWinner().TeamId == teamB.TeamId);
+                        var nodesA = teamA == null ? null : rootNode.FindDeciders(d => d.IsDecided && !d.Locked && d.GetWinner() != null && d.GetWinner().TeamId == teamA.TeamId).ToList();
+                        var nodesB = teamB == null ? null : rootNode.FindDeciders(d => d.IsDecided && !d.Locked && d.GetWinner() != null && d.GetWinner().TeamId == teamB.TeamId).ToList();
 
-                        if (nodesA == null || nodesA.Count() == 0 || nodesB == null || nodesB.Count() == 0)
+                        if (nodesA == null || nodesA.Count == 0 || nodesB == null || nodesB.Count == 0)
                         {
                             if (!byesLocked)
                             {
@@ -148,10 +150,11 @@ namespace Tournaments.Standard
                                 LockByes(rootNode);
                                 goto tryagainwithbyeslocked;
                             }
+
                             throw new InvalidTournamentStateException("There was at least one pairing that could not be matched: The requested team was not available to play.");
                         }
 
-                        if (nodesA.Count() > 1 || nodesB.Count() > 1)
+                        if (nodesA.Count > 1 || nodesB.Count > 1)
                         {
                             if (!byesLocked)
                             {
@@ -159,6 +162,7 @@ namespace Tournaments.Standard
                                 LockByes(rootNode);
                                 goto tryagainwithbyeslocked;
                             }
+
                             throw new InvalidTournamentStateException("There was at least one pairing that could not be matched: The requested team was not able to be decided unambiguously.");
                         }
 
@@ -177,6 +181,7 @@ namespace Tournaments.Standard
                                     LockByes(rootNode);
                                     goto tryagainwithbyeslocked;
                                 }
+
                                 throw new InvalidTournamentStateException("There was at least one pairing that could not be matched: The requested pairing was not compatible with the state of the tournament.");
                             }
                         }
@@ -214,6 +219,7 @@ namespace Tournaments.Standard
                                 LockByes(rootNode);
                                 goto tryagainwithbyeslocked;
                             }
+
                             throw new InvalidTournamentStateException("A swap was performed to match the tournament to the actual state, but applying the pairing failed.");
                         }
                     }
@@ -236,32 +242,30 @@ namespace Tournaments.Standard
             // TODO: Swap Secondary Parents.
         }
 
-        private EliminationNode BuildTree(IEnumerable<TournamentTeam> teams)
+        private EliminationNode BuildTree(IList<TournamentTeam> teams)
         {
-            List<EliminationNode> nodes = new List<EliminationNode>();
+            var nodes = new List<EliminationNode>();
 
-            if (teams.Count() >= 2)
+            if (teams.Count >= 2)
             {
-                int ranking = 0;
-                var teamsOrder = from team in teams
-                                 orderby team.Rating.HasValue ? team.Rating : 0 descending
-                                 select new TeamRanking
-                                 {
-                                     Team = team,
-                                     Ranking = ranking++,
-                                 };
+                var teamsOrder = teams
+                    .OrderByDescending(team => team.Rating ?? 0)
+                    .Select((team, ranking) => new
+                    {
+                        Team = team,
+                        Ranking = ranking,
+                    });
 
-                int i = 0;
-                int nextRoundAt = 2;
-                int roundNumber = 0;
-                int mask = (1 << roundNumber) - 1;
+                var nextRoundAt = 2;
+                var roundNumber = 0;
+                var mask = (1 << roundNumber) - 1;
                 var teamRankings = teamsOrder.ToList();
                 foreach (var teamRanking in teamRankings)
                 {
-                    if (i == nextRoundAt)
+                    if (teamRanking.Ranking == nextRoundAt)
                     {
                         nextRoundAt *= 2;
-                        roundNumber += 1;
+                        roundNumber++;
                         mask = (1 << roundNumber) - 1;
                     }
 
@@ -281,11 +285,10 @@ namespace Tournaments.Standard
                     }
 
                     nodes.Add(newNode);
-                    i++;
                 }
 
                 // Add in byes to even out the left side of the bracket.
-                for (ranking = teamRankings.Count; ranking < nextRoundAt; ranking++)
+                for (var ranking = teamRankings.Count; ranking < nextRoundAt; ranking++)
                 {
                     var match = (from n in nodes
                                  let d = n.Decider as TeamDecider
@@ -321,14 +324,14 @@ namespace Tournaments.Standard
                 maxLevel--;
                 deciders = rootNode.FindDeciders(d => d.Level == maxLevel);
 
-                if (deciders.Count() == 0)
+                if (!deciders.Any())
                 {
                     break;
                 }
 
                 var newLosers = BuildLoserNodes(deciders);
 
-                while (loserNodes.Count() > newLosers.Count())
+                while (loserNodes.Count > newLosers.Count)
                 {
                     loserNodes = SimplifyNodes(loserNodes);
                 }
@@ -362,10 +365,10 @@ namespace Tournaments.Standard
         {
             if (nodeListA.Count != nodeListB.Count)
             {
-                throw new InvalidOperationException("An attempt was made to interleave two lists of nodes that han an unequal number of elements.  This is invalid.");
+                throw new InvalidOperationException("An attempt was made to interleave two lists of nodes that han an unequal number of elements.");
             }
 
-            var nodes = new List<EliminationNode>();
+            var nodes = new List<EliminationNode>(nodeListA.Count * 2);
 
             for (int i = 0; i < nodeListA.Count; i++)
             {
@@ -393,16 +396,14 @@ namespace Tournaments.Standard
 
         private List<EliminationNode> SimplifyNodes(IList<EliminationNode> loserNodes)
         {
-            var count = loserNodes.Count();
-
-            if (count % 2 != 0)
+            if (loserNodes.Count % 2 != 0)
             {
-                throw new InvalidOperationException("An attempt was made to simplify a list of nodes where there was an odd number of elements.  This is invalid.");
+                throw new InvalidOperationException("An attempt was made to simplify a list of nodes where there was an odd number of elements.");
             }
 
             var nodes = new List<EliminationNode>();
 
-            for (int i = 0; i < count; i += 2)
+            for (int i = 0; i < loserNodes.Count; i += 2)
             {
                 var nodeA = loserNodes[i];
                 var nodeB = loserNodes[i + 1];
@@ -450,9 +451,9 @@ namespace Tournaments.Standard
 
         public TournamentRound CreateNextRound(int? places)
         {
-            if (places.HasValue && places.Value < 0)
+            if (places <= 0)
             {
-                throw new ArgumentException("You must specify a number of places that is greater than zero.", "places");
+                throw new ArgumentException("You must specify a number of places that is greater than zero.", nameof(places));
             }
 
             if (this.state != PairingsGeneratorState.Initialized)
@@ -465,9 +466,9 @@ namespace Tournaments.Standard
                 return null;
             }
 
-            var readyToPlay = this.loadedRootNode.FindUndecided();
+            var readyToPlay = this.loadedRootNode.FindUndecided().ToList();
 
-            if (readyToPlay.Count() == 0)
+            if (readyToPlay.Count == 0)
             {
                 // if this is because the root is locked, return null
                 // otherwise, return an error because there is either a tie or an unfinished round.
@@ -480,13 +481,13 @@ namespace Tournaments.Standard
                 return null;
             }
 
-            if (places.HasValue)
+            if (places != null)
             {
                 return new TournamentRound(readyToPlay.Take(places.Value).ToList());
             }
             else
             {
-                return new TournamentRound(readyToPlay.ToList());
+                return new TournamentRound(readyToPlay);
             }
         }
 

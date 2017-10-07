@@ -77,7 +77,6 @@
     <Compile Include="Helpers\EliminationNode.cs" />
     <Compile Include="Helpers\StayDecider.cs" />
     <Compile Include="Helpers\TeamDecider.cs" />
-    <Compile Include="Helpers\TeamRanking.cs" />
     <Compile Include="Helpers\WinnerNode.cs" />
     <Compile Include="Plugins\EliminationTournamentFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

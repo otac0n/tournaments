@@ -26,14 +26,13 @@
 // <author>John Gietzen</author>
 //-----------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Drawing;
-
 namespace Tournaments.Standard
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+
+    [DebuggerDisplay("[LoserNode: Level = {this.Level}, Decider = {this.Decider}]")]
     public class LoserNode : EliminationNode
     {
         public LoserNode(EliminationDecider decider)
@@ -63,7 +62,7 @@ namespace Tournaments.Standard
         {
             if (pairing == null)
             {
-                throw new ArgumentNullException("pairing");
+                throw new ArgumentNullException(nameof(pairing));
             }
 
             return false;

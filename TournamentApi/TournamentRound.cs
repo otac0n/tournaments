@@ -48,7 +48,7 @@ namespace Tournaments
         {
             if (pairings == null)
             {
-                throw new ArgumentNullException("pairings");
+                throw new ArgumentNullException(nameof(pairings));
             }
 
             this.pairings = new List<TournamentPairing>(pairings);
@@ -62,7 +62,7 @@ namespace Tournaments
         {
             if (pairings == null)
             {
-                throw new ArgumentNullException("pairings");
+                throw new ArgumentNullException(nameof(pairings));
             }
 
             this.pairings = new List<TournamentPairing>(pairings);

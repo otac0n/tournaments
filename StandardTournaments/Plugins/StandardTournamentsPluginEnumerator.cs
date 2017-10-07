@@ -27,7 +27,6 @@
 
 namespace Tournaments.Standard
 {
-    using System;
     using System.Collections.Generic;
     using Tournaments.Plugins;
     using Tournaments.Standard.Plugins;

@@ -35,27 +35,17 @@ namespace Tournaments.Standard
     public abstract class EliminationNode
     {
         private EliminationDecider primaryParent;
-        protected List<EliminationDecider> secondaryParents = new List<EliminationDecider>();
-
         protected EliminationDecider decider;
 
         public EliminationNode(EliminationDecider decider)
         {
-            if (decider == null)
-            {
-                throw new ArgumentNullException("decider");
-            }
-
-            this.decider = decider;
+            this.decider = decider ?? throw new ArgumentNullException(nameof(decider));
         }
 
-        public bool IsDecided
-        {
-            get
-            {
-                return this.decider.IsDecided;
-            }
-        }
+        /// <summary>
+        /// Gets a value indicating whether or not this node is decided.
+        /// </summary>
+        public bool IsDecided => this.decider.IsDecided;
 
         public EliminationDecider PrimaryParent
         {
@@ -70,35 +60,13 @@ namespace Tournaments.Standard
             }
         }
 
-        public int Level
-        {
-            get
-            {
-                if (this.primaryParent == null)
-                {
-                    return 0;
-                }
-                else
-                {
-                    return this.primaryParent.Level + 1;
-                }
-            }
-        }
+        public int Level =>
+            this.primaryParent == null ? 0 :
+            this.primaryParent.Level + 1;
 
-        public EliminationNode CommonAncestor
-        {
-            get
-            {
-                if (this.primaryParent == null)
-                {
-                    return this;
-                }
-                else
-                {
-                    return this.primaryParent.CommonAncestor;
-                }
-            }
-        }
+        public EliminationNode CommonAncestor =>
+            this.primaryParent == null ?  this :
+            this.primaryParent.CommonAncestor;
 
         public bool Locked
         {
@@ -108,10 +76,7 @@ namespace Tournaments.Standard
             }
         }
 
-        public abstract TournamentTeam Team
-        {
-            get;
-        }
+        public abstract TournamentTeam Team { get; }
 
         public EliminationDecider Decider
         {
@@ -119,30 +84,25 @@ namespace Tournaments.Standard
             {
                 return this.decider;
             }
+
             set
             {
-                if (value == null)
-                {
-                    throw new ArgumentNullException("value");
-                }
-
-                this.decider = value;
+                this.decider = value ?? throw new ArgumentNullException(nameof(value));
             }
         }
 
-        public Score Score
-        {
-            get;
-            set;
-        }
+        public Score Score { get; set; }
 
         public abstract NodeMeasurement Measure(IGraphics g, TournamentNameTable names, float textHeight);
 
         public abstract void Render(IGraphics g, TournamentNameTable names, float x, float y, float textHeight);
 
         public abstract bool ApplyPairing(TournamentPairing pairing);
+
         public abstract IEnumerable<TournamentPairing> FindUndecided();
+
         public abstract IEnumerable<EliminationNode> FindNodes(Func<EliminationNode, bool> filter);
+
         public abstract IEnumerable<EliminationDecider> FindDeciders(Func<EliminationDecider, bool> filter);
     }
 }

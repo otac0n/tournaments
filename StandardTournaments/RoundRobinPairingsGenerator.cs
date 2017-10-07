@@ -124,7 +124,7 @@ namespace Tournaments.Standard
                 }
                 else
                 {
-                    throw new ArgumentException("Object is not an RRWinRecord", "obj");
+                    throw new ArgumentException("Object is not an RRWinRecord", nameof(obj));
                 }
             }
 
@@ -222,12 +222,12 @@ namespace Tournaments.Standard
         {
             if (teams == null)
             {
-                throw new ArgumentNullException("teams");
+                throw new ArgumentNullException(nameof(teams));
             }
 
             if (rounds == null)
             {
-                throw new ArgumentNullException("rounds");
+                throw new ArgumentNullException(nameof(rounds));
             }
 
             // Load our list of teams.
@@ -380,18 +380,18 @@ namespace Tournaments.Standard
 
                     if (scoreA == scoreB)
                     {
-                        records[teamA].Draws += 1;
-                        records[teamB].Draws += 1;
+                        records[teamA].Draws++;
+                        records[teamB].Draws++;
                     }
                     else if (scoreA > scoreB)
                     {
-                        records[teamA].Wins += 1;
-                        records[teamB].Losses += 1;
+                        records[teamA].Wins++;
+                        records[teamB].Losses++;
                     }
                     else
                     {
-                        records[teamA].Losses += 1;
-                        records[teamB].Wins += 1;
+                        records[teamA].Losses++;
+                        records[teamB].Wins++;
                     }
                 }
             }

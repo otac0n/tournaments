@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using Tournaments.Standard;
 using System.Diagnostics;
@@ -27,14 +25,9 @@ namespace Tournaments.Sample
 
         public TournamentView(IPairingsGenerator generator)
         {
-            if (generator == null)
-            {
-                throw new ArgumentNullException("generator");
-            }
-
             InitializeComponent();
 
-            this.generator = generator;
+            this.generator = generator ?? throw new ArgumentNullException(nameof(generator));
             this.generator.Reset();
             this.visualizer = this.generator as ITournamentVisualizer;
 

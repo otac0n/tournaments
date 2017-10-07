@@ -28,10 +28,12 @@
 namespace Tournaments
 {
     using System;
+    using System.Diagnostics;
 
     /// <summary>
     /// Describes the score that a team has obtained in a tournament.
     /// </summary>
+    [DebuggerDisplay("Team {Team.TeamId} scored {Score}")]
     public sealed class TournamentTeamScore
     {
         /// <summary>
@@ -46,12 +48,7 @@ namespace Tournaments
         /// <param name="score">The score that the team obtained.</param>
         public TournamentTeamScore(TournamentTeam team, Score score)
         {
-            if (team == null)
-            {
-                throw new ArgumentNullException("team");
-            }
-
-            this.team = team;
+            this.team = team ?? throw new ArgumentNullException(nameof(team));
             this.Score = score;
         }
 

@@ -26,105 +26,103 @@
 // <author>John Gietzen</author>
 //-----------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Tournaments.Graphics;
-using System.Drawing;
-
 namespace Tournaments.Standard
 {
+    using System;
+    using System.Collections.Generic;
+    using Tournaments.Graphics;
+
     public class StayDecider : EliminationDecider
     {
-        private EliminationNode previousWinnerNode = null;
-        private EliminationNode stayNode = null;
-
         public StayDecider(EliminationNode previousWinnerNode, EliminationNode stayNode)
         {
-            if (previousWinnerNode == null)
-            {
-                throw new ArgumentNullException("previousWinnerNode");
-            }
-
-            if (stayNode == null)
-            {
-                throw new ArgumentNullException("stayNode");
-            }
-
-            this.previousWinnerNode = previousWinnerNode;
-            this.stayNode = stayNode;
+            this.PreviousWinnerNode = previousWinnerNode ?? throw new ArgumentNullException(nameof(previousWinnerNode));
+            this.StayNode = stayNode ?? throw new ArgumentNullException(nameof(stayNode));
         }
 
+        /// <summary>
+        /// Gets the winner of the previous pairing.
+        /// </summary>
+        public EliminationNode PreviousWinnerNode { get; }
+
+        /// <summary>
+        /// Gets the node whose winner will stay if necessary.
+        /// </summary>
+        public EliminationNode StayNode { get; }
+
+        /// <inheritdoc />
         public override bool IsDecided
         {
             get
             {
-                return this.previousWinnerNode.IsDecided && this.stayNode.IsDecided && ((this.previousWinnerNode.Team.TeamId == this.stayNode.Team.TeamId) || (previousWinnerNode.Score != null && stayNode.Score != null && previousWinnerNode.Score != stayNode.Score));
+                return this.PreviousWinnerNode.IsDecided && this.StayNode.IsDecided && ((this.PreviousWinnerNode.Team.TeamId == this.StayNode.Team.TeamId) || (PreviousWinnerNode.Score != null && StayNode.Score != null && PreviousWinnerNode.Score != StayNode.Score));
             }
         }
 
+        /// <inheritdoc />
         public override TournamentTeam GetWinner()
         {
-            if (!this.previousWinnerNode.IsDecided || !this.stayNode.IsDecided)
+            if (!this.PreviousWinnerNode.IsDecided || !this.StayNode.IsDecided)
             {
                 throw new InvalidOperationException("Cannot determine a winner from a node that is undecided.");
             }
 
-            if (this.previousWinnerNode.Team.TeamId == this.stayNode.Team.TeamId)
+            if (this.PreviousWinnerNode.Team.TeamId == this.StayNode.Team.TeamId)
             {
-                return this.previousWinnerNode.Team;
+                return this.PreviousWinnerNode.Team;
             }
 
-            if (this.previousWinnerNode.Score == null || this.stayNode.Score == null)
+            if (this.PreviousWinnerNode.Score == null || this.StayNode.Score == null)
             {
                 throw new InvalidOperationException("Cannot determine a winner from a node without a score.");
             }
 
-            if (this.previousWinnerNode.Score == this.stayNode.Score)
+            if (this.PreviousWinnerNode.Score == this.StayNode.Score)
             {
                 throw new InvalidOperationException("Cannot determine a winner from between two nodes with the same score.");
             }
 
-            return this.previousWinnerNode.Score > this.stayNode.Score ? this.previousWinnerNode.Team : this.stayNode.Team;
+            return this.PreviousWinnerNode.Score > this.StayNode.Score ? this.PreviousWinnerNode.Team : this.StayNode.Team;
         }
 
+        /// <inheritdoc />
         public override TournamentTeam GetLoser()
         {
-            if (!this.previousWinnerNode.IsDecided || !this.stayNode.IsDecided)
+            if (!this.PreviousWinnerNode.IsDecided || !this.StayNode.IsDecided)
             {
                 throw new InvalidOperationException("Cannot determine a loser from a node that is undecided.");
             }
 
-            if (this.previousWinnerNode.Team.TeamId == this.stayNode.Team.TeamId)
+            if (this.PreviousWinnerNode.Team.TeamId == this.StayNode.Team.TeamId)
             {
                 throw new InvalidOperationException("Cannot determine a loser from a competition between a team and itself.");
             }
 
-            if (this.previousWinnerNode.Score == null || this.stayNode.Score == null)
+            if (this.PreviousWinnerNode.Score == null || this.StayNode.Score == null)
             {
                 throw new InvalidOperationException("Cannot determine a loser from a node without a score.");
             }
 
-            if (this.previousWinnerNode.Score == this.stayNode.Score)
+            if (this.PreviousWinnerNode.Score == this.StayNode.Score)
             {
                 throw new InvalidOperationException("Cannot determine a loser from between two nodes with the same score.");
             }
 
-            return this.previousWinnerNode.Score > this.stayNode.Score ? this.stayNode.Team : this.previousWinnerNode.Team;
+            return this.PreviousWinnerNode.Score > this.StayNode.Score ? this.StayNode.Team : this.PreviousWinnerNode.Team;
         }
 
+        /// <inheritdoc />
         public override NodeMeasurement MeasureWinner(IGraphics g, TournamentNameTable names, float textHeight, Score score)
         {
-            if (!(this.previousWinnerNode.IsDecided && this.stayNode.IsDecided) || (this.stayNode.Team == null || this.previousWinnerNode.Team == null) || this.previousWinnerNode.Team.TeamId == this.stayNode.Team.TeamId)
+            if (!(this.PreviousWinnerNode.IsDecided && this.StayNode.IsDecided) || (this.StayNode.Team == null || this.PreviousWinnerNode.Team == null) || this.PreviousWinnerNode.Team.TeamId == this.StayNode.Team.TeamId)
             {
-                return this.previousWinnerNode.Measure(g, names, textHeight);
+                return this.PreviousWinnerNode.Measure(g, names, textHeight);
             }
             else
             {
                 var m = this.MeasureTree(g, names, textHeight,
-                    this.previousWinnerNode,
-                    this.stayNode);
+                    this.PreviousWinnerNode,
+                    this.StayNode);
 
                 string teamName = "";
                 if (this.IsDecided)
@@ -146,16 +144,18 @@ namespace Tournaments.Standard
             }
         }
 
+        /// <inheritdoc />
         public override NodeMeasurement MeasureLoser(IGraphics g, TournamentNameTable names, float textHeight, Score score)
         {
             throw new InvalidOperationException("Rendering the loser node of a stay decider is invalid.");
         }
 
+        /// <inheritdoc />
         public override void RenderWinner(IGraphics g, TournamentNameTable names, float x, float y, float textHeight, Score score)
         {
-            if (!(this.previousWinnerNode.IsDecided && this.stayNode.IsDecided) || (this.stayNode.Team == null || this.previousWinnerNode.Team == null) || this.previousWinnerNode.Team.TeamId == this.stayNode.Team.TeamId)
+            if (!(this.PreviousWinnerNode.IsDecided && this.StayNode.IsDecided) || (this.StayNode.Team == null || this.PreviousWinnerNode.Team == null) || this.PreviousWinnerNode.Team.TeamId == this.StayNode.Team.TeamId)
             {
-                this.previousWinnerNode.Render(g, names, x, y, textHeight);
+                this.PreviousWinnerNode.Render(g, names, x, y, textHeight);
             }
             else
             {
@@ -179,21 +179,23 @@ namespace Tournaments.Standard
 
                 this.RenderTextBox(g, x + m.Width - r.Width, y + m.CenterLine - r.CenterLine, textHeight, teamName, score);
                 this.RenderTree(g, names, x, y, textHeight,
-                    this.previousWinnerNode,
-                    this.stayNode);
+                    this.PreviousWinnerNode,
+                    this.StayNode);
             }
         }
 
+        /// <inheritdoc />
         public override void RenderLoser(IGraphics g, TournamentNameTable names, float x, float y, float textHeight, Score score)
         {
             throw new InvalidOperationException("Rendering the loser node of a stay decider is invalid.");
         }
 
+        /// <inheritdoc />
         public override bool ApplyPairing(TournamentPairing pairing)
         {
             if (pairing == null)
             {
-                throw new ArgumentNullException("pairing");
+                throw new ArgumentNullException(nameof(pairing));
             }
 
             if (this.Locked)
@@ -205,10 +207,10 @@ namespace Tournaments.Standard
             if (pairing.TeamScores.Count != 2 || pairing.TeamScores[0] == null || pairing.TeamScores[1] == null || pairing.TeamScores[0].Team == null || pairing.TeamScores[1].Team == null)
             {
                 // If the pairing did not contain exactly two teams, or if either of the teams passed was null.
-                throw new ArgumentException("A bye was passed as a pairing.", "pairing");
+                throw new ArgumentException("A bye was passed as a pairing.", nameof(pairing));
             }
 
-            if (this.previousWinnerNode.IsDecided && this.stayNode.IsDecided && !(this.previousWinnerNode.Score != null || this.stayNode.Score != null))
+            if (this.PreviousWinnerNode.IsDecided && this.StayNode.IsDecided && !(this.PreviousWinnerNode.Score != null || this.StayNode.Score != null))
             {
                 // If our component nodes have played out, but we haven't
                 var teamA = pairing.TeamScores[0].Team;
@@ -216,7 +218,7 @@ namespace Tournaments.Standard
                 var teamB = pairing.TeamScores[1].Team;
                 var scoreB = pairing.TeamScores[1].Score;
 
-                if (this.previousWinnerNode.Team.TeamId == teamB.TeamId && this.stayNode.Team.TeamId == teamA.TeamId)
+                if (this.PreviousWinnerNode.Team.TeamId == teamB.TeamId && this.StayNode.Team.TeamId == teamA.TeamId)
                 {
                     // If the order of the pairing is reversed, we will normalize the pairing to us.
                     var teamSwap = teamA;
@@ -228,11 +230,11 @@ namespace Tournaments.Standard
                     scoreA = scoreSwap;
                 }
 
-                if (this.previousWinnerNode.Team.TeamId == teamA.TeamId && this.stayNode.Team.TeamId == teamB.TeamId)
+                if (this.PreviousWinnerNode.Team.TeamId == teamA.TeamId && this.StayNode.Team.TeamId == teamB.TeamId)
                 {
                     // If we are a match, assign the scores.
-                    this.previousWinnerNode.Score = scoreA;
-                    this.stayNode.Score = scoreB;
+                    this.PreviousWinnerNode.Score = scoreA;
+                    this.StayNode.Score = scoreB;
                     this.Lock();
                     return true;
                 }
@@ -243,17 +245,18 @@ namespace Tournaments.Standard
             }
             else
             {
-                return (!this.previousWinnerNode.IsDecided && this.previousWinnerNode.ApplyPairing(pairing)) || (!this.stayNode.IsDecided && this.stayNode.ApplyPairing(pairing));
+                return (!this.PreviousWinnerNode.IsDecided && this.PreviousWinnerNode.ApplyPairing(pairing)) || (!this.StayNode.IsDecided && this.StayNode.ApplyPairing(pairing));
             }
         }
 
+        /// <inheritdoc />
         public override IEnumerable<TournamentPairing> FindUndecided()
         {
             if (this.IsDecided)
             {
                 yield break;
             }
-            else if (this.previousWinnerNode.IsDecided && this.stayNode.IsDecided)
+            else if (this.PreviousWinnerNode.IsDecided && this.StayNode.IsDecided)
             {
                 if (this.Locked)
                 {
@@ -262,23 +265,23 @@ namespace Tournaments.Standard
                 else
                 {
                     yield return new TournamentPairing(
-                            new TournamentTeamScore(this.previousWinnerNode.Team, null),
-                            new TournamentTeamScore(this.stayNode.Team, null));
+                        new TournamentTeamScore(this.PreviousWinnerNode.Team, null),
+                        new TournamentTeamScore(this.StayNode.Team, null));
                 }
             }
             else
             {
-                if (!this.previousWinnerNode.IsDecided)
+                if (!this.PreviousWinnerNode.IsDecided)
                 {
-                    foreach (var undecided in this.previousWinnerNode.FindUndecided())
+                    foreach (var undecided in this.PreviousWinnerNode.FindUndecided())
                     {
                         yield return undecided;
                     }
                 }
 
-                if (!this.stayNode.IsDecided)
+                if (!this.StayNode.IsDecided)
                 {
-                    foreach (var undecided in this.stayNode.FindUndecided())
+                    foreach (var undecided in this.StayNode.FindUndecided())
                     {
                         yield return undecided;
                     }
@@ -286,17 +289,19 @@ namespace Tournaments.Standard
             }
         }
 
+        /// <inheritdoc />
         public override IEnumerable<EliminationNode> FindNodes(Func<EliminationNode, bool> filter)
         {
-            if (this.previousWinnerNode != null)
+            if (this.PreviousWinnerNode != null)
             {
-                foreach(var match in this.previousWinnerNode.FindNodes(filter))
+                foreach(var match in this.PreviousWinnerNode.FindNodes(filter))
                 {
                     yield return match;
                 }
             }
         }
 
+        /// <inheritdoc />
         public override IEnumerable<EliminationDecider> FindDeciders(Func<EliminationDecider, bool> filter)
         {
             if (filter.Invoke(this))
@@ -304,9 +309,9 @@ namespace Tournaments.Standard
                 yield return this;
             }
 
-            if (this.previousWinnerNode != null)
+            if (this.PreviousWinnerNode != null)
             {
-                foreach (var match in this.previousWinnerNode.FindDeciders(filter))
+                foreach (var match in this.PreviousWinnerNode.FindDeciders(filter))
                 {
                     yield return match;
                 }
