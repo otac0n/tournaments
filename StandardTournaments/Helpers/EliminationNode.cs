@@ -68,14 +68,6 @@ namespace Tournaments.Standard
             this.primaryParent == null ?  this :
             this.primaryParent.CommonAncestor;
 
-        public bool Locked
-        {
-            get
-            {
-                return this.decider.Locked || (this.primaryParent != null && this.primaryParent.Locked);
-            }
-        }
-
         public abstract TournamentTeam Team { get; }
 
         public EliminationDecider Decider

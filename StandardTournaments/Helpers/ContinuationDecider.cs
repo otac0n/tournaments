@@ -311,7 +311,7 @@ namespace Tournaments.Standard
                 return false;
             }
 
-            if (!this.nodeA.IsDecided || !this.nodeA.Locked || !this.nodeB.IsDecided || !this.nodeB.Locked)
+            if (!this.nodeA.IsDecided || !this.nodeB.IsDecided)
             {
                 return (!this.nodeA.IsDecided && this.nodeA.ApplyPairing(pairing)) || (!this.nodeB.IsDecided && this.nodeB.ApplyPairing(pairing));
             }

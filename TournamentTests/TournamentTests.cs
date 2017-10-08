@@ -437,6 +437,80 @@ namespace TournamentTests
             }
         }
 
+        [TestMethod]
+        public void DoubleEliminationTieDisallowed()
+        {
+            IPairingsGenerator pg = new EliminationTournament(2);
+
+            List<TournamentTeam> teams = new List<TournamentTeam>(CreateTeams(2));
+            List<TournamentRound> rounds = new List<TournamentRound>();
+
+            pg.LoadState(teams, rounds);
+            TournamentRound round = pg.CreateNextRound(null);
+            round.Pairings[0].TeamScores[0].Score = new HighestPointsScore(10);
+            round.Pairings[0].TeamScores[1].Score = new HighestPointsScore(10);
+            rounds.Add(round);
+
+            try
+            {
+                RunTournament(pg, teams, rounds, false, null);
+                Assert.Fail();
+            }
+            catch (InvalidTournamentStateException)
+            {
+                return;
+            }
+        }
+
+        [TestMethod]
+        public void DoubleEliminationLongTournament()
+        {
+            IPairingsGenerator pg = new EliminationTournament(2);
+
+            List<TournamentTeam> teams = new List<TournamentTeam>(CreateTeams(5));
+            List<TournamentRound> rounds = new List<TournamentRound>();
+
+            pg.LoadState(teams, rounds);
+            TournamentRound round1 = pg.CreateNextRound(null);
+            round1.Pairings[0].TeamScores[0].Score = new HighestPointsScore(1);
+            round1.Pairings[0].TeamScores[1].Score = new HighestPointsScore(2);
+            round1.Pairings[1].TeamScores[0].Score = new HighestPointsScore(1);
+            round1.Pairings[1].TeamScores[1].Score = new HighestPointsScore(2);
+            rounds.Add(round1);
+            pg.LoadState(teams, rounds);
+            TournamentRound round2 = pg.CreateNextRound(null);
+            round2.Pairings[0].TeamScores[0].Score = new HighestPointsScore(1);
+            round2.Pairings[0].TeamScores[1].Score = new HighestPointsScore(2);
+            rounds.Add(round2);
+            pg.LoadState(teams, rounds);
+            TournamentRound round3 = pg.CreateNextRound(null);
+            round3.Pairings[0].TeamScores[0].Score = new HighestPointsScore(2);
+            round3.Pairings[0].TeamScores[1].Score = new HighestPointsScore(1);
+            round3.Pairings[1].TeamScores[0].Score = new HighestPointsScore(2);
+            round3.Pairings[1].TeamScores[1].Score = new HighestPointsScore(1);
+            rounds.Add(round3);
+            pg.LoadState(teams, rounds);
+            TournamentRound round4 = pg.CreateNextRound(null);
+            round4.Pairings[0].TeamScores[0].Score = new HighestPointsScore(2);
+            round4.Pairings[0].TeamScores[1].Score = new HighestPointsScore(1);
+            rounds.Add(round4);
+            pg.LoadState(teams, rounds);
+            TournamentRound round5 = pg.CreateNextRound(null);
+            round5.Pairings[0].TeamScores[0].Score = new HighestPointsScore(1);
+            round5.Pairings[0].TeamScores[1].Score = new HighestPointsScore(2);
+            rounds.Add(round5);
+            pg.LoadState(teams, rounds);
+            TournamentRound round6 = pg.CreateNextRound(null);
+            round6.Pairings[0].TeamScores[0].Score = new HighestPointsScore(2);
+            round6.Pairings[0].TeamScores[1].Score = new HighestPointsScore(1);
+            rounds.Add(round6);
+
+            RunTournament(pg, teams, rounds, false, null);
+
+            DisplayTournamentRounds(rounds);
+            DisplayTournamentRankings(pg.GenerateRankings());
+        }
+
         private Score Score(double score)
         {
             return new HighestPointsScore(score);
